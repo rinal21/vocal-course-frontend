@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-export default class studentAdd extends Component {
+export default class teacherAttendanceAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
