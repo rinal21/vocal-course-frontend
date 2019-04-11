@@ -20,6 +20,15 @@ import PricingAdd from "../modules/pricing/Pricing-Add";
 
 import PayrollList from "../modules/payroll/Payroll-List";
 import PayrollAdd from "../modules/payroll/Payroll-Add";
+
+import TeacherAttendanceList from "../modules/teacher-attendance/Teacher-List";
+import TeacherAttendanceAdd from "../modules/teacher-attendance/Teacher-Add";
+
+import StudentAttendanceList from "../modules/student-attendance/Student-List";
+import StudentAttendanceAdd from "../modules/student-attendance/Student-Add";
+
+import TransactionList from "../modules/transaction/Transaction-List";
+import TransactionAdd from "../modules/transaction/Transaction-Add";
 export default class Content extends Component {
     render(){
         return (
@@ -45,6 +54,12 @@ export default class Content extends Component {
                           <Route exact path="/pricing/add" component={PricingAdd} />
                           <Route exact path="/payroll" component={PayrollList} />
                           <Route exact path="/payroll/add" component={PayrollAdd} />
+                          <Route exact path="/teacher-attendance" component={TeacherAttendanceList} />
+                          <Route exact path="/teacher-attendance/add" component={TeacherAttendanceAdd} />
+                          <Route exact path="/student-attendance" component={StudentAttendanceList} />
+                          <Route exact path="/student-attendance/add" component={StudentAttendanceAdd} />                          
+                          <Route exact path="/transaction" component={TransactionList} />
+                          <Route exact path="/transaction/add" component={TransactionAdd} />
                         </div>
                       
                     

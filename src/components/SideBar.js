@@ -62,8 +62,23 @@ export default class SideBar extends Component {
                     </NavLink>
                   </li>
                   <li>
+                    <NavLink to="/student-attendance">
+                      <i className="fa fa-th" /> <span>Student Attendance</span>
+                    </NavLink>
+                  </li>
+                  <li>
                     <NavLink to="/teacher">
                       <i className="fa fa-th" /> <span>Teacher</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/teacher-attendance">
+                      <i className="fa fa-th" /> <span>Teacher Attendance</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/transaction">
+                      <i className="fa fa-th" /> <span>Transaction</span>
                     </NavLink>
                   </li>
                   <li>
