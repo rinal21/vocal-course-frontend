@@ -13,17 +13,17 @@ export default class SideBar extends Component {
                   <img
                     src="img/user2-160x160.jpg"
                     className="img-circle"
-                    alt="User Image"
+                    alt="User"
                   />
                 </div>
                 <div className="pull-left info">
                   <p>Alexander Pierce</p>
-                  <a href="#">
+                  <a href="">
                     <i className="fa fa-circle text-success" /> Online
                   </a>
                 </div>
               </div>
-              <form action="#" method="get" className="sidebar-form">
+              <form action="" method="get" className="sidebar-form">
                 <div className="input-group">
                   <input
                     type="text"
@@ -47,12 +47,37 @@ export default class SideBar extends Component {
                 <ul className="sidebar-menu" data-widget="tree">
                   <li className="header">MAIN NAVIGATION</li>
                   <li>
-                    <NavLink to="/contact">
+                    <NavLink to="/class">
+                      <i className="fa fa-th" /> <span>Class</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/user">
+                      <i className="fa fa-th" /> <span>User</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/student">
                       <i className="fa fa-th" /> <span>Students</span>
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink to="/teacher">
+                      <i className="fa fa-th" /> <span>Teacher</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/pricing">
+                      <i className="fa fa-th" /> <span>Pricing</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/payroll">
+                      <i className="fa fa-th" /> <span>Payroll</span>
+                    </NavLink>
+                  </li>
                   <li className="treeview">
-                    <a href="#">
+                    <a href="">
                       <i className="fa fa-files-o" />
                       <span>Layout Options</span>
                       <span className="pull-right-container">
@@ -87,17 +112,17 @@ export default class SideBar extends Component {
                     </ul>
                   </li>
                   <li>
-                    <a href="pages/widgets.html">
+                    <NavLink to="/about">
                       <i className="fa fa-th" /> <span>Widgets</span>
                       <span className="pull-right-container">
                         <small className="label pull-right bg-green">
                           new
                         </small>
                       </span>
-                    </a>
+                    </NavLink>
                   </li>
                   <li className="treeview">
-                    <a href="#">
+                    <a href="">
                       <i className="fa fa-pie-chart" />
                       <span>Charts</span>
                       <span className="pull-right-container">
