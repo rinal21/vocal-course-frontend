@@ -53,26 +53,23 @@ export default class userAdd extends Component {
           }) => (
               <div>
                 <form action="/action_page.php">
-                  <div className="form-inline mb-2">
-                    <label for="username" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                  <div className="form-group mb-2">
+                    <label for="username" class="mr-sm-2 text-left d-block" >
                       Username
                     </label>
-                    <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="username" />
+                    <input type="text" class="form-control mr-sm-2 w-25" id="username" />
                   </div>
-                  <div className="form-inline mb-2">
-                    <label for="email" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                  <div className="form-group mb-2">
+                    <label for="email" class="mr-sm-2 text-left d-block" >
                       Email
                     </label>
-                    <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="email" />
+                    <input type="text" class="form-control mr-sm-2 w-25" id="email" />
                   </div>
-                  <div className="form-inline mb-2">
-                    <label for="password" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                  <div className="form-group mb-2">
+                    <label for="password" class="mr-sm-2 text-left d-block" >
                       Password
                     </label>
-                    <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="password" />
+                    <input type="text" class="form-control mr-sm-2 w-25" id="password" />
                   </div>
                   
 

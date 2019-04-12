@@ -53,12 +53,11 @@ export default class studentAdd extends Component {
           }) => (
             <div>
             <form action="/action_page.php">
-              <div className="form-inline mb-2">
-                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+              <div className="form-group mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block">
                   Name
                 </label>
-                <label>: &nbsp;</label>
-                <input type="text" class="form-control mr-sm-2" id="name" />
+                <input type="text" class="form-control mr-sm-2 w-25" id="name" />
               </div>
               
               <div className="form-group">
