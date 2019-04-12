@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Route, HashRouter } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Home from "../modules/Home";
 import About from "../modules/About";
 
@@ -32,7 +32,6 @@ import TransactionAdd from "../modules/transaction/Transaction-Add";
 export default class Content extends Component {
     render(){
         return (
-            <HashRouter>
                 <div className="content-wrapper">
             <section className="content-header">
               <div className="row">
@@ -69,7 +68,6 @@ export default class Content extends Component {
               
             </section>
           </div>
-            </HashRouter>
           
         );
     }

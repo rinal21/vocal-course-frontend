@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Header from './components/Header';
 import SideBar from './components/SideBar';
 import Content from './components/Content';
+import { BrowserRouter } from 'react-router-dom';
 
 class App extends Component {
 
@@ -10,8 +11,13 @@ class App extends Component {
     return (
       <div>
         <Header />
-        <SideBar />
+        
+        <BrowserRouter>
         <Content />
+        <SideBar />
+        </BrowserRouter>
+        
+        
       </div>
     );
   }

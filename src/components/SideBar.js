@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import { NavLink, HashRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 export default class SideBar extends Component {
@@ -43,53 +43,52 @@ export default class SideBar extends Component {
                   </span>
                 </div>
               </form>
-              <HashRouter>
                 <ul className="sidebar-menu" data-widget="tree">
                   <li className="header">MAIN NAVIGATION</li>
                   <li>
-                    <NavLink to="/class">
+                    <Link to="/class">
                       <i className="fa fa-users" /> <span>Class</span>
-                    </NavLink>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to="/user">
+                    <Link to="/user">
                       <i className="fa fa-user" /> <span>User</span>
-                    </NavLink>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to="/student">
+                    <Link to="/student">
                       <i className="fa fa-child" /> <span>Student</span>
-                    </NavLink>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to="/student-attendance">
+                    <Link to="/student-attendance">
                       <i className="fa fa-check-square-o" /> <span>Student Attendance</span>
-                    </NavLink>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to="/teacher">
+                    <Link to="/teacher">
                       <i className="fa fa-graduation-cap" /> <span>Teacher</span>
-                    </NavLink>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to="/teacher-attendance">
+                    <Link to="/teacher-attendance">
                       <i className="fa fa-check-square-o" /> <span>Teacher Attendance</span>
-                    </NavLink>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to="/transaction">
+                    <Link to="/transaction">
                       <i className="fa fa-exchange" /> <span>Transaction</span>
-                    </NavLink>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to="/pricing">
+                    <Link to="/pricing">
                       <i className="fa fa-tag" /> <span>Pricing</span>
-                    </NavLink>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to="/payroll">
+                    <Link to="/payroll">
                       <i className="fa fa-print" /> <span>Payroll</span>
-                    </NavLink>
+                    </Link>
                   </li>
                   <li className="treeview">
                     <a href="">
@@ -103,10 +102,10 @@ export default class SideBar extends Component {
                     </a>
                     <ul className="treeview-menu">
                       <li>
-                        <NavLink to="/contact">
+                        <Link to="/contact">
                           <i className="fa fa-circle-o" /> Top
                           Navigation
-                        </NavLink>
+                        </Link>
                       </li>
                       <li>
                         <a href="pages/layout/boxed.html">
@@ -127,14 +126,14 @@ export default class SideBar extends Component {
                     </ul>
                   </li>
                   <li>
-                    <NavLink to="/about">
+                    <Link to="/about">
                       <i className="fa fa-th" /> <span>Widgets</span>
                       <span className="pull-right-container">
                         <small className="label pull-right bg-green">
                           new
                         </small>
                       </span>
-                    </NavLink>
+                    </Link>
                   </li>
                   <li className="treeview">
                     <a href="">
@@ -212,8 +211,7 @@ export default class SideBar extends Component {
                       </span>
                     </a>
                   </li>
-                </ul>                
-              </HashRouter>
+                </ul>
             </section>
           </aside>
         );
