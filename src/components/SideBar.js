@@ -48,47 +48,47 @@ export default class SideBar extends Component {
                   <li className="header">MAIN NAVIGATION</li>
                   <li>
                     <NavLink to="/class">
-                      <i className="fa fa-th" /> <span>Class</span>
+                      <i className="fa fa-users" /> <span>Class</span>
                     </NavLink>
                   </li>
                   <li>
                     <NavLink to="/user">
-                      <i className="fa fa-th" /> <span>User</span>
+                      <i className="fa fa-user" /> <span>User</span>
                     </NavLink>
                   </li>
                   <li>
                     <NavLink to="/student">
-                      <i className="fa fa-th" /> <span>Students</span>
+                      <i className="fa fa-child" /> <span>Student</span>
                     </NavLink>
                   </li>
                   <li>
                     <NavLink to="/student-attendance">
-                      <i className="fa fa-th" /> <span>Student Attendance</span>
+                      <i className="fa fa-check-square-o" /> <span>Student Attendance</span>
                     </NavLink>
                   </li>
                   <li>
                     <NavLink to="/teacher">
-                      <i className="fa fa-th" /> <span>Teacher</span>
+                      <i className="fa fa-graduation-cap" /> <span>Teacher</span>
                     </NavLink>
                   </li>
                   <li>
                     <NavLink to="/teacher-attendance">
-                      <i className="fa fa-th" /> <span>Teacher Attendance</span>
+                      <i className="fa fa-check-square-o" /> <span>Teacher Attendance</span>
                     </NavLink>
                   </li>
                   <li>
                     <NavLink to="/transaction">
-                      <i className="fa fa-th" /> <span>Transaction</span>
+                      <i className="fa fa-exchange" /> <span>Transaction</span>
                     </NavLink>
                   </li>
                   <li>
                     <NavLink to="/pricing">
-                      <i className="fa fa-th" /> <span>Pricing</span>
+                      <i className="fa fa-tag" /> <span>Pricing</span>
                     </NavLink>
                   </li>
                   <li>
                     <NavLink to="/payroll">
-                      <i className="fa fa-th" /> <span>Payroll</span>
+                      <i className="fa fa-print" /> <span>Payroll</span>
                     </NavLink>
                   </li>
                   <li className="treeview">
