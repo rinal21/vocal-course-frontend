@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Formik } from 'formik';
+import ReactAutocomplete from 'react-autocomplete'
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -7,7 +8,9 @@ export default class userAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: new Date()
+      startDate: new Date(),
+      value1: '',
+      value2: ''
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -57,22 +60,54 @@ export default class userAdd extends Component {
                       Teacher Name
                   </label>
                     <label>: &nbsp;</label>
-                    <select class="form-control">
-                      <option value="1">Pak Andi</option>
-                      <option value="2">Pak Budi</option>
-                      <option value="3">Pak Charly</option>
-                    </select>
+                    <ReactAutocomplete
+                      items={[
+                        { id: '1', label: 'Pak Andi' },
+                        { id: '2', label: 'Pak Budi' },
+                        { id: '3', label: 'Pak Charly' },
+                      ]}
+                      shouldItemRender={(item, value1) => item.label.toLowerCase().indexOf(value1.toLowerCase()) > -1}
+                      getItemValue={item => item.label}
+                      renderInput={props => <input {...props} className='form-control'/>}
+                      renderItem={(item, highlighted) =>
+                        <div
+                          key={item.id}
+                          style={{ backgroundColor: highlighted ? '#ddd' : 'transparent' }}
+                        >
+                          {item.label}
+                        </div>
+                      }
+                      value={this.state.value1}
+                      onChange={e => this.setState({ value1: e.target.value })}
+                      onSelect={value1 => this.setState({ value1 })}
+                    />
                   </div>
                   <div className="form-inline mb-2">
                     <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Student Name
                   </label>
                     <label>: &nbsp;</label>
-                    <select class="form-control">
-                      <option value="1">Andi</option>
-                      <option value="2">Budi</option>
-                      <option value="3">Charly</option>
-                    </select>
+                    <ReactAutocomplete
+                      items={[
+                        { id: '1', label: 'Andi' },
+                        { id: '2', label: 'Budi' },
+                        { id: '3', label: 'Charly' },
+                      ]}
+                      shouldItemRender={(item, value2) => item.label.toLowerCase().indexOf(value2.toLowerCase()) > -1}
+                      getItemValue={item => item.label}
+                      renderInput={props => <input {...props} className='form-control'/>}
+                      renderItem={(item, highlighted) =>
+                        <div
+                          key={item.id}
+                          style={{ backgroundColor: highlighted ? '#ddd' : 'transparent' }}
+                        >
+                          {item.label}
+                        </div>
+                      }
+                      value={this.state.value2}
+                      onChange={e => this.setState({ value2: e.target.value })}
+                      onSelect={value2 => this.setState({ value2 })}
+                    />
                   </div>
                   <div className="form-inline mb-2">
                     <label for="level" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>

@@ -161,7 +161,7 @@ export default class studentAdd extends Component {
                         showMonthDropdown
                         showYearDropdown
                         dropdownMode="select"
-                        className="form-control "
+                        className="form-control"
                       />
                       {/* <input type="text" class="form-control mb-2 mr-sm-2" id="birthdate" /> */}
                     </div>
