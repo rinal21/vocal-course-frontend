@@ -26,7 +26,7 @@ export default class Header extends Component {
                                             <li>
                                                 <a href="#">
                                                     <div className="pull-left">
-                                                        <img src="img/user2-160x160.jpg" className="img-circle" alt="User Image" />
+                                                        <img src="/img/user2-160x160.jpg" className="img-circle" alt="User Image" />
                                                     </div>
                                                     <h4>
                                                         Support Team

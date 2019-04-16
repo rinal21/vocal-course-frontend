@@ -11,7 +11,7 @@ export default class SideBar extends Component {
               <div className="user-panel">
                 <div className="pull-left image">
                   <img
-                    src="img/user2-160x160.jpg"
+                    src="/img/user2-160x160.jpg"
                     className="img-circle"
                     alt="User"
                   />
