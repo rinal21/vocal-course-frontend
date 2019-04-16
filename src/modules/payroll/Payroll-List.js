@@ -247,7 +247,7 @@ export default class classList extends Component {
         return(
             <div>
               <div class="box-header">
-                  <NavLink to="/payroll/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Payroll</NavLink>
+                  <NavLink to="/payroll/add" class="btn btn-info" color="#fff"><i class="fa fa-print"></i> Generate</NavLink>
               </div>
                 <MDBDataTable
                     striped
