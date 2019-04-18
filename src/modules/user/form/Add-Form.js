@@ -41,7 +41,7 @@ export default class userAdd extends Component {
     const obj = {
       email: this.state.email,
       username: this.state.username,
-      username: this.state.username
+      password: this.state.password
     };
     axios.post('http://localhost:8000/api/user', obj)
         .then(res => console.log(res.data))

@@ -16,6 +16,7 @@ import ClassEdit from "../modules/class/Class-Edit";
 
 import TeacherList from "../modules/teacher/Teacher-List";
 import TeacherAdd from "../modules/teacher/Teacher-Add";
+import TeacherEdit from "../modules/teacher/Teacher-Edit";
 
 import PricingList from "../modules/pricing/Pricing-List";
 import PricingAdd from "../modules/pricing/Pricing-Add";
@@ -53,6 +54,7 @@ export default class Content extends Component {
                           <Route exact path="/class/edit" component={ClassEdit} />
                           <Route exact path="/teacher" component={TeacherList} />
                           <Route exact path="/teacher/add" component={TeacherAdd} />
+                          <Route exact path="/teacher/edit" component={TeacherEdit} />
                           <Route exact path="/pricing" component={PricingList} />
                           <Route exact path="/pricing/add" component={PricingAdd} />
                           <Route exact path="/payroll" component={PayrollList} />

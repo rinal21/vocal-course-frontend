@@ -3,17 +3,18 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
 
-export default class teacherAdd extends Component {
+export default class teacherEdit extends Component {
   constructor(props) {
     super(props);
+    const { name, salary } = props;
     
     this.onChangeName = this.onChangeName.bind(this);
     this.onChangeSalary = this.onChangeSalary.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
-      name: '',
-      salary: '',
+      name: name,
+      salary: salary,
       redirect: false
     };
   }
@@ -35,7 +36,7 @@ export default class teacherAdd extends Component {
       name: this.state.name,
       salary: this.state.salary
     };
-    axios.post('http://localhost:8000/api/teacher', obj)
+    axios.patch('http://localhost:8000/api/teacher/'+this.props.teacherId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));
   }
