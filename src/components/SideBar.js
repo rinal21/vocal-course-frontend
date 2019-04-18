@@ -90,52 +90,7 @@ export default class SideBar extends Component {
                       <i className="fa fa-print" /> <span>Payroll</span>
                     </Link>
                   </li>
-                  <li className="treeview">
-                    <a href="">
-                      <i className="fa fa-files-o" />
-                      <span>Layout Options</span>
-                      <span className="pull-right-container">
-                        <span className="label label-primary pull-right">
-                          4
-                        </span>
-                      </span>
-                    </a>
-                    <ul className="treeview-menu">
-                      <li>
-                        <Link to="/contact">
-                          <i className="fa fa-circle-o" /> Top
-                          Navigation
-                        </Link>
-                      </li>
-                      <li>
-                        <a href="pages/layout/boxed.html">
-                          <i className="fa fa-circle-o" /> Boxed
-                        </a>
-                      </li>
-                      <li>
-                        <a href="pages/layout/fixed.html">
-                          <i className="fa fa-circle-o" /> Fixed
-                        </a>
-                      </li>
-                      <li>
-                        <a href="pages/layout/collapsed-sidebar.html">
-                          <i className="fa fa-circle-o" /> Collapsed
-                          Sidebar
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <Link to="/about">
-                      <i className="fa fa-th" /> <span>Widgets</span>
-                      <span className="pull-right-container">
-                        <small className="label pull-right bg-green">
-                          new
-                        </small>
-                      </span>
-                    </Link>
-                  </li>
-                  <li className="treeview">
+                  {/* <li className="treeview">
                     <a href="">
                       <i className="fa fa-pie-chart" />
                       <span>Charts</span>
@@ -179,38 +134,7 @@ export default class SideBar extends Component {
                         </a>
                       </li>
                     </ul>
-                  </li>
-                  <li>
-                    <a href="pages/calendar.html">
-                      <i className="fa fa-calendar" />{" "}
-                      <span>Calendar</span>
-                      <span className="pull-right-container">
-                        <small className="label pull-right bg-red">
-                          3
-                        </small>
-                        <small className="label pull-right bg-blue">
-                          17
-                        </small>
-                      </span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="pages/mailbox/mailbox.html">
-                      <i className="fa fa-envelope" />{" "}
-                      <span>Mailbox</span>
-                      <span className="pull-right-container">
-                        <small className="label pull-right bg-yellow">
-                          12
-                        </small>
-                        <small className="label pull-right bg-green">
-                          16
-                        </small>
-                        <small className="label pull-right bg-red">
-                          5
-                        </small>
-                      </span>
-                    </a>
-                  </li>
+                  </li> */}
                 </ul>
             </section>
           </aside>
