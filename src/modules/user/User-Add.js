@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import UserAddForm from "./form/Add-Form"
 
-
-export default class studentList extends Component {
+export default class userAdd extends Component {
     render() {
         return(
             <div>

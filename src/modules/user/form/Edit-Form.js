@@ -3,9 +3,9 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
 
-export default class userAdd extends Component {
+export default class userEdit extends Component {
   constructor(props) {
-    const { userId, email, username } = props
+    const { email, username } = props
     super(props);
     
     this.onChangeEmail = this.onChangeEmail.bind(this);
@@ -50,11 +50,11 @@ export default class userAdd extends Component {
   }
 
   render() {
-    
     const { redirect } = this.state;
     if (redirect) {
       return <Redirect to='/user' />;
     }
+    
     return (
       <div>
         <Formik

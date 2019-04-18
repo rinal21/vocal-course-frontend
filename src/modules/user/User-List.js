@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import { MDBDataTable } from 'mdbreact';
 import { NavLink } from "react-router-dom";
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 
-export default class studentList extends Component {
+export default class userList extends Component {
   constructor(props) {
     super(props)
 
