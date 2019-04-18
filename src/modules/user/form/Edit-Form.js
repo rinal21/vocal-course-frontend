@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom'
 
 export default class userAdd extends Component {
   constructor(props) {
+    const { userId, email, username } = props
     super(props);
     
     this.onChangeEmail = this.onChangeEmail.bind(this);
@@ -13,8 +14,8 @@ export default class userAdd extends Component {
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
-      email: '',
-      username: '',
+      email: email,
+      username: username,
       password: '',
       redirect: false
     };
@@ -43,12 +44,13 @@ export default class userAdd extends Component {
       username: this.state.username,
       username: this.state.username
     };
-    axios.post('http://localhost:8000/api/user', obj)
+    axios.patch('http://localhost:8000/api/user/'+this.props.userId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));
   }
 
   render() {
+    
     const { redirect } = this.state;
     if (redirect) {
       return <Redirect to='/user' />;
@@ -110,21 +112,8 @@ export default class userAdd extends Component {
                     value={this.state.email}
                     onChange={this.onChangeEmail}
                     />
-                  </div>
-                  <div className="form-group mb-2">
-                    <label for="password" class="mr-sm-2 text-left d-block" >
-                      Password
-                    </label>
-                    <input 
-                    type="text" 
-                    class="form-control mr-sm-2 w-25" 
-                    id="password"
-                    value={this.state.password}
-                    onChange={this.onChangePassword}
-                    />
-                  </div>
+                  </div>     
                   
-
                   <div className="form-group">
                     <button type="submit" class="btn btn-primary mb-2">
                       Submit

@@ -1,273 +1,112 @@
 import React, { Component } from "react";
-import { MDBBtn, MDBTable, MDBTableBody, MDBTableHead, MDBDataTable  } from 'mdbreact';
+import { MDBDataTable } from 'mdbreact';
 import { NavLink } from "react-router-dom";
-
-const data = {
-    columns: [
-      {
-        label: 'Name',
-        field: 'name',
-        sort: 'asc',
-        width: 150
-      },
-      {
-        label: 'Address',
-        field: 'address',
-        sort: 'asc',
-        width: 270
-      },
-      {
-        label: 'School',
-        field: 'school',
-        sort: 'asc',
-        width: 200
-      },
-      {
-        label: 'Email',
-        field: 'email',
-        sort: 'asc',
-        width: 100
-      },
-      {
-        label: 'Birth date',
-        field: 'birthDate',
-        sort: 'asc',
-        width: 150
-      },
-      {
-        label: 'Age',
-        field: 'age',
-        sort: 'asc',
-        width: 100
-      },
-      {
-        label: 'Sex',
-        field: 'sex',
-        width: 100
-      },
-      {
-        label: 'Phone',
-        field: 'phone',
-        width: 100
-      },
-      {
-        label: 'Edit',
-        field: 'edit',
-        width: 100
-      },
-      {
-        label: 'Delete',
-        field: 'delete',
-        width: 100
-      }
-    ],
-    rows: [
-      {
-        name: 'Andi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Budi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Charly',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Andi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Budi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Charly',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },{
-        name: 'Andi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Budi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Charly',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },{
-        name: 'Andi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Budi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Charly',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },{
-        name: 'Andi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Budi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Charly',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
-      },
-    ]
-  };
+import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 export default class studentList extends Component {
-    render() {
-        return(
-            <div>
-              <div class="box-header">
-                  <NavLink to="/user/add" class="btn btn-success"><i class="fa fa-plus"></i> Add User</NavLink>
-              </div>
-              {/* <MDBTable 
-              btn
-              striped
-              bordered
-              hover
-              paging
-              searching>  
-                <MDBTableHead columns={data.columns} />
-                <MDBTableBody rows={data.rows} />
-              </MDBTable> */}
-                <MDBDataTable
-                    striped
-                    bordered
-                    hover
-                    data={data}
-                    btn
-                />
-            </div>
-        )
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      users: []
     }
+    this.delete = this.delete.bind(this);
+  }
+
+  delete(id) {
+    axios.delete('http://localhost:8000/api/user/' + id)
+      .then(console.log('Deleted'))
+      .then(() => this.fetchData())
+      .catch(err => console.log(err))
+  }
+
+  componentDidMount = () => {
+    // ajax call
+    this.fetchData()
+  }
+
+  fetchData = () => {
+    fetch('http://localhost:8000/api/users')
+    .then(response => response.json())
+    .then((json) => {
+      this.setState({
+        users: json.data
+      })
+    })
+  }
+
+  data = (users) => {
+    const userDelete = this.delete
+
+    return ({
+      columns: [
+        {
+          label: 'Email',
+          field: 'email',
+          sort: 'asc',
+          width: 500
+        },
+        {
+          label: 'Username',
+          field: 'username',
+          sort: 'desc',
+          width: 500
+        },
+        {
+          label: 'Edit',
+          field: 'edit',
+          width: 10
+        },
+        {
+          label: 'Delete',
+          field: 'delete',
+          width: 10
+        }
+      ],
+      rows: (function () {
+        let rowData = []
+
+        users.map((data, index) => {
+          rowData.push({
+            email: data.email,
+            username: data.username,
+            edit: <NavLink
+              to={{
+                pathname: 'user/edit',
+                state: {
+                  userId: data.id,
+                  email: data.email,
+                  username: data.username
+                }
+              }}
+              className="btn btn-primary">Edit</NavLink>,
+            delete: <button onClick={() => userDelete(data.id)} className="btn btn-danger">Delete</button>
+          })
+        })
+
+        return rowData
+      }())
+    })
+  };
+
+
+  render() {
+    return (
+      <div>
+        <div class="box-header">
+          <NavLink to="/user/add" class="btn btn-success"><i class="fa fa-plus"></i> Add User</NavLink>
+        </div>
+
+        <MDBDataTable
+          striped
+          bordered
+          hover
+          data={this.data(this.state.users)}
+          btn
+        />
+      </div>
+    )
+  }
 }
 

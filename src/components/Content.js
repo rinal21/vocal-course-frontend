@@ -8,6 +8,7 @@ import StudentAdd from "../modules/student/Student-Add";
 
 import UserList from "../modules/user/User-List";
 import UserAdd from "../modules/user/User-Add";
+import UserEdit from "../modules/user/User-Edit";
 
 import ClassList from "../modules/class/Class-List";
 import ClassAdd from "../modules/class/Class-Add";
@@ -45,6 +46,7 @@ export default class Content extends Component {
                           <Route path="/student/add" component={StudentAdd} />
                           <Route exact path="/user" component={UserList} />
                           <Route exact path="/user/add" component={UserAdd} />
+                          <Route exact path="/user/edit" component={UserEdit} />
                           <Route exact path="/class" component={ClassList} />
                           <Route exact path="/class/add" component={ClassAdd} />
                           <Route exact path="/teacher" component={TeacherList} />
