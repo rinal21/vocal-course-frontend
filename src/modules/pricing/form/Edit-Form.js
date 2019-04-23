@@ -5,9 +5,11 @@ import { Redirect } from 'react-router-dom'
 import Select from 'react-select';
 
 import "react-datepicker/dist/react-datepicker.css";
-export default class pricingAdd extends Component {
+
+export default class pricingEdit extends Component {
   constructor(props) {
     super(props);
+
     this.onChangeClass = this.onChangeClass.bind(this);
     this.onChangePrice = this.onChangePrice.bind(this);
     this.onChangeMeetup = this.onChangeMeetup.bind(this);
@@ -20,6 +22,7 @@ export default class pricingAdd extends Component {
     this.state = {
       startDate: new Date(),
       classes: [],
+      datas: [],
       classId: '',
       price: '',
       meetup: '',
@@ -27,6 +30,9 @@ export default class pricingAdd extends Component {
       difficulty: '',
       teacher: '',
       participant: '',
+      difficultySelected: '',
+      teacherSelected: '',
+      participantSelected: '',
       selectedClass: null,
       redirect: false
     };
@@ -79,17 +85,44 @@ export default class pricingAdd extends Component {
       teacher: this.state.teacher,
       participant: this.state.participant
     };
-    axios.post('http://localhost:8000/api/pricing', obj)
+    axios.patch('http://localhost:8000/api/pricing/'+this.props.pricingId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));
   }
 
   componentDidMount = () => {
     // ajax call
+    this.fetchClasses()
     this.fetchData()
   }
 
   fetchData = () => {
+    const { pricingId } = this.props
+    fetch('http://localhost:8000/api/pricing/' + pricingId)
+      .then(response => response.json())
+      .then((json) => {
+        json.map((data, index) => {
+          this.setState({
+            selectedClass: [{
+              value: data.class_id,
+              label: data.class_name
+            }],
+            classId: data.class_id,
+            price: data.price,
+            meetup: data.total_meetup,
+            duration: data.duration,
+            difficulty: data.type_by_difficulty,
+            teacher: data.type_by_teacher,
+            participant: data.type_by_participant,
+          })
+        })
+        this.setState({
+          datas: json
+        })
+      })
+  }
+
+  fetchClasses = () => {
     fetch('http://localhost:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
@@ -122,6 +155,10 @@ export default class pricingAdd extends Component {
     )
   };
   render() {
+    console.log(this.state.datas)
+
+    const { teacher, difficulty, participant } = this.state
+
     const { redirect } = this.state;
     if (redirect) {
       return <Redirect to='/pricing' />;
@@ -206,7 +243,7 @@ export default class pricingAdd extends Component {
                       Type by difficulty
                     </label>
                     <label>: &nbsp;</label>
-                    <select class="form-control" onChange={this.onChangeDifficulty} style={{width: 192}}>
+                    <select class="form-control" onChange={this.onChangeDifficulty} value={difficulty}>
                       <option>Choose one..</option>
                       <option value="1">Basic</option>
                       <option value="2">Intermediate</option>
@@ -218,7 +255,7 @@ export default class pricingAdd extends Component {
                       Type by teacher
                     </label>
                     <label>: &nbsp;</label>
-                    <select class="form-control" onChange={this.onChangeTeacher} style={{width: 192}}>
+                    <select class="form-control" onChange={this.onChangeTeacher} value={teacher}>
                       <option>Choose one..</option>
                       <option value="1">Regular teacher class</option>
                       <option value="2">Senior teacher class</option>
@@ -229,7 +266,7 @@ export default class pricingAdd extends Component {
                       Type by participant
                     </label>
                     <label>: &nbsp;</label>
-                    <select class="form-control" onChange={this.onChangeParticipant} style={{width: 192}}>
+                    <select class="form-control" onChange={this.onChangeParticipant} value={participant}>
                       <option>Choose one..</option>
                       <option value="1">Private</option>
                       <option value="2">Semi Private</option>
