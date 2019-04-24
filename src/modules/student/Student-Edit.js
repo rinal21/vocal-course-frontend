@@ -1,17 +1,21 @@
 import React, { Component } from "react";
-import StudentAddForm from "./form/Add-Form"
+import StudentEditForm from "./form/Edit-Form"
 
-export default class studentAdd extends Component {
+
+export default class studentEdit extends Component {
     render() {
+        const { studentId } = this.props.location.state
+
         return(
             <div>
                 <div className="box-header with-border">
                     <h3>
-                        Add Student
+                        Edit Student
                       </h3>
                 </div>
                 <div className="box-body">
-                    <StudentAddForm />
+                    <StudentEditForm
+                        studentId={studentId} />
                 </div>
             </div>
         )

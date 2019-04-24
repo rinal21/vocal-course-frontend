@@ -7,11 +7,11 @@ import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import "react-datepicker/dist/react-datepicker.css";
 
-export default class studentAdd extends Component {
+export default class studentEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedBirthDate: new Date('2000-01-01'),
+      selectedBirthDate: new Date(),
       classes: [],
       teachers: [],
       classId: '',
@@ -22,7 +22,7 @@ export default class studentAdd extends Component {
       address: '',
       school: '',
       email: '',
-      // birthDate: '',
+      birthDate: '',
       age: '',
       selectedSex: '',
       cellPhone: '',
@@ -116,16 +116,61 @@ export default class studentAdd extends Component {
   }
 
   onChangeBirthDate = selectedBirthDate => {
-    // const formatBirthDate = moment(selectedBirthDate).format("DD-MM-YYYY");
+    const formatBirthDate = moment(selectedBirthDate).format("DD-MM-YYYY");
     this.setState({
+      birthDate: formatBirthDate,
       selectedBirthDate: selectedBirthDate
     });
+    
   }
 
   componentDidMount = () => {
     // ajax call
     this.fetchClasses()
     this.fetchTeachers()
+    this.fetchDatas()
+  }
+
+  fetchDatas = () => {
+    const { studentId } = this.props
+    fetch('http://localhost:8000/api/student/' + studentId)
+      .then(response => response.json())
+      .then((json) => {
+        json.map((data, index) => {
+          this.setState({
+            selectedClass: [{
+              value: data.class_id,
+              label: data.class_name
+            }],
+            selectedTeacher: [{
+              value: data.teacher_id,
+              label: data.teacher_name
+            }],
+            classId: data.class_id,
+            teacherId: data.teacher_id,
+            firstName: data.first_name,
+            middleName: data.middle_name,
+            lastName: data.last_name,
+            address: data.street_address,
+            school: data.school,
+            email: data.email,
+            selectedBirthDate: data.birth_date,
+            age: data.age,
+            selectedSex: data.sex,
+            cellPhone: data.cell_phone,
+            homePhone: data.home_phone_no,
+            responsible: data.person_responsible_for_bill,
+            selectedReason: data.reason_choose_us,
+            instructorAudition: data.instructor_audition,
+            result: data.audition_results,
+            days: data.result_days,
+            hours: data.result_hours,
+          })
+        })
+        this.setState({
+          datas: json
+        })
+      })
   }
 
   fetchClasses = () => {
@@ -203,7 +248,7 @@ export default class studentAdd extends Component {
       // selectedClass: null,
       // selectedTeacher: null,
     };
-    axios.post('http://localhost:8000/api/student', obj)
+    axios.patch('http://localhost:8000/api/student/'+this.props.studentId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));
   }
@@ -211,7 +256,7 @@ export default class studentAdd extends Component {
   render() {
     const { redirect } = this.state;
     if (redirect) {
-      return <Redirect to='/pricing' />;
+      return <Redirect to='/student' />;
     }
     return (
       <div>
@@ -482,10 +527,10 @@ export default class studentAdd extends Component {
                     </div>
 
                     <div className="form-group mb-2">
-                      <label for="homephone" class="mr-sm-2 text-left d-block" onChange={this.onChangeResult} style={{ width: 182 }}>
+                      <label for="homephone" class="mr-sm-2 text-left d-block" style={{ width: 182 }}>
                         Indicate audition results
                       </label>
-                      <select class="form-control" onChange={this.onChangeResult}>
+                      <select class="form-control" onChange={this.onChangeResult} value={this.state.result}>
                         <option value="">Choose One ..</option>
                         <option value="Basic 1">Basic 1</option>
                         <option value="Basic 2">Basic 2</option>

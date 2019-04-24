@@ -5,6 +5,7 @@ import About from "../modules/About";
 
 import StudentList from "../modules/student/Student-List";
 import StudentAdd from "../modules/student/Student-Add";
+import StudentEdit from "../modules/student/Student-Edit";
 
 import UserList from "../modules/user/User-List";
 import UserAdd from "../modules/user/User-Add";
@@ -45,7 +46,8 @@ export default class Content extends Component {
                   <Route exact path="/" component={Home} />
                   <Route path="/about" component={About} />
                   <Route exact path="/student" component={StudentList} />
-                  <Route path="/student/add" component={StudentAdd} />
+                  <Route exact path="/student/add" component={StudentAdd} />
+                  <Route exact path="/student/edit" component={StudentEdit} />
                   <Route exact path="/user" component={UserList} />
                   <Route exact path="/user/add" component={UserAdd} />
                   <Route exact path="/user/edit" component={UserEdit} />
@@ -74,5 +76,5 @@ export default class Content extends Component {
       </div>
 
     );
-    }
+  }
 }

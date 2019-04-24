@@ -88,8 +88,6 @@ export default class userList extends Component {
       }())
     })
   };
-
-
   render() {
     return (
       <div>
