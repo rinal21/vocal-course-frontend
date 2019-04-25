@@ -248,6 +248,7 @@ export default class studentEdit extends Component {
       // selectedClass: null,
       // selectedTeacher: null,
     };
+    console.log(obj)
     axios.patch('http://localhost:8000/api/student/'+this.props.studentId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));

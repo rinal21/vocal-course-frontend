@@ -163,11 +163,11 @@ export default class studentAdd extends Component {
     )
   }
 
-  dataTeachers = (classes) => {
+  dataTeachers = (teachers) => {
     return (
       function () {
         let rowData = []
-        classes.map((data) => {
+        teachers.map((data) => {
           rowData.push({
             value: data.id,
             label: data.name,
@@ -189,7 +189,7 @@ export default class studentAdd extends Component {
       address: this.state.address,
       school: this.state.school,
       email: this.state.email,
-      birthDate: this.state.selectedBirthDate,
+      birthDate: moment(this.state.selectedBirthDate).format("YYYY-MM-DD hh:mm:ss"),
       age: this.state.age,
       sex: this.state.selectedSex,      
       cellPhone: this.state.cellPhone,
@@ -203,6 +203,7 @@ export default class studentAdd extends Component {
       // selectedClass: null,
       // selectedTeacher: null,
     };
+    console.log(obj)
     axios.post('http://localhost:8000/api/student', obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));
@@ -211,7 +212,7 @@ export default class studentAdd extends Component {
   render() {
     const { redirect } = this.state;
     if (redirect) {
-      return <Redirect to='/pricing' />;
+      return <Redirect to='/student' />;
     }
     return (
       <div>
