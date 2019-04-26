@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Formik } from 'formik';
-import ReactAutocomplete from 'react-autocomplete'
+import axios from 'axios';
+import { Redirect } from 'react-router-dom'
+import Select from 'react-select';
+import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -8,18 +11,95 @@ export default class userAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: new Date(),
-      value1: '',
-      value2: ''
+      paymentDate: new Date(),
+      teachers: [],
+      teacherId: '',
+      selectedTeacher: '',
+      students: [],
+      studentId: '',
+      selectedStudent: '',
+      level: ''
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.onChangePaymentDate = this.onChangePaymentDate.bind(this);
+    this.onChangeStudents = this.onChangeStudents.bind(this);
+    this.onChangeTeacher = this.onChangeTeacher.bind(this);
+    this.onChangeLevel = this.onChangeLevel.bind(this);
   }
 
-  handleChange(date) {
+  onChangePaymentDate(date) {
     this.setState({
-      startDate: date
+      paymentDate: date
     });
   }
+
+  onChangeStudents = (selectedStudent) =>  {
+    this.setState({ selectedStudent });
+    this.setState({ studentId: selectedStudent.value})
+  }
+  onChangeTeacher = (selectedTeacher) =>  {
+    this.setState({ selectedTeacher });
+    this.setState({ teacherId: selectedTeacher.value})
+  }
+  onChangeLevel(e) {
+    this.setState({level: e.target.value})  
+  }
+
+  componentDidMount = () => {
+    // ajax call
+    this.fetchTeachers()
+    this.fetchStudents()
+  }
+
+  fetchTeachers = () => {
+    fetch('http://localhost:8000/api/teachers')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          teachers: json.data
+        })
+      })
+  }
+  
+  fetchStudents = () => {
+    fetch('http://localhost:8000/api/students')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          students: json.data
+        })
+      })
+  }
+
+  dataStudents = (students) => {
+    return (
+      function () {
+        let rowData = []
+        students.map((data) => {
+          rowData.push({
+            value: data.id,
+            label: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
+          })
+        })
+        return rowData
+      }()
+    )
+  }
+
+  dataTeachers = (teachers) => {
+    return (
+      function () {
+        let rowData = []
+        teachers.map((data) => {
+          rowData.push({
+            value: data.id,
+            label: data.name,
+          })
+        })
+        return rowData
+      }()
+    )
+  }
+
   render() {
     return (
       <div>
@@ -60,68 +140,61 @@ export default class userAdd extends Component {
                       Teacher Name
                   </label>
                     <label>: &nbsp;</label>
-                    <ReactAutocomplete
-                      items={[
-                        { id: '1', label: 'Pak Andi' },
-                        { id: '2', label: 'Pak Budi' },
-                        { id: '3', label: 'Pak Charly' },
-                      ]}
-                      shouldItemRender={(item, value1) => item.label.toLowerCase().indexOf(value1.toLowerCase()) > -1}
-                      getItemValue={item => item.label}
-                      renderInput={props => <input {...props} className='form-control'/>}
-                      renderItem={(item, highlighted) =>
-                        <div
-                          key={item.id}
-                          style={{ backgroundColor: highlighted ? '#ddd' : 'transparent' }}
-                        >
-                          {item.label}
-                        </div>
-                      }
-                      value={this.state.value1}
-                      onChange={e => this.setState({ value1: e.target.value })}
-                      onSelect={value1 => this.setState({ value1 })}
-                    />
+                    <div style={{ display: 'inline-block', width: 223.2 }}>
+                      <Select
+                        value={this.state.selectedTeacher}
+                        onChange={this.onChangeTeacher}
+                        options={this.dataTeachers(this.state.teachers)}
+                      />
+                    </div>
                   </div>
                   <div className="form-inline mb-2">
                     <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Student Name
                   </label>
                     <label>: &nbsp;</label>
-                    <ReactAutocomplete
-                      items={[
-                        { id: '1', label: 'Andi' },
-                        { id: '2', label: 'Budi' },
-                        { id: '3', label: 'Charly' },
-                      ]}
-                      shouldItemRender={(item, value2) => item.label.toLowerCase().indexOf(value2.toLowerCase()) > -1}
-                      getItemValue={item => item.label}
-                      renderInput={props => <input {...props} className='form-control'/>}
-                      renderItem={(item, highlighted) =>
-                        <div
-                          key={item.id}
-                          style={{ backgroundColor: highlighted ? '#ddd' : 'transparent' }}
-                        >
-                          {item.label}
-                        </div>
-                      }
-                      value={this.state.value2}
-                      onChange={e => this.setState({ value2: e.target.value })}
-                      onSelect={value2 => this.setState({ value2 })}
-                    />
+                    <div style={{ display: 'inline-block', width: 223.2 }}>
+                      <Select
+                        value={this.state.selectedStudent}
+                        onChange={this.onChangeStudents}
+                        options={this.dataStudents(this.state.students)}
+                      />
+                    </div>
                   </div>
                   <div className="form-inline mb-2">
                     <label for="level" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Level
                     </label>
                     <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="level" />
+                    <select class="form-control" onChange={this.onChangeLevel} style={{width: 223.2}}>
+                      <option value="">Choose One ..</option>
+                      <option value="Basic 1">Basic 1</option>
+                      <option value="Basic 2">Basic 2</option>
+                      <option value="Middle 1">Middle 1</option>
+                      <option value="Middle 2">Middle 2</option>
+                      <option value="Pre Advance">Pre Advance</option>
+                      <option value="Advance 1">Advance 1</option>
+                      <option value="Advance 2">Advance 2</option>
+                      <option value="Executive">Executive</option>
+                      <option value="Group">Group</option>
+                      <option value="Other">Other</option>
+                    </select>
                   </div>
                   <div className="form-inline mb-2">
                     <label for="date" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Payment Date
                     </label>
                     <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="date" />
+                    <DatePicker
+                        selected={this.state.paymentDate}
+                        onChange={this.onChangePaymentDate}
+                        dateFormat="d-MM-yyyy"
+                        peekNextMonth
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
+                        className="form-control"
+                      />
                   </div>
                   <div className="form-inline mb-2">
                     <label for="receipt" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
