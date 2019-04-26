@@ -1,27 +1,111 @@
 import React, { Component } from 'react';
 import { Formik } from 'formik';
 import DatePicker from "react-datepicker";
-import ReactAutocomplete from 'react-autocomplete'
+import Select from 'react-select';
+import moment from "moment";
+import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 import "react-datepicker/dist/react-datepicker.css";
 
 
-export default class userAdd extends Component {
+export default class studentAttendances extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: new Date(),
-      value: '',
+      dateAttend: new Date(),
+      students: [],
+      studentId: '',
+      selectedStudent: null,
+      // absent: '',
+      // permission: '',
+      selectedAttendance: '',
+      redirect: false
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.onChangeDateAttend = this.onChangeDateAttend.bind(this);
+    this.onChangeStudents = this.onChangeStudents.bind(this);
+    // this.onChangeAbsent = this.onChangeAbsent.bind(this);
+    // this.onChangePermission = this.onChangePermission.bind(this);
+    this.onChangeAttendance = this.onChangeAttendance.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  handleChange(date) {
+  onChangeDateAttend = dateAttend => {
     this.setState({
-      startDate: date
+      dateAttend: dateAttend
     });
+    
   }
+
+  onChangeStudents = (selectedStudent) =>  {
+    this.setState({ selectedStudent });
+    this.setState({ studentId: selectedStudent.value})
+  }
+  onChangeAttendance = changeEvent => {
+    this.setState({selectedAttendance: changeEvent.target.value})  
+  }
+  // onChangeAbsent = changeEvent => {
+  //   this.setState({absent: changeEvent.target.value})  
+  // }
+  // onChangePermission = changeEvent => {
+  //   this.setState({permission: changeEvent.target.value})  
+  // }
+  // onChangeAttend = changeEvent => {
+  //   this.setState({attend: changeEvent.target.value})  
+  // }
+
+  componentDidMount = () => {
+    // ajax call
+    this.fetchStudents()
+  }
+
+  fetchStudents = () => {
+    fetch('http://localhost:8000/api/students')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          students: json.data
+        })
+      })
+  }
+
+  dataStudents = (students) => {
+    return (
+      function () {
+        let rowData = []
+        students.map((data) => {
+          rowData.push({
+            value: data.id,
+            label: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
+          })
+        })
+        return rowData
+      }()
+    )
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+    const obj = {
+      studentId: this.state.studentId,
+      dateAttend: moment(this.state.dateAttend).format("YYYY-MM-DD hh:mm:ss"),
+      status: this.state.selectedAttendance,
+      // permission: this.state.permission,
+      // attend: this.state.attend,
+    };
+    axios.post('http://localhost:8000/api/studentAttend', obj)
+        .then(res => console.log(res.data))
+        .then(() => this.setState({ redirect: true }))
+        .catch(error => {
+          console.log(error.message);
+        })
+  }
+
   render() {
+    const { redirect } = this.state;
+    if (redirect) {
+      return <Redirect to='/student-attendance' />;
+    }
     return (
       <div>
         <Formik
@@ -55,15 +139,16 @@ export default class userAdd extends Component {
             /* and other goodies */
           }) => (
               <div>
-                <form action="/action_page.php">
+                <form onSubmit={this.onSubmit}>
                   <div className="form-inline mb-2">
                     <label for="date" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Date
                     </label>
                     <label>: &nbsp;</label>
                     <DatePicker
-                        selected={this.state.startDate}
-                        onChange={this.handleChange}
+                        selected={this.state.dateAttend}
+                        onChange={this.onChangeDateAttend}
+                        dateFormat="d-MM-yyyy"
                         peekNextMonth
                         dropdownMode="select"
                         className="form-control"
@@ -74,59 +159,55 @@ export default class userAdd extends Component {
                       Student Name
                   </label>
                     <label>: &nbsp;</label>
-                    <ReactAutocomplete
-                      items={[
-                        { id: '1', label: 'Andi' },
-                        { id: '2', label: 'Budi' },
-                        { id: '3', label: 'Charly' },
-                      ]}
-                      shouldItemRender={(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) > -1}
-                      getItemValue={item => item.label}
-                      renderInput={props => <input {...props} className='form-control'/>}
-                      renderItem={(item, highlighted) =>
-                        <div
-                          key={item.id}
-                          style={{ backgroundColor: highlighted ? '#ddd' : 'transparent' }}
-                        >
-                          {item.label}
-                        </div>
-                      }
-                      value={this.state.value}
-                      onChange={e => this.setState({ value: e.target.value })}
-                      onSelect={value => this.setState({ value })}
-                    />
+                    <div style={{ display: 'inline-block', width: 223.2 }}>
+                      <Select
+                        value={this.state.selectedStudent}
+                        onChange={this.onChangeStudents}
+                        options={this.dataStudents(this.state.students)}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-inline mb-2">
+                    <label for="absent" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Attendance
+                  </label>
+                    <label>: &nbsp;</label>
+                    <label class="radio-inline mr-2">
+                      <input type="radio" name="optattandance" value="1"
+                        checked={this.state.selectedAttendance === "1"}
+                        onChange={this.onChangeAttendance} />Absent
+                    </label>
+                    <label class="radio-inline mr-2"><input type="radio" name="optattandance" value="2"
+                      checked={this.state.selectedAttendance === "2"}
+                      onChange={this.onChangeAttendance} />With Permission
+                    </label>
+                    <label class="radio-inline"><input type="radio" name="optattandance" value="3"
+                      checked={this.state.selectedAttendance === "3"}
+                      onChange={this.onChangeAttendance} />Attend
+                    </label>
                   </div>
                   {/* <div className="form-inline mb-2">
-                    <label for="absent" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Is Attend
-                  </label>
-                    <label>: &nbsp;</label>
-                    <input type="checkbox" name="vehicle1" value="Bike" /> I have a bike<br />
-                    <input type="checkbox" name="vehicle2" value="Car" /> I have a car<br />
-                    <input type="checkbox" name="vehicle3" value="Boat" checked /> I have a boat<br />
-                  </div> */}
-                  <div className="form-inline mb-2">
-                    <label for="absent" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Is Absent
-                  </label>
-                    <label>: &nbsp;</label>
-                    <select class="form-control">
-                      <option value="">Choose one</option>
-                      <option value="false">No</option>
-                      <option value="true">Yes</option>
-                    </select>
-                  </div>
-                  <div className="form-inline mb-2">
                     <label for="permission" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Is With Permission
                   </label>
                     <label>: &nbsp;</label>
-                    <select class="form-control">
-                      <option value="">Choose one</option>
-                      <option value="false">No</option>
-                      <option value="true">Yes</option>
-                    </select>
+                    <label>
+                      <input type="checkbox" name="permission" value="1" class="checkbox"
+                        checked={this.state.permission === "1"}
+                        onChange={this.onChangePermission} />
+                    </label>
                   </div>
+                  <div className="form-inline mb-2">
+                    <label for="permission" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Is Attend
+                  </label>
+                    <label>: &nbsp;</label>
+                    <label>
+                      <input type="checkbox" name="attend" value="1" class="checkbox"
+                        checked={this.state.attend === "1"}
+                        onChange={this.onChangeAttend} />
+                    </label>
+                  </div> */}
                   
                   <div className="form-group">
                     <button type="submit" class="btn btn-primary mb-2">
