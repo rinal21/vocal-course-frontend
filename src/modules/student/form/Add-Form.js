@@ -91,10 +91,14 @@ export default class studentAdd extends Component {
     this.setState({selectedSex: changeEvent.target.value})  
   }
   onChangeHomePhone(e) {
-    this.setState({homePhone: e.target.value})  
+    if (/^\d+$/.test(e.target.value) || e.target.value == ''){
+      this.setState({homePhone: e.target.value})  
+    }
   }
   onChangeCellPhone(e) {
-    this.setState({cellPhone: e.target.value})  
+    if (/^\d+$/.test(e.target.value) || e.target.value == '') {
+      this.setState({cellPhone: e.target.value})
+    }
   }
   onChangeResponsible(e) {
     this.setState({responsible: e.target.value})  
@@ -109,10 +113,14 @@ export default class studentAdd extends Component {
     this.setState({result: e.target.value})  
   }
   onChangeDays(e) {
-    this.setState({days: e.target.value})  
+    if (/^\d+$/.test(e.target.value) || e.target.value == '') {
+      this.setState({days: e.target.value})
+    }
   }
   onChangeHours(e) {
-    this.setState({hours: e.target.value})  
+    if (/^\d+$/.test(e.target.value) || e.target.value == '') {
+      this.setState({hours: e.target.value})
+    }
   }
 
   onChangeBirthDate = selectedBirthDate => {

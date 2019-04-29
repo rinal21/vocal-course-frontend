@@ -57,6 +57,7 @@ export default class studentAttendances extends Component {
   componentDidMount = () => {
     // ajax call
     this.fetchStudents()
+    this.fetchDatas()
   }
 
   fetchStudents = () => {
@@ -65,6 +66,29 @@ export default class studentAttendances extends Component {
       .then((json) => {
         this.setState({
           students: json.data
+        })
+      })
+  }
+
+  fetchDatas = () => {
+    const { studentId } = this.props
+    fetch('http://localhost:8000/api/student_attendance/' + studentId)
+      .then(response => response.json())
+      .then((json) => {
+        json.map((data, index) => {
+          this.setState({
+              selectedStudent: [{
+                  value: data.student_id,
+                  label: data.first_name + ' ' + data.middle_name + ' ' + data.last_name
+              }],
+              studentId: data.student_id,
+              dateAttend: data.date,
+              selectedAttendance: data.status,
+              redirect: false
+          })
+        })
+        this.setState({
+          datas: json
         })
       })
   }
@@ -93,7 +117,7 @@ export default class studentAttendances extends Component {
       // permission: this.state.permission,
       // attend: this.state.attend,
     };
-    axios.post('http://localhost:8000/api/student_attendance', obj)
+    axios.patch('http://localhost:8000/api/student_attendance/'+this.props.studentId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }))
         .catch(error => {
@@ -174,41 +198,18 @@ export default class studentAttendances extends Component {
                     <label>: &nbsp;</label>
                     <label class="radio-inline mr-2">
                       <input type="radio" name="optattandance" value="1"
-                        checked={this.state.selectedAttendance === "1"}
+                        checked={this.state.selectedAttendance == 1}
                         onChange={this.onChangeAttendance} />Absent
                     </label>
                     <label class="radio-inline mr-2"><input type="radio" name="optattandance" value="2"
-                      checked={this.state.selectedAttendance === "2"}
+                      checked={this.state.selectedAttendance == 2}
                       onChange={this.onChangeAttendance} />With Permission
                     </label>
                     <label class="radio-inline"><input type="radio" name="optattandance" value="3"
-                      checked={this.state.selectedAttendance === "3"}
+                      checked={this.state.selectedAttendance == 3}
                       onChange={this.onChangeAttendance} />Attend
                     </label>
                   </div>
-                  {/* <div className="form-inline mb-2">
-                    <label for="permission" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Is With Permission
-                  </label>
-                    <label>: &nbsp;</label>
-                    <label>
-                      <input type="checkbox" name="permission" value="1" class="checkbox"
-                        checked={this.state.permission === "1"}
-                        onChange={this.onChangePermission} />
-                    </label>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="permission" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Is Attend
-                  </label>
-                    <label>: &nbsp;</label>
-                    <label>
-                      <input type="checkbox" name="attend" value="1" class="checkbox"
-                        checked={this.state.attend === "1"}
-                        onChange={this.onChangeAttend} />
-                    </label>
-                  </div> */}
-                  
                   <div className="form-group">
                     <button type="submit" class="btn btn-primary mb-2">
                       Submit

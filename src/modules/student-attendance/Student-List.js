@@ -3,6 +3,7 @@ import { MDBDataTable  } from 'mdbreact';
 import { NavLink } from "react-router-dom";
 import moment from "moment";
 import DatePicker from "react-datepicker";
+import axios from 'axios';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -14,7 +15,7 @@ export default class studentList extends Component {
       students: [],
       filterDate: new Date()
     }
-    // this.delete = this.delete.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
   onChangeFilterDate = filterDate => {
@@ -24,12 +25,12 @@ export default class studentList extends Component {
     this.filterData(filterDate)
   }
 
-  // delete(id) {
-  //   axios.delete('http://localhost:8000/api/teacher/' + id)
-  //     .then(console.log('Deleted'))
-  //     .then(() => this.fetchData())
-  //     .catch(err => console.log(err))
-  // }
+  delete(id) {
+    axios.delete('http://localhost:8000/api/student_attendance/' + id)
+      .then(console.log('Deleted'))
+      .then(() => this.fetchData())
+      .catch(err => console.log(err))
+  }
 
   componentDidMount = () => {
     // ajax call
@@ -37,7 +38,7 @@ export default class studentList extends Component {
   }
 
   fetchData = () => {
-    fetch('http://localhost:8000/api/studentsAttend')
+    fetch('http://localhost:8000/api/student_attendances')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -47,7 +48,7 @@ export default class studentList extends Component {
   }
 
   filterData = (filterDate) => {
-    fetch('http://localhost:8000/api/studentsAttend/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
+    fetch('http://localhost:8000/api/student_attendances/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -57,7 +58,7 @@ export default class studentList extends Component {
   }
 
   data = (students) => {
-    const checklist = this.checklistIcon
+    const studentAttendanceDelete = this.delete
 
     return ({
       columns: [
@@ -96,11 +97,11 @@ export default class studentList extends Component {
           field: 'edit',
           width: 100
         },
-        // {
-        //   label: 'Delete',
-        //   field: 'delete',
-        //   width: 100
-        // }
+        {
+          label: 'Delete',
+          field: 'delete',
+          width: 100
+        }
       ],
       rows: (function () {
         let rowData = []
@@ -114,15 +115,13 @@ export default class studentList extends Component {
             attend: data.status == 3 && <i class="fa fa-check" style={{ float: "right", position: "relative", right: "50%" }}></i>,
             edit: <NavLink
               to={{
-                pathname: 'studentAttend/edit',
+                pathname: 'student-attendance/edit',
                 state: {
-                  // teacherId: data.id,
-                  // name: data.name,
-                  // salary: data.salary
+                  studentId: data.id,
                 }
               }}
               className="btn btn-primary">Edit</NavLink>,
-            // delete: <button onClick={() => teacherDelete(data.id)} className="btn btn-danger">Delete</button>
+            delete: <button onClick={() => studentAttendanceDelete(data.id)} className="btn btn-danger">Delete</button>
           })
         })
 

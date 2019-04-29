@@ -32,9 +32,11 @@ import TeacherAttendanceEdit from "../modules/teacher-attendance/Teacher-Edit";
 
 import StudentAttendanceList from "../modules/student-attendance/Student-List";
 import StudentAttendanceAdd from "../modules/student-attendance/Student-Add";
+import StudentAttendanceEdit from "../modules/student-attendance/Student-Edit";
 
 import TransactionList from "../modules/transaction/Transaction-List";
 import TransactionAdd from "../modules/transaction/Transaction-Add";
+import studentAttendances from '../modules/student-attendance/form/Add-Form';
 export default class Content extends Component {
   render() {
     return (
@@ -68,6 +70,7 @@ export default class Content extends Component {
                   <Route exact path="/teacher-attendance/edit" component={TeacherAttendanceEdit} />
                   <Route exact path="/student-attendance" component={StudentAttendanceList} />
                   <Route exact path="/student-attendance/add" component={StudentAttendanceAdd} />
+                  <Route exact path="/student-attendance/edit" component={StudentAttendanceEdit} />
                   <Route exact path="/transaction" component={TransactionList} />
                   <Route exact path="/transaction/add" component={TransactionAdd} />
                 </div>

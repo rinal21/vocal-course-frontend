@@ -44,7 +44,6 @@ export default class classList extends Component {
         {
           label: 'Name',
           field: 'name',
-          sort: 'asc',
           width: 150
         },
         {
@@ -93,6 +92,7 @@ export default class classList extends Component {
                     hover
                     data={this.data(this.state.classes)}
                     btn
+                    sorting={false}
                 />
             </div>
         )
