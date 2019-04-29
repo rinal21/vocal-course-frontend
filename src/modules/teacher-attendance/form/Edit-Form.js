@@ -8,7 +8,7 @@ import { Redirect } from 'react-router-dom';
 
 import "react-datepicker/dist/react-datepicker.css";
 
-export default class teacherAttendanceAdd extends Component {
+export default class teacherAttendanceEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -55,6 +55,7 @@ export default class teacherAttendanceAdd extends Component {
   componentDidMount = () => {
     // ajax call
     this.fetchTeachers()
+    this.fetchDatas()
   }
 
   fetchTeachers = () => {
@@ -63,6 +64,29 @@ export default class teacherAttendanceAdd extends Component {
       .then((json) => {
         this.setState({
           teachers: json.data
+        })
+      })
+  }
+
+  fetchDatas = () => {
+    const { teacherId } = this.props
+    fetch('http://localhost:8000/api/teacher_attendance/' + teacherId)
+      .then(response => response.json())
+      .then((json) => {
+        json.map((data, index) => {
+          this.setState({
+              selectedTeacher: [{
+                  value: data.teacher_id,
+                  label: data.teacher_name
+              }],
+              teacherId: data.teacher_id,
+              dateAttend: data.date,
+              selectedAttendance: data.status,
+              redirect: false
+          })
+        })
+        this.setState({
+          datas: json
         })
       })
   }
@@ -172,15 +196,15 @@ export default class teacherAttendanceAdd extends Component {
                     <label>: &nbsp;</label>
                     <label class="radio-inline mr-2">
                       <input type="radio" name="optattandance" value="1"
-                        checked={this.state.selectedAttendance === "1"}
+                        checked={this.state.selectedAttendance === 1}
                         onChange={this.onChangeAttendance} />Absent
                     </label>
                     <label class="radio-inline mr-2"><input type="radio" name="optattandance" value="2"
-                      checked={this.state.selectedAttendance === "2"}
+                      checked={this.state.selectedAttendance === 2}
                       onChange={this.onChangeAttendance} />With Permission
                     </label>
                     <label class="radio-inline"><input type="radio" name="optattandance" value="3"
-                      checked={this.state.selectedAttendance === "3"}
+                      checked={this.state.selectedAttendance === 3}
                       onChange={this.onChangeAttendance} />Attend
                     </label>
                   </div>

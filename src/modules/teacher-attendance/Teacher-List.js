@@ -3,6 +3,9 @@ import { MDBDataTable  } from 'mdbreact';
 import { NavLink } from "react-router-dom";
 import moment from "moment";
 import DatePicker from "react-datepicker";
+import axios from 'axios';
+
+import "react-datepicker/dist/react-datepicker.css";
 
 export default class teacherList extends Component {
   constructor(props) {
@@ -12,7 +15,7 @@ export default class teacherList extends Component {
       teachers: [],
       filterDate: new Date()
     }
-    // this.delete = this.delete.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
   onChangeFilterDate = filterDate => {
@@ -22,12 +25,12 @@ export default class teacherList extends Component {
     this.filterData(filterDate)
   }
 
-  // delete(id) {
-  //   axios.delete('http://localhost:8000/api/teacher/' + id)
-  //     .then(console.log('Deleted'))
-  //     .then(() => this.fetchData())
-  //     .catch(err => console.log(err))
-  // }
+  delete(id) {
+    axios.delete('http://localhost:8000/api/teacher_attendance/' + id)
+      .then(console.log('Deleted'))
+      .then(() => this.fetchData())
+      .catch(err => console.log(err))
+  }
 
   componentDidMount = () => {
     // ajax call
@@ -35,7 +38,7 @@ export default class teacherList extends Component {
   }
 
   fetchData = () => {
-    fetch('http://localhost:8000/api/teachersAttend')
+    fetch('http://localhost:8000/api/teacher_attendances')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -45,7 +48,7 @@ export default class teacherList extends Component {
   }
 
   filterData = (filterDate) => {
-    fetch('http://localhost:8000/api/teachersAttend/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
+    fetch('http://localhost:8000/api/teacher_attendances/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -55,7 +58,7 @@ export default class teacherList extends Component {
   }
 
   data = (teachers) => {
-    const checklist = this.checklistIcon
+    const teacherAttendanceDelete = this.delete
 
     return ({
       columns: [
@@ -94,11 +97,11 @@ export default class teacherList extends Component {
           field: 'edit',
           width: 100
         },
-        // {
-        //   label: 'Delete',
-        //   field: 'delete',
-        //   width: 100
-        // }
+        {
+          label: 'Delete',
+          field: 'delete',
+          width: 100
+        }
       ],
       rows: (function () {
         let rowData = []
@@ -112,15 +115,13 @@ export default class teacherList extends Component {
             attend: data.status == 3 && <i class="fa fa-check" style={{ float: "right", position: "relative", right: "50%" }}></i>,
             edit: <NavLink
               to={{
-                pathname: 'teacherAttend/edit',
+                pathname: 'teacher-attendance/edit',
                 state: {
-                  // teacherId: data.id,
-                  // name: data.name,
-                  // salary: data.salary
+                  teacherId: data.id,
                 }
               }}
               className="btn btn-primary">Edit</NavLink>,
-            // delete: <button onClick={() => teacherDelete(data.id)} className="btn btn-danger">Delete</button>
+            delete: <button onClick={() => teacherAttendanceDelete(data.id)} className="btn btn-danger">Delete</button>
           })
         })
 
