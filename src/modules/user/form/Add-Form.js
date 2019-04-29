@@ -116,7 +116,7 @@ export default class userAdd extends Component {
                       Password
                     </label>
                     <input 
-                    type="text" 
+                    type="password" 
                     class="form-control mr-sm-2 w-25" 
                     id="password"
                     value={this.state.password}
