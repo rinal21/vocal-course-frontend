@@ -115,7 +115,7 @@ export default class teacherAttendanceEdit extends Component {
       // vacation: this.state.vacation,
       // attend: this.state.attend,
     };
-    axios.post('http://localhost:8000/api/teacher_attendance', obj)
+    axios.patch('http://localhost:8000/api/teacher_attendance/'+this.props.teacherId, obj)
       .then(res => console.log(res.data))
       .then(() => this.setState({ redirect: true }))
       .catch(error => {
@@ -196,41 +196,18 @@ export default class teacherAttendanceEdit extends Component {
                     <label>: &nbsp;</label>
                     <label class="radio-inline mr-2">
                       <input type="radio" name="optattandance" value="1"
-                        checked={this.state.selectedAttendance === 1}
+                        checked={this.state.selectedAttendance == 1}
                         onChange={this.onChangeAttendance} />Absent
                     </label>
                     <label class="radio-inline mr-2"><input type="radio" name="optattandance" value="2"
-                      checked={this.state.selectedAttendance === 2}
+                      checked={this.state.selectedAttendance == 2}
                       onChange={this.onChangeAttendance} />With Permission
                     </label>
                     <label class="radio-inline"><input type="radio" name="optattandance" value="3"
-                      checked={this.state.selectedAttendance === 3}
+                      checked={this.state.selectedAttendance == 3}
                       onChange={this.onChangeAttendance} />Attend
                     </label>
                   </div>
-                  {/* <div className="form-inline mb-2">
-                    <label for="permission" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Is Vacation
-                  </label>
-                    <label>: &nbsp;</label>
-                    <label>
-                      <input type="checkbox" name="vacation" value="1" class="checkbox"
-                        checked={this.state.vacation === "1"}
-                        onChange={this.onChangeVacation} />
-                    </label>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="permission" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Is Attend
-                  </label>
-                    <label>: &nbsp;</label>
-                    <label>
-                      <input type="checkbox" name="attend" value="1" class="checkbox"
-                        checked={this.state.attend === "1"}
-                        onChange={this.onChangeAttend} />
-                    </label>
-                  </div> */}
-                  
                   <div className="form-group">
                     <button type="submit" class="btn btn-primary mb-2">
                       Submit
