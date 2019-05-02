@@ -8,7 +8,7 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-export default class transactionAdd extends Component {
+export default class transactionEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -69,6 +69,7 @@ export default class transactionAdd extends Component {
     this.fetchTeachers()
     this.fetchStudents()
     this.fetchPricings()
+    this.fetchDatas()
   }
 
   fetchTeachers = () => {
@@ -114,6 +115,62 @@ export default class transactionAdd extends Component {
       })
   }
 
+    fetchDatas = () => {
+        const { transactionId } = this.props
+        fetch('http://localhost:8000/api/transaction/' + transactionId)
+            .then(response => response.json())
+            .then((json) => {
+                json.map((data, index) => {
+                    if (data.type_by_difficulty == 1) {
+                        data.type_by_difficulty = 'Basic'
+                    } else if (data.type_by_difficulty == 2) {
+                        data.type_by_difficulty = 'Intermediate'
+                    } else if (data.type_by_participant == 3) {
+                        data.type_by_difficulty = 'Pre adv & adv'
+                    }
+
+                    //   if(data.type_by_teacher == 1){
+                    //     data.type_by_teacher = 'Regular teacher class'
+                    //   }else if(data.type_by_participant == 2){
+                    //     data.type_by_teacher = 'Senior teacher class'
+                    //   }
+
+                    if (data.type_by_participant == 1) {
+                        data.type_by_participant = 'Private'
+                    } else if (data.type_by_participant == 2) {
+                        data.type_by_participant = 'Semi Private'
+                    } else if (data.type_by_participant == 3) {
+                        data.type_by_participant = 'Group'
+                    }
+                    this.setState({
+                        selectedStudent: [{
+                            value: data.student_id,
+                            label: data.first_name + ' ' + data.middle_name + ' ' + data.last_name
+                        }],
+                        selectedTeacher: [{
+                            value: data.teacher_id,
+                            label: data.teacher_name
+                        }],
+                        selectedPricing: [{
+                            value: data.pricing_id,
+                            label: data.class_name + ' - ' + data.type_by_difficulty + ' - ' + data.type_by_participant
+                        }],
+                        pricingId: data.pricing_id,
+                        teacherId: data.teacher_id,
+                        studentId: data.student_id,
+                        paymentDate: data.payment_date,
+                        receiptNumber: data.receipt_number,
+                        cost: data.cost,
+                        royalty: data.royalty,
+                        note: data.note,
+                    })
+                })
+                // this.setState({
+                //   datas: json
+                // })
+            })
+    }
+
   dataStudents = (students) => {
     return (
       function () {
@@ -157,11 +214,11 @@ export default class transactionAdd extends Component {
             data.type_by_difficulty = 'Pre adv & adv'
           }
 
-          if(data.type_by_teacher == 1){
-            data.type_by_teacher = 'Regular teacher class'
-          }else if(data.type_by_participant == 2){
-            data.type_by_teacher = 'Senior teacher class'
-          }
+        //   if(data.type_by_teacher == 1){
+        //     data.type_by_teacher = 'Regular teacher class'
+        //   }else if(data.type_by_participant == 2){
+        //     data.type_by_teacher = 'Senior teacher class'
+        //   }
 
           if(data.type_by_participant == 1){
             data.type_by_participant = 'Private'
@@ -193,7 +250,7 @@ export default class transactionAdd extends Component {
       note: this.state.note
     };
     console.log(obj)
-    axios.post('http://localhost:8000/api/transaction', obj)
+      axios.patch('http://localhost:8000/api/transaction/' + this.props.transactionId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));
   }

@@ -36,6 +36,8 @@ import StudentAttendanceEdit from "../modules/student-attendance/Student-Edit";
 
 import TransactionList from "../modules/transaction/Transaction-List";
 import TransactionAdd from "../modules/transaction/Transaction-Add";
+import TransactionEdit from "../modules/transaction/Transaction-Edit";
+
 import studentAttendances from '../modules/student-attendance/form/Add-Form';
 export default class Content extends Component {
   render() {
@@ -73,6 +75,7 @@ export default class Content extends Component {
                   <Route exact path="/student-attendance/edit" component={StudentAttendanceEdit} />
                   <Route exact path="/transaction" component={TransactionList} />
                   <Route exact path="/transaction/add" component={TransactionAdd} />
+                  <Route exact path="/transaction/edit" component={TransactionEdit} />
                 </div>
               </div>
             </div>
