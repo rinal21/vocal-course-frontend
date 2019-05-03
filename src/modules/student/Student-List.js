@@ -93,13 +93,9 @@ export default class studentList extends Component {
           width: 10
         },
         {
-          label: 'Edit',
-          field: 'edit',
-          width: 10
-        },
-        {
-          label: 'Delete',
-          field: 'delete',
+          label: 'Action',
+          field: 'action',
+          sort: 'disabled',
           width: 10
         }
       ],
@@ -116,15 +112,18 @@ export default class studentList extends Component {
             homePhone: data.home_phone_no,
             school: data.school,
             email: data.email,
-            edit: <NavLink
-              to={{
-                pathname: 'student/edit',
-                state: {
-                  studentId: data.id
-                }
-              }}
-              className="btn btn-primary">Edit</NavLink>,
-            delete: <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger">Delete</button>
+            action: 
+              <div>
+                <NavLink
+                  to={{
+                    pathname: 'student/edit',
+                    state: {
+                      studentId: data.id
+                    }
+                  }}
+                  className="btn btn-primary">Edit</NavLink>
+                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+              </div>
           })
         })
         return rowData

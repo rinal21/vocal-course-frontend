@@ -88,15 +88,11 @@ export default class teacherList extends Component {
           width: 500
         },
         {
-          label: 'Edit',
-          field: 'edit',
+          label: 'Action',
+          field: 'action',
+          sort: 'disabled',
           width: 10
         },
-        {
-          label: 'Delete',
-          field: 'delete',
-          width: 10
-        }
       ],
       rows: (function () {
         let rowData = []
@@ -109,15 +105,18 @@ export default class teacherList extends Component {
             payment: data.payment_date,
             receipt: data.receipt_number,
             cost: data.cost,
-            edit: <NavLink
-              to={{
-                pathname: 'transaction/edit',
-                state: {
-                  transactionId: data.id
-                }
-              }}
-              className="btn btn-primary">Edit</NavLink>,
-            delete: <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger">Delete</button>
+            edit:
+              <div>
+                <NavLink
+                  to={{
+                    pathname: 'transaction/edit',
+                    state: {
+                      transactionId: data.id
+                    }
+                  }}
+                  className="btn btn-primary">Edit</NavLink>
+                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+              </div>
           })
         })
 
@@ -137,7 +136,6 @@ export default class teacherList extends Component {
           hover
           data={this.data(this.state.transactions)}
           btn
-          sort={false}
         />
         <MDBContainer>
           <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>

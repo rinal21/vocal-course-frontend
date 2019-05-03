@@ -69,13 +69,9 @@ export default class teacherList extends Component {
           width: 500
         },
         {
-          label: 'Edit',
-          field: 'edit',
-          width: 10
-        },
-        {
-          label: 'Delete',
-          field: 'delete',
+          label: 'Action',
+          field: 'action',
+          sort: 'disabled',
           width: 10
         }
       ],
@@ -87,17 +83,20 @@ export default class teacherList extends Component {
             name: data.name,
             student: data.students_count,
             salary: data.salary,
-            edit: <NavLink
-              to={{
-                pathname: 'teacher/edit',
-                state: {
-                  teacherId: data.id,
-                  name: data.name,
-                  salary: data.salary
-                }
-              }}
-              className="btn btn-primary">Edit</NavLink>,
-            delete: <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger">Delete</button>
+            action:
+              <div>
+                <NavLink
+                  to={{
+                    pathname: 'teacher/edit',
+                    state: {
+                      teacherId: data.id,
+                      name: data.name,
+                      salary: data.salary
+                    }
+                  }}
+                  className="btn btn-primary">Edit</NavLink>
+                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+              </div>
           })
         })
 

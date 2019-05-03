@@ -103,13 +103,9 @@ export default class studentList extends Component {
           width: 150
         },
         {
-          label: 'Edit',
-          field: 'edit',
-          width: 100
-        },
-        {
-          label: 'Delete',
-          field: 'delete',
+          label: 'Action',
+          field: 'action',
+          sort: 'disabled',
           width: 100
         }
       ],
@@ -123,15 +119,18 @@ export default class studentList extends Component {
             absent: data.status == 1 && <i class="fa fa-check" style={{ float: "right", position: "relative", right: "50%" }}></i>,
             permission: data.status == 2 && <i class="fa fa-check" style={{ float: "right", position: "relative", right: "50%" }}></i>,
             attend: data.status == 3 && <i class="fa fa-check" style={{ float: "right", position: "relative", right: "50%" }}></i>,
-            edit: <NavLink
-              to={{
-                pathname: 'student-attendance/edit',
-                state: {
-                  studentId: data.id,
-                }
-              }}
-              className="btn btn-primary">Edit</NavLink>,
-            delete: <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger">Delete</button>
+            action:
+              <div>
+                <NavLink
+                  to={{
+                    pathname: 'student-attendance/edit',
+                    state: {
+                      studentId: data.id,
+                    }
+                  }}
+                  className="btn btn-primary">Edit</NavLink>
+                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+              </div>
           })
         })
 

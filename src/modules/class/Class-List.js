@@ -56,13 +56,9 @@ export default class classList extends Component {
           width: 150
         },
         {
-          label: 'Edit',
-          field: 'edit',
-          width: 100
-        },
-        {
-          label: 'Delete',
-          field: 'delete',
+          label: 'Action',
+          field: 'action',
+          sort: 'disable',
           width: 100
         }
       ],
@@ -72,16 +68,19 @@ export default class classList extends Component {
         classes.map((data, index) => {
           rowData.push({
             name: data.name,
-            edit: <NavLink
-              to={{
-                pathname: 'class/edit',
-                state: {
-                  classId: data.id,
-                  name: data.name
-                }
-              }}
-              className="btn btn-primary">Edit</NavLink>,
-            delete: <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger">Delete</button>
+            action:
+              <div>
+                <NavLink
+                  to={{
+                    pathname: 'class/edit',
+                    state: {
+                      classId: data.id,
+                      name: data.name
+                    }
+                  }}
+                  className="btn btn-primary">Edit</NavLink>
+                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+              </div>,
           })
         })
 

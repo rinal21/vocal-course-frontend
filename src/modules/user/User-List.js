@@ -63,13 +63,9 @@ export default class userList extends Component {
           width: 500
         },
         {
-          label: 'Edit',
-          field: 'edit',
-          width: 10
-        },
-        {
-          label: 'Delete',
-          field: 'delete',
+          label: 'Action',
+          field: 'action',
+          sort: 'disabled',
           width: 10
         }
       ],
@@ -80,17 +76,20 @@ export default class userList extends Component {
           rowData.push({
             email: data.email,
             username: data.username,
-            edit: <NavLink
-              to={{
-                pathname: 'user/edit',
-                state: {
-                  userId: data.id,
-                  email: data.email,
-                  username: data.username
-                }
-              }}
-              className="btn btn-primary">Edit</NavLink>,
-            delete: <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger">Delete</button>
+            edit:
+              <div>
+                <NavLink
+                  to={{
+                    pathname: 'user/edit',
+                    state: {
+                      userId: data.id,
+                      email: data.email,
+                      username: data.username
+                    }
+                  }}
+                  className="btn btn-primary">Edit</NavLink>
+                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+              </div>
           })
         })
 

@@ -93,13 +93,9 @@ export default class pricingList extends Component {
           width: 500
         },
         {
-          label: 'Edit',
-          field: 'edit',
-          width: 10
-        },
-        {
-          label: 'Delete',
-          field: 'delete',
+          label: 'Action',
+          field: 'action',
+          sort: 'disabled',
           width: 10
         }
       ],
@@ -136,15 +132,18 @@ export default class pricingList extends Component {
             difficulty: data.type_by_difficulty,
             teacher: data.type_by_teacher,
             participant: data.type_by_participant,
-            edit: <NavLink
-              to={{
-                pathname: 'pricing/edit',
-                state: {
-                  pricingId: data.id
-                }
-              }}
-              className="btn btn-primary">Edit</NavLink>,
-            delete: <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger">Delete</button>
+            action:
+              <div>
+                <NavLink
+                  to={{
+                    pathname: 'pricing/edit',
+                    state: {
+                      pricingId: data.id
+                    }
+                  }}
+                  className="btn btn-primary">Edit</NavLink>
+                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+              </div>
           })
         })
 

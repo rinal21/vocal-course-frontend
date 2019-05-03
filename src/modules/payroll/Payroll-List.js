@@ -8,36 +8,36 @@ const data = {
         label: 'Name',
         field: 'name',
         sort: 'asc',
-        width: 150
+        width: 1500
       },
       {
         label: 'Address',
         field: 'address',
-        sort: 'asc',
+        // sort: 'asc',
         width: 270
       },
       {
         label: 'School',
         field: 'school',
-        sort: 'asc',
+        // sort: 'asc',
         width: 200
       },
       {
         label: 'Email',
         field: 'email',
-        sort: 'asc',
+        // sort: 'asc',
         width: 100
       },
       {
         label: 'Birth date',
         field: 'birthDate',
-        sort: 'asc',
+        // sort: 'asc',
         width: 150
       },
       {
         label: 'Age',
         field: 'age',
-        sort: 'asc',
+        // sort: 'asc',
         width: 100
       },
       {
@@ -51,15 +51,16 @@ const data = {
         width: 100
       },
       {
-        label: 'Edit',
-        field: 'edit',
+        label: 'Action',
+        field: 'action',
+        sort: 'disabled',
         width: 100
       },
-      {
-        label: 'Delete',
-        field: 'delete',
-        width: 100
-      }
+      // {
+      //   label: 'Delete',
+      //   field: 'delete',
+      //   width: 100
+      // }
     ],
     rows: [
       {
@@ -71,8 +72,9 @@ const data = {
         age: '17',
         sex: 'M',
         phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        edit: <div><button className="btn btn-primary">Edit</button>
+        <button className="btn btn-danger" style={{position: "relative", left: 25}}>Delete</button></div>,
+        // //delete: <button className="btn btn-danger">Delete</button>
       },
       {
         name: 'Budi',
@@ -84,7 +86,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },
       {
         name: 'Charly',
@@ -96,7 +98,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },
       {
         name: 'Andi',
@@ -108,7 +110,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },
       {
         name: 'Budi',
@@ -120,7 +122,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },
       {
         name: 'Charly',
@@ -132,7 +134,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },{
         name: 'Andi',
         address: 'Jln Mawar Raya No. 9',
@@ -143,7 +145,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },
       {
         name: 'Budi',
@@ -155,7 +157,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },
       {
         name: 'Charly',
@@ -167,7 +169,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },{
         name: 'Andi',
         address: 'Jln Mawar Raya No. 9',
@@ -178,7 +180,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },
       {
         name: 'Budi',
@@ -190,7 +192,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },
       {
         name: 'Charly',
@@ -202,7 +204,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },{
         name: 'Andi',
         address: 'Jln Mawar Raya No. 9',
@@ -213,7 +215,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },
       {
         name: 'Budi',
@@ -225,7 +227,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },
       {
         name: 'Charly',
@@ -237,7 +239,7 @@ const data = {
         sex: 'M',
         phone: '0987654321',
         edit: <button className="btn btn-primary">Edit</button>,
-        delete: <button className="btn btn-danger">Delete</button>
+        //delete: <button className="btn btn-danger">Delete</button>
       },
     ]
   };
@@ -250,11 +252,13 @@ export default class classList extends Component {
                   <NavLink to="/payroll/add" class="btn btn-info" color="#fff"><i class="fa fa-print"></i> Generate</NavLink>
               </div>
                 <MDBDataTable
+                    sortable={true}
+                    fixed={false}
+                    // order={['name', 'desc' ]}
                     striped
                     bordered
                     hover
                     data={data}
-                    btn
                 />
             </div>
         )
