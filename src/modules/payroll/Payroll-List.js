@@ -1,255 +1,185 @@
 import React, { Component } from "react";
-import { MDBBtn, MDBTable, MDBTableBody, MDBTableHead, MDBDataTable  } from 'mdbreact';
+import { MDBDataTable  } from 'mdbreact';
 import { NavLink } from "react-router-dom";
 
-const data = {
-    columns: [
-      {
-        label: 'Name',
-        field: 'name',
-        sort: 'asc',
-        width: 1500
-      },
-      {
-        label: 'Address',
-        field: 'address',
-        // sort: 'asc',
-        width: 270
-      },
-      {
-        label: 'School',
-        field: 'school',
-        // sort: 'asc',
-        width: 200
-      },
-      {
-        label: 'Email',
-        field: 'email',
-        // sort: 'asc',
-        width: 100
-      },
-      {
-        label: 'Birth date',
-        field: 'birthDate',
-        // sort: 'asc',
-        width: 150
-      },
-      {
-        label: 'Age',
-        field: 'age',
-        // sort: 'asc',
-        width: 100
-      },
-      {
-        label: 'Sex',
-        field: 'sex',
-        width: 100
-      },
-      {
-        label: 'Phone',
-        field: 'phone',
-        width: 100
-      },
-      {
-        label: 'Action',
-        field: 'action',
-        sort: 'disabled',
-        width: 100
-      },
-      // {
-      //   label: 'Delete',
-      //   field: 'delete',
-      //   width: 100
-      // }
-    ],
-    rows: [
-      {
-        name: 'Andi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <div><button className="btn btn-primary">Edit</button>
-        <button className="btn btn-danger" style={{position: "relative", left: 25}}>Delete</button></div>,
-        // //delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Budi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Charly',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Andi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Budi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Charly',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },{
-        name: 'Andi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Budi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Charly',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },{
-        name: 'Andi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Budi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Charly',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },{
-        name: 'Andi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Budi',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },
-      {
-        name: 'Charly',
-        address: 'Jln Mawar Raya No. 9',
-        school: 'Edinburgh',
-        email: 'email@email.com',
-        birthDate: '2011/04/25',
-        age: '17',
-        sex: 'M',
-        phone: '0987654321',
-        edit: <button className="btn btn-primary">Edit</button>,
-        //delete: <button className="btn btn-danger">Delete</button>
-      },
-    ]
-  };
+import axios from 'axios';
+import moment from "moment";
+import DatePicker from "react-datepicker";
 
 export default class classList extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      payrolls: [],
+      fromDate: new Date(),
+      toDate: new Date(),
+      deleteConfirm: false,
+      deleteId : ''
+    }
+    this.delete = this.delete.bind(this);
+    this.filterData = this.filterData.bind(this);
+  }
+
+  onChangeFromDate = (fromDate) => {
+    this.setState({
+      fromDate: fromDate
+    });
+  }
+
+  onChangeToDate = (toDate) => {
+    this.setState({
+      toDate: toDate
+    });
+  }
+
+  filterData = (fromDate, toDate) => {
+    const from = moment(fromDate).format("YYYY-MM-DD")
+    const to = moment(toDate).format("YYYY-MM-DD")
+    fetch('http://localhost:8000/api/payrolls?from_date=' + from + '&to_date=' + to)
+      .then(response => response.json())
+      .then((json) => {
+        console.log(json)
+        this.setState({
+          payrolls: json
+        })
+      })
+  }
+
+  delete(id) {
+    axios.delete('http://localhost:8000/api/payroll/' + id)
+      .then(console.log('Deleted'))
+      .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
+      .then(() => this.fetchData())
+      .catch(err => console.log(err))
+  }
+
+  toggleDeleteConfirmation = (id) => {
+    this.setState({
+      deleteConfirm: !this.state.deleteConfirm,
+      deleteId: id
+    });
+  }
+
+  data = (payrolls) => {
+    const deleteConfirm = this.toggleDeleteConfirmation
+
+    return ({
+      columns: [
+        {
+          label: 'Date',
+          field: 'date',
+          sort: 'asc',
+          width: 500
+        },
+        {
+          label: 'Teacher\'s Name',
+          field: 'teacher',
+          sort: 'desc',
+          width: 500
+        },
+        {
+          label: 'Students Count',
+          field: 'count',
+          sort: 'desc',
+          width: 500
+        },
+        {
+          label: 'Total Salary',
+          field: 'salary',
+          sort: 'desc',
+          width: 500
+        },
+        {
+          label: 'Total Vacation',
+          field: 'vacation',
+          sort: 'desc',
+          width: 500
+        },
+        {
+          label: 'Total Absent',
+          field: 'Absent',
+          sort: 'desc',
+          width: 500
+        },
+        {
+          label: 'Total',
+          field: 'total',
+          sort: 'desc',
+          width: 500
+        },
+        {
+          label: 'Action',
+          field: 'action',
+          sort: 'disabled',
+          width: 10
+        },
+      ],
+      rows: (function () {
+        let rowData = []
+
+        payrolls.map((data, index) => {
+          rowData.push({
+            date: data.date,
+            teacher: data.name,
+            count: data.students_count,
+            salary: data.total_salary,
+            vacation: data.total_vacation,
+            absent: data.total_absent,
+            total: data.total,
+            edit:
+              <div>
+                <NavLink
+                  to={{
+                    pathname: 'payroll/edit',
+                    state: {
+                      payrollId: data.id
+                    }
+                  }}
+                  className="btn btn-primary">Edit</NavLink>
+                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+              </div>
+          })
+        })
+
+        return rowData
+      }())
+    })
+  };
     render() {
-        return(
-            <div>
-              <div class="box-header">
-                  <NavLink to="/payroll/add" class="btn btn-info" color="#fff"><i class="fa fa-print"></i> Generate</NavLink>
+      return (
+        <div>
+          <div>
+              <div class="form-inline">
+                <DatePicker
+                  selected={this.state.fromDate}
+                  onChange={this.onChangeFromDate}
+                  selectsStart
+                  startDate={this.state.fromDate}
+                  endDate={this.state.toDate}
+                  dateFormat="d-MM-yyyy"
+                  peekNextMonth
+                  dropdownMode="select"
+                  className="form-control"
+                />
+                <label style={{ marginLeft: 10, marginRight: 10 }}>-</label>
+                <DatePicker
+                  selected={this.state.toDate}
+                  onChange={this.onChangeToDate}
+                  selectsEnd
+                  startDate={this.state.fromDate}
+                  endDate={this.state.toDate}
+                  dateFormat="d-MM-yyyy"
+                  peekNextMonth
+                  dropdownMode="select"
+                  className="form-control"
+                />
+
+                <button type="button" class="btn btn-info" color="#fff" style={{marginLeft: 10}} onClick={() => this.filterData(this.state.fromDate, this.state.toda)} ><i class="fa fa-print"></i>
+                  Generate
+                </button>
+              </div>
+                  
               </div>
                 <MDBDataTable
                     sortable={true}
@@ -258,7 +188,7 @@ export default class classList extends Component {
                     striped
                     bordered
                     hover
-                    data={data}
+                    data={this.data(this.state.payrolls )}
                 />
             </div>
         )
