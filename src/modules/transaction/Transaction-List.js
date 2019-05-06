@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { MDBDataTable, MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter  } from 'mdbreact';
 import { NavLink } from "react-router-dom";
 import axios from 'axios';
+import moment from "moment";
+import DatePicker from "react-datepicker";
 
 
 export default class teacherList extends Component {
@@ -10,10 +12,28 @@ export default class teacherList extends Component {
 
     this.state = {
       transactions: [],
+      filterDate: new Date(),
       deleteConfirm: false,
       deleteId : ''
     }
     this.delete = this.delete.bind(this);
+  }
+
+  onChangeFilterDate = filterDate => {
+    this.setState({
+      filterDate: filterDate
+    });
+    this.filterData(filterDate)
+  }
+
+  filterData = (filterDate) => {
+    fetch('http://localhost:8000/api/transactions/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          transactions: json
+        })
+      })
   }
 
   delete(id) {
@@ -125,10 +145,20 @@ export default class teacherList extends Component {
     })
   };
   render() {
+    console.log(this.state.filterDate)
     return (
       <div>
         <div class="box-header">
           <NavLink to="/transaction/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Transaction</NavLink>
+          <div class="float-right">
+            <DatePicker
+              selected={this.state.filterDate}
+              onChange={this.onChangeFilterDate}
+              dateFormat="MM/yyyy"
+              showMonthYearPicker
+              className="form-control"
+            />
+          </div>
         </div>
         <MDBDataTable
           striped
