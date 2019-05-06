@@ -1,92 +1,66 @@
 import React, { Component } from 'react';
-import { Formik } from 'formik';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
 
 export default class classEdit extends Component {
     constructor(props) {
-        const { name } = props
         super(props);
-
-        this.onChangeName = this.onChangeName.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-
         this.state = {
-            name: name,
             redirect: false
         };
     }
 
-    onChangeName(e) {
-        this.setState({
-            name: e.target.value
-        });
-    }
-
-    onSubmit(e) {
-        e.preventDefault();
-        const obj = {
-            name: this.state.name,
-        };
-        axios.patch('http://localhost:8000/api/class/' + this.props.classId, obj)
-            .then(res => console.log(res.data))
-            .then(() => this.setState({ redirect: true }));
-    }
     render() {
         const { redirect } = this.state;
+        const { name, classId } = this.props
         if (redirect) {
             return <Redirect to='/class' />;
         }
 
+        const ClassSchema = Yup.object().shape({
+            NameClass: Yup.string()
+                .min(2, 'Too Short!')
+                .max(50, 'Too Long!')
+                .required('Required')
+        });
         return (
             <div>
                 <Formik
-                    initialValues={{ email: "", password: "" }}
-                    validate={values => {
-                        let errors = {};
-                        if (!values.email) {
-                            errors.email = "Required";
-                        } else if (
-                            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                        ) {
-                            errors.email = "Invalid email address";
-                        }
-                        return errors;
-                    }}
-                    onSubmit={(values, { setSubmitting }) => {
-                        setTimeout(() => {
-                            alert(JSON.stringify(values, null, 2));
-                            setSubmitting(false);
-                        }, 400);
-                    }}
-                >
+                    initialValues={{ NameClass: name }}
+                    validationSchema={ClassSchema}
+                    onSubmit={values => {
+                        const obj = {
+                            name: values.NameClass,
+                        };
+                        axios.patch('http://localhost:8000/api/class/' + classId, obj)
+                            .then(res => console.log(res.data))
+                            .then(() => this.setState({ redirect: true }));
+
+                    }}>
                     {({
-                        values,
                         errors,
                         touched,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        isSubmitting
-                        /* and other goodies */
                     }) => (
                             <div>
-                                <form  onSubmit={this.onSubmit} >
+                                <Form >
                                     <div className="form-group mb-2">
                                         <label for="name" class="mr-sm-2 text-left d-block">
                                             Name
-                                        </label>
-                                        <input type="text" class="form-control mr-sm-2 w-25" id="name" 
-                                        value={this.state.name}
-                                        onChange={this.onChangeName}/>
+                                    </label>
+                                        <Field type="text" class="form-control mr-sm-2 w-25" name="NameClass" />
+                                        {errors.NameClass && touched.NameClass ? (
+                                            <div style={{ color: 'red' }}>{errors.NameClass}</div>
+                                        ) : null}
                                     </div>
 
                                     <div className="form-group">
                                         <button type="submit" class="btn btn-primary mb-2">
                                             Submit
-                                        </button>
+                                    </button>
                                     </div>
-                                </form>
+                                </Form>
                             </div>
                         )}
                 </Formik>

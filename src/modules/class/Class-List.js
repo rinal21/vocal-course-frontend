@@ -91,8 +91,8 @@ export default class classList extends Component {
     render() {
         return(
             <div>
-              <div class="box-header">
-                  <NavLink to="/class/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Class</NavLink>
+              <div className="box-header">
+                  <NavLink to="/class/add" className="btn btn-success"><i className="fa fa-plus"></i> Add Class</NavLink>
               </div>
                 <MDBDataTable
                     striped
@@ -100,7 +100,6 @@ export default class classList extends Component {
                     hover
                     data={this.data(this.state.classes)}
                     btn
-                    sorting={false}
                 />
             
             <MDBContainer>
