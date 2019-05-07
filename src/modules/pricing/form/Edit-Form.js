@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Formik } from 'formik';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
 import Select from 'react-select';
@@ -11,13 +12,9 @@ export default class pricingEdit extends Component {
     super(props);
 
     this.onChangeClass = this.onChangeClass.bind(this);
-    this.onChangePrice = this.onChangePrice.bind(this);
-    this.onChangeMeetup = this.onChangeMeetup.bind(this);
-    this.onChangeDuration = this.onChangeDuration.bind(this);
     this.onChangeDifficulty = this.onChangeDifficulty.bind(this);
     this.onChangeTeacher = this.onChangeTeacher.bind(this);
     this.onChangeParticipant = this.onChangeParticipant.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
       startDate: new Date(),
@@ -33,6 +30,7 @@ export default class pricingEdit extends Component {
       difficultySelected: '',
       teacherSelected: '',
       participantSelected: '',
+      isLoaded: false,
       selectedClass: null,
       redirect: false
     };
@@ -42,21 +40,6 @@ export default class pricingEdit extends Component {
   onChangeClass = (selectedClass) =>  {
     this.setState({ selectedClass });
     this.setState({ classId: selectedClass.value})
-  }
-  onChangePrice(e) {
-    this.setState({
-      price: e.target.value
-    })  
-  }
-  onChangeMeetup(e) {
-    this.setState({
-      meetup: e.target.value
-    })
-  }
-  onChangeDuration(e) {
-    this.setState({
-      duration: e.target.value
-    });
   }
   onChangeDifficulty(e) {
     this.setState({
@@ -119,6 +102,9 @@ export default class pricingEdit extends Component {
         this.setState({
           datas: json
         })
+        this.setState({
+          isLoaded: true
+        })
       })
   }
 
@@ -155,136 +141,155 @@ export default class pricingEdit extends Component {
     )
   };
   render() {
-    console.log(this.state.datas)
-
     const { teacher, difficulty, participant } = this.state
 
     const { redirect } = this.state;
     if (redirect) {
       return <Redirect to='/pricing' />;
-    }
+    }const PricingSchema = Yup.object().shape({
+      price: Yup.number()
+        .min(100000, 'Too Few!')
+        .max(1000000, 'Too Much!')
+        .required('Required'),
+      meetup: Yup.number()
+        .min(1, 'Too Few!')
+        .max(10, 'Too Much!')
+        .required('Required'),
+      duration: Yup.number()
+        .min(20, 'Too Short!')
+        .max(1000, 'Too Long!')
+        .required('Required'),
+
+    });
+
     return (
       <div>
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          validate={values => {
-            let errors = {};
-            if (!values.email) {
-              errors.email = "Required";
-            } else if (
-              !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-            ) {
-              errors.email = "Invalid email address";
-            }
-            return errors;
-          }}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 400);
-          }}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting
-            /* and other goodies */
-          }) => (
-              <div>
-                <form onSubmit={this.onSubmit}>
-                  <div className="form-inline mb-2">
-                    <label for="class" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Class
+        {this.state.isLoaded && (
+          <Formik
+            initialValues={{
+              classId: '',
+              price: this.state.price,
+              meetup: this.state.meetup,
+              duration: this.state.duration,
+              difficulty: '',
+              teacher: '',
+              participant: ''
+            }}
+            validationSchema={PricingSchema}
+            onSubmit={values => {
+              const obj = {
+                classId: this.state.classId,
+                price: values.price,
+                meetup: values.meetup,
+                duration: values.duration,
+                difficulty: this.state.difficulty,
+                teacher: this.state.teacher,
+                participant: this.state.participant
+              };
+              axios.patch('http://localhost:8000/api/pricing/' + this.props.pricingId, obj)
+                .then(res => console.log(res.data))
+                .then(() => this.setState({ redirect: true }));
+
+            }}
+          >
+            {({
+              errors,
+              touched,
+              values,
+            }) => (
+                <div>
+                  <Form>
+                    <div className="form-inline mb-2">
+                      <label for="class" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Class
                     </label>
-                    <label>: &nbsp;</label>
-                    <div style={{ display: 'inline-block', width: 223.2 }}>
-                      <Select
-                        value={this.state.selectedClass}
-                        onChange={this.onChangeClass}
-                        options={this.data(this.state.classes)}
-                      />
+                      <label>: &nbsp;</label>
+                      <div style={{ display: 'inline-block', width: 223.2 }}>
+                        <Select
+                          value={this.state.selectedClass}
+                          onChange={this.onChangeClass}
+                          options={this.data(this.state.classes)}
+                        />
+                      </div>
+
+                    </div>
+                    <div className="form-inline mb-2">
+                      <label for="price" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Price
+                </label>
+                      <label>: &nbsp;</label>
+                      <Field type="text" class="form-control mr-sm-2 w-25" name="price" value={(/^\d+$/.test(values.price) || values.price == '') ? values.price : ''} />
+                      {errors.price && touched.price ? (
+                        <div style={{ color: 'red' }}>{errors.price}</div>
+                      ) : null}
+                    </div>
+                    <div className="form-inline mb-2">
+                      <label for="totalMeetup" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Total Meetup
+                </label>
+                      <label>: &nbsp;</label>
+                      <Field type="text" class="form-control mr-sm-2 w-25" name="meetup" value={(/^\d+$/.test(values.meetup) || values.meetup == '') ? values.meetup : ''} />
+                      {errors.meetup && touched.meetup ? (
+                        <div style={{ color: 'red' }}>{errors.meetup}</div>
+                      ) : null}
+                    </div>
+                    <div className="form-inline mb-2">
+                      <label for="duration" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Duration
+                </label>
+                      <label>: &nbsp;</label>
+                      <Field type="text" class="form-control mr-sm-2 w-25" name="duration" value={(/^\d+$/.test(values.duration) || values.duration == '') ? values.duration : ''} />
+                      {errors.duration && touched.duration ? (
+                        <div style={{ color: 'red' }}>{errors.duration}</div>
+                      ) : null}
+                    </div>
+                    <div className="form-inline mb-2">
+                      <label for="difficulty" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Type by difficulty
+                    </label>
+                      <label>: &nbsp;</label>
+                      <select class="form-control" onChange={this.onChangeDifficulty} style={{ width: 192 }} value={difficulty}>
+                        <option>Choose one..</option>
+                        <option value="1">Basic</option>
+                        <option value="2">Intermediate</option>
+                        <option value="3">Pre adv & adv</option>
+                      </select>
+                    </div>
+                    <div className="form-inline mb-2">
+                      <label for="teacher" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Type by teacher
+                    </label>
+                      <label>: &nbsp;</label>
+                      <select class="form-control" onChange={this.onChangeTeacher} style={{ width: 192 }} value={teacher}>
+                        <option>Choose one..</option>
+                        <option value="1">Regular teacher class</option>
+                        <option value="2">Senior teacher class</option>
+                      </select>
+                    </div>
+                    <div className="form-inline mb-2">
+                      <label for="participant" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Type by participant
+                    </label>
+                      <label>: &nbsp;</label>
+                      <select class="form-control" onChange={this.onChangeParticipant} style={{ width: 192 }} value={participant}>
+                        <option>Choose one..</option>
+                        <option value="1">Private</option>
+                        <option value="2">Semi Private</option>
+                        <option value="3">Group</option>
+                      </select>
                     </div>
 
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="price" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Price
-                </label>
-                    <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="price" 
-                    value={this.state.price}
-                    onChange={this.onChangePrice}/>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="totalMeetup" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Total Meetup
-                </label>
-                    <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="totalMeetup" 
-                    value={this.state.meetup}
-                    onChange={this.onChangeMeetup}/>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="duration" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Duration
-                </label>
-                    <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="duration" 
-                    value={this.state.duration}
-                    onChange={this.onChangeDuration}/>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="difficulty" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Type by difficulty
-                    </label>
-                    <label>: &nbsp;</label>
-                    <select class="form-control" onChange={this.onChangeDifficulty} value={difficulty}>
-                      <option>Choose one..</option>
-                      <option value="1">Basic</option>
-                      <option value="2">Intermediate</option>
-                      <option value="3">Pre adv & adv</option>
-                    </select>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="teacher" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Type by teacher
-                    </label>
-                    <label>: &nbsp;</label>
-                    <select class="form-control" onChange={this.onChangeTeacher} value={teacher}>
-                      <option>Choose one..</option>
-                      <option value="1">Regular teacher class</option>
-                      <option value="2">Senior teacher class</option>
-                    </select>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="participant" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Type by participant
-                    </label>
-                    <label>: &nbsp;</label>
-                    <select class="form-control" onChange={this.onChangeParticipant} value={participant}>
-                      <option>Choose one..</option>
-                      <option value="1">Private</option>
-                      <option value="2">Semi Private</option>
-                      <option value="3">Group</option>
-                    </select>
-                  </div>
-
-                  <div className="form-group">
-                    <button type="submit" class="btn btn-primary mb-2">
-                      Submit
-                </button>
-                  </div>
-                </form>
-              </div>
-            )}
-        </Formik>
+                    <div className="form-group">
+                      <button type="submit" class="btn btn-primary mb-2">
+                        Submit
+                      </button>
+                    </div>
+                  </Form>
+                </div>
+              )}
+          </Formik>
+        )}
       </div>
     )
   }
 }
-

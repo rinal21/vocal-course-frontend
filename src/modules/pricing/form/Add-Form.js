@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Formik } from 'formik';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
 import Select from 'react-select';
@@ -9,21 +10,14 @@ export default class pricingAdd extends Component {
   constructor(props) {
     super(props);
     this.onChangeClass = this.onChangeClass.bind(this);
-    this.onChangePrice = this.onChangePrice.bind(this);
-    this.onChangeMeetup = this.onChangeMeetup.bind(this);
-    this.onChangeDuration = this.onChangeDuration.bind(this);
     this.onChangeDifficulty = this.onChangeDifficulty.bind(this);
     this.onChangeTeacher = this.onChangeTeacher.bind(this);
     this.onChangeParticipant = this.onChangeParticipant.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
       startDate: new Date(),
       classes: [],
       classId: '',
-      price: '',
-      meetup: '',
-      duration: '',
       difficulty: '',
       teacher: '',
       participant: '',
@@ -36,21 +30,6 @@ export default class pricingAdd extends Component {
   onChangeClass = (selectedClass) =>  {
     this.setState({ selectedClass });
     this.setState({ classId: selectedClass.value})
-  }
-  onChangePrice(e) {
-    this.setState({
-      price: e.target.value
-    })  
-  }
-  onChangeMeetup(e) {
-    this.setState({
-      meetup: e.target.value
-    })
-  }
-  onChangeDuration(e) {
-    this.setState({
-      duration: e.target.value
-    });
   }
   onChangeDifficulty(e) {
     this.setState({
@@ -66,22 +45,6 @@ export default class pricingAdd extends Component {
     this.setState({
       participant: e.target.value
     })
-  }
-
-  onSubmit(e) {
-    e.preventDefault();
-    const obj = {
-      classId: this.state.classId,
-      price: this.state.price,
-      meetup: this.state.meetup,
-      duration: this.state.duration,
-      difficulty: this.state.difficulty,
-      teacher: this.state.teacher,
-      participant: this.state.participant
-    };
-    axios.post('http://localhost:8000/api/pricing', obj)
-        .then(res => console.log(res.data))
-        .then(() => this.setState({ redirect: true }));
   }
 
   componentDidMount = () => {
@@ -116,7 +79,6 @@ export default class pricingAdd extends Component {
             label: data.name,
           })
         })
-
         return rowData
       }()
     )
@@ -126,40 +88,58 @@ export default class pricingAdd extends Component {
     if (redirect) {
       return <Redirect to='/pricing' />;
     }
+    const PricingSchema = Yup.object().shape({
+      price: Yup.number()
+        .min(100000, 'Too Few!')
+        .max(1000000, 'Too Much!')
+        .required('Required'),
+      meetup: Yup.number()
+        .min(1, 'Too Few!')
+        .max(10, 'Too Much!')
+        .required('Required'),
+      duration: Yup.number()
+        .min(20, 'Too Short!')
+        .max(1000, 'Too Long!')
+        .required('Required'),
+
+    });
+
     return (
       <div>
         <Formik
-          initialValues={{ email: "", password: "" }}
-          validate={values => {
-            let errors = {};
-            if (!values.email) {
-              errors.email = "Required";
-            } else if (
-              !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-            ) {
-              errors.email = "Invalid email address";
-            }
-            return errors;
-          }}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 400);
+          initialValues={{
+            classId: '',
+            price: '',
+            meetup: '',
+            duration: '',
+            difficulty: '',
+            teacher: '',
+            participant: ''
+           }}
+          validationSchema={PricingSchema}
+          onSubmit={values => {
+            const obj = {
+              classId: this.state.classId,
+              price: values.price,
+              meetup: values.meetup,
+              duration: values.duration,
+              difficulty: this.state.difficulty,
+              teacher: this.state.teacher,
+              participant: this.state.participant
+            };
+            axios.post('http://localhost:8000/api/pricing', obj)
+                .then(res => console.log(res.data))
+                .then(() => this.setState({ redirect: true }));
+
           }}
         >
           {({
-            values,
             errors,
             touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting
-            /* and other goodies */
+            values,
           }) => (
               <div>
-                <form onSubmit={this.onSubmit}>
+                <Form>
                   <div className="form-inline mb-2">
                     <label for="class" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Class
@@ -179,27 +159,30 @@ export default class pricingAdd extends Component {
                       Price
                 </label>
                     <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="price" 
-                    value={this.state.price}
-                    onChange={this.onChangePrice}/>
+                    <Field type="text" class="form-control mr-sm-2 w-25" name="price" value={(/^\d+$/.test(values.price) || values.price == '') ? values.price : ''} />
+                    {errors.price && touched.price ? (
+                      <div style={{ color: 'red' }}>{errors.price}</div>
+                    ) : null}
                   </div>
                   <div className="form-inline mb-2">
                     <label for="totalMeetup" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Total Meetup
                 </label>
                     <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="totalMeetup" 
-                    value={this.state.meetup}
-                    onChange={this.onChangeMeetup}/>
+                    <Field type="text" class="form-control mr-sm-2 w-25" name="meetup" value={(/^\d+$/.test(values.meetup) || values.meetup == '') ? values.meetup : ''} />
+                    {errors.meetup && touched.meetup ? (
+                      <div style={{ color: 'red' }}>{errors.meetup}</div>
+                    ) : null}
                   </div>
                   <div className="form-inline mb-2">
                     <label for="duration" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Duration
                 </label>
                     <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="duration" 
-                    value={this.state.duration}
-                    onChange={this.onChangeDuration}/>
+                    <Field type="text" class="form-control mr-sm-2 w-25" name="duration" value={(/^\d+$/.test(values.duration) || values.duration == '') ? values.duration : ''} />
+                    {errors.duration && touched.duration ? (
+                      <div style={{ color: 'red' }}>{errors.duration}</div>
+                    ) : null}
                   </div>
                   <div className="form-inline mb-2">
                     <label for="difficulty" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
@@ -240,9 +223,9 @@ export default class pricingAdd extends Component {
                   <div className="form-group">
                     <button type="submit" class="btn btn-primary mb-2">
                       Submit
-                </button>
+                    </button>
                   </div>
-                </form>
+                </Form>
               </div>
             )}
         </Formik>
