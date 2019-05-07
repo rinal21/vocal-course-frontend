@@ -107,13 +107,13 @@ export default class pricingList extends Component {
             data.type_by_difficulty = 'Basic'
           }else if(data.type_by_difficulty == 2){
             data.type_by_difficulty = 'Intermediate'
-          }else if(data.type_by_participant == 3){
+          }else if(data.type_by_difficulty == 3){
             data.type_by_difficulty = 'Pre adv & adv'
           }
 
           if(data.type_by_teacher == 1){
             data.type_by_teacher = 'Regular teacher class'
-          }else if(data.type_by_participant == 2){
+          }else if(data.type_by_teacher == 2){
             data.type_by_teacher = 'Senior teacher class'
           }
 
