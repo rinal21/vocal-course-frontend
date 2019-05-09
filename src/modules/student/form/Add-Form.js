@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Formik } from 'formik';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import DatePicker from "react-datepicker";
 import Select from 'react-select';
 import moment from "moment";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import "react-datepicker/dist/react-datepicker.css";
+import { read } from 'fs';
 
 export default class studentAdd extends Component {
   constructor(props) {
@@ -22,7 +24,6 @@ export default class studentAdd extends Component {
       address: '',
       school: '',
       email: '',
-      // birthDate: '',
       age: '',
       selectedSex: '',
       cellPhone: '',
@@ -35,29 +36,30 @@ export default class studentAdd extends Component {
       hours: '',
       selectedClass: null,
       selectedTeacher: null,
+      signature: null,
+      imgPreviewUrl: '',
       redirect: false
     };
     this.onChangeClass = this.onChangeClass.bind(this);
     this.onChangeTeacher = this.onChangeTeacher.bind(this);
-    this.onChangeFirstName = this.onChangeFirstName.bind(this);
-    this.onChangeMiddleName = this.onChangeMiddleName.bind(this);
-    this.onChangeLastName = this.onChangeLastName.bind(this);
     this.onChangeBirthDate = this.onChangeBirthDate.bind(this);
-    this.onChangeAddress = this.onChangeAddress.bind(this);
-    this.onChangeSchool = this.onChangeSchool.bind(this);
-    this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangeAge = this.onChangeAge.bind(this);
     this.onChangeSex = this.onChangeSex.bind(this);
-    this.onChangeHomePhone = this.onChangeHomePhone.bind(this);
-    this.onChangeCellPhone = this.onChangeCellPhone.bind(this);
-    this.onChangeResponsible = this.onChangeResponsible.bind(this);
-    this.onChangeInstructorAudition = this.onChangeInstructorAudition.bind(this);
     this.onChangeResult = this.onChangeResult.bind(this);
-    this.onChangeDays = this.onChangeDays.bind(this);
-    this.onChangeHours = this.onChangeHours.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.onChangeSignature = this.onChangeSignature.bind(this);
   }
 
+  
+
+  onChangeSignature(e) {
+    let reader = new FileReader()
+
+    reader.readAsDataURL(e.target.files[0])
+    reader.onloadend = () => {
+      this.setState({ imgPreviewUrl: reader.result})
+    }
+
+    this.setState({ signature: e.target.files[0] });
+  }
   onChangeClass = (selectedClass) =>  {
     this.setState({ selectedClass });
     this.setState({ classId: selectedClass.value})
@@ -66,61 +68,14 @@ export default class studentAdd extends Component {
     this.setState({ selectedTeacher });
     this.setState({ teacherId: selectedTeacher.value})
   }
-  onChangeFirstName(e) {
-    this.setState({firstName: e.target.value})  
-  }
-  onChangeMiddleName(e) {
-    this.setState({middleName: e.target.value})  
-  }
-  onChangeLastName(e) {
-    this.setState({lastName: e.target.value})  
-  }
-  onChangeAddress(e) {
-    this.setState({address: e.target.value})  
-  }
-  onChangeSchool(e) {
-    this.setState({school: e.target.value})  
-  }
-  onChangeEmail(e) {
-    this.setState({email: e.target.value})  
-  }
-  onChangeAge(e) {
-    this.setState({age: e.target.value})  
-  }
   onChangeSex = changeEvent => {
     this.setState({selectedSex: changeEvent.target.value})  
-  }
-  onChangeHomePhone(e) {
-    if (/^\d+$/.test(e.target.value) || e.target.value == ''){
-      this.setState({homePhone: e.target.value})  
-    }
-  }
-  onChangeCellPhone(e) {
-    if (/^\d+$/.test(e.target.value) || e.target.value == '') {
-      this.setState({cellPhone: e.target.value})
-    }
-  }
-  onChangeResponsible(e) {
-    this.setState({responsible: e.target.value})  
   }
   onChangeReason = changeEvent => {
     this.setState({selectedReason: changeEvent.target.value})  
   }
-  onChangeInstructorAudition(e) {
-    this.setState({instructorAudition: e.target.value})  
-  }
   onChangeResult(e) {
     this.setState({result: e.target.value})  
-  }
-  onChangeDays(e) {
-    if (/^\d+$/.test(e.target.value) || e.target.value == '') {
-      this.setState({days: e.target.value})
-    }
-  }
-  onChangeHours(e) {
-    if (/^\d+$/.test(e.target.value) || e.target.value == '') {
-      this.setState({hours: e.target.value})
-    }
   }
 
   onChangeBirthDate = selectedBirthDate => {
@@ -186,108 +141,139 @@ export default class studentAdd extends Component {
     )
   }
 
-  onSubmit(e) {
-    e.preventDefault();
-    const obj = {
-      class: this.state.classId,
-      teacher: this.state.teacherId,
-      firstName: this.state.firstName,
-      middleName: this.state.middleName,
-      lastName: this.state.lastName,
-      address: this.state.address,
-      school: this.state.school,
-      email: this.state.email,
-      birthDate: moment(this.state.selectedBirthDate).format("YYYY-MM-DD hh:mm:ss"),
-      age: this.state.age,
-      sex: this.state.selectedSex,      
-      cellPhone: this.state.cellPhone,
-      homePhone: this.state.homePhone,
-      responsible: this.state.responsible,
-      reason: this.state.selectedReason,
-      intructor: this.state.instructorAudition,
-      result: this.state.result,
-      days: this.state.days,
-      hours: this.state.hours,
-      // selectedClass: null,
-      // selectedTeacher: null,
-    };
-    console.log(obj)
-    axios.post('http://localhost:8000/api/student', obj)
-        .then(res => console.log(res.data))
-        .then(() => this.setState({ redirect: true }));
-  }
-
   render() {
-    const { redirect } = this.state;
+    const { redirect, imgPreviewUrl } = this.state;
+    let $imagePreview = null;
     if (redirect) {
       return <Redirect to='/student' />;
     }
+
+    if (imgPreviewUrl) {
+      $imagePreview = (<img src={imgPreviewUrl} style={{height: 200}}/>);
+    }
+
+    const StudentSchema = Yup.object().shape({
+      firstName: Yup.string()
+        .min(3, 'Too Short!')
+        .max(30, 'Too Long!')
+        .required('Required'),
+      middleName: Yup.string()
+        .min(3, 'Too Short!')
+        .max(30, 'Too Long!')
+        .required('Required'),
+      lastName: Yup.string()
+        .min(3, 'Too Short!')
+        .max(30, 'Too Long!')
+        .required('Required'),
+      address: Yup.string()
+        .min(5, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+      school: Yup.string()
+        .min(5, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+      email: Yup.string()
+        .email('Invalid email')
+        .required('Required'),
+      age: Yup.number()
+        .min(8, 'Too Young!')
+        .max(60, 'Too Old!')
+        .required('Required'),
+      cellPhone: Yup.string()
+        .min(4, 'Too Short!')
+        .max(13, 'Too Long!')
+        .required('Required'),
+      homePhone: Yup.string()
+        .min(4, 'Too Short!')
+        .max(13, 'Too Long!')
+        .required('Required'),
+      responsible: Yup.string()
+        .min(3, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+      instructor: Yup.string()
+        .min(3, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+      days: Yup.number()
+        .min(2, 'Too Short!')
+        .max(360, 'Too Long!')
+        .required('Required'),
+      hours: Yup.number()
+        .min(2, 'Too Short!')
+        .max(365, 'Too Long!')
+        .required('Required'),
+    });
     return (
       <div>
         <Formik
-          initialValues={{ email: "", password: "" }}
-          validate={values => {
-            let errors = {};
-            if (!values.email) {
-              errors.email = "Required";
-            } else if (
-              !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-            ) {
-              errors.email = "Invalid email address";
-            }
-            return errors;
-          }}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 400);
-          }}
+          initialValues={{
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            address: '',
+            school: '',
+            email: '',
+            age: '',
+            cellPhone: '',
+            homePhone: '',
+            responsible: '',
+            instructor: '',
+            days: '',
+            hours: '',
+           }}
+          validationSchema={StudentSchema}
+          onSubmit={values => {
+            const obj = {
+              class: this.state.classId,
+              teacher: this.state.teacherId,
+              firstName: values.firstName,
+              middleName: values.middleName,
+              lastName: values.lastName,
+              address: values.address,
+              school: values.school,
+              email: values.email,
+              birthDate: moment(this.state.selectedBirthDate).format("YYYY-MM-DD hh:mm:ss"),
+              age: values.age,
+              sex: this.state.selectedSex,      
+              cellPhone: values.cellPhone,
+              homePhone: values.homePhone,
+              responsible: values.responsible,
+              reason: this.state.selectedReason,
+              instructor: values.instructor,
+              result: this.state.result,
+              days: values.days,
+              hours: values.hours,
+            };
+            const formData = new FormData();
+            formData.append('signature', this.state.signature);
+            formData.append('picName', values.firstName + this.state.classId + '.png');
+            const config = {
+              headers: {
+                'content-type': 'multipart/form-data'
+              }
+            };
+            console.log(obj)
+            axios.post('http://localhost:8000/api/student', obj)
+              .then(res => console.log(res.data))
+              .then(axios.post("http://localhost:8000/api/student/upload", formData, config)
+                .then(() => {
+                  alert("The file is successfully uploaded");
+                }))
+              .then(() => this.setState({ redirect: true }));
+          }
+        }
         >
           {({
-            values,
             errors,
             touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting
-            /* and other goodies */
+            values,
           }) => (
-              //     <form onSubmit={handleSubmit}>
-              //     <div className="form-group">
-              //     <label>First Name</label>
-              //       <input
-              //         type="email"
-              //         name="email"
-              //         onChange={handleChange}
-              //         onBlur={handleBlur}
-              //         value={values.email}
-              //       />
-              //       {errors.email && touched.email && errors.email}
-              //     </div>
-              //     <div className="form-group">
-              //       <input
-              //         type="password"
-              //         name="password"
-              //         onChange={handleChange}
-              //         onBlur={handleBlur}
-              //         value={values.password}
-              //       />
-              //       {errors.password && touched.password && errors.password}
-              //     </div>
-              //     <div className="form-group">
-              //     <button type="submit" disabled={isSubmitting}>
-              //       Submit
-              //     </button>
-              //     </div>
-
-              //   </form>
-
               <div>
                 <h5>Student Information</h5>
                 <hr />
-                <form onSubmit={this.onSubmit}>
+                <Form>
                   <div class="container" style={{ marginLeft: 0, paddingLeft: 0 }}>
                     <div class="row">
                       <div class="col-sm">
@@ -295,13 +281,17 @@ export default class studentAdd extends Component {
                           <label for="first" class="mr-sm-2">
                             First Name
                           </label>
-                          <input
+                          {/* <input
                             type="text"
                             class="form-control mb-2 mr-sm-2"
                             id="first"
                             value={this.state.firstName}
                             onChange={this.onChangeFirstName}
-                          />
+                          /> */}
+                          <Field type="text" class="form-control mb-2 mr-sm-2" name="firstName" />
+                          {errors.firstName && touched.firstName ? (
+                            <div style={{ color: 'red' }}>{errors.firstName}</div>
+                          ) : null}
                         </div>
                       </div>
                       <div class="col-sm">
@@ -309,13 +299,17 @@ export default class studentAdd extends Component {
                           <label for="middle" class="mr-sm-2">
                             Middle
                         </label>
-                          <input
+                          {/* <input
                             type="text"
                             class="form-control mb-2 mr-sm-2"
                             id="middle"
                             value={this.state.middleName}
                             onChange={this.onChangeMiddleName}
-                          />
+                          /> */}
+                          <Field type="text" class="form-control mb-2 mr-sm-2" name="middleName" />
+                          {errors.middleName && touched.middleName ? (
+                            <div style={{ color: 'red' }}>{errors.middleName}</div>
+                          ) : null}
                         </div>
                       </div>
                       <div class="col-sm">
@@ -323,13 +317,17 @@ export default class studentAdd extends Component {
                           <label for="last" class="mr-sm-2">
                             Last
                           </label>
-                          <input
+                          {/* <input
                             type="text"
                             class="form-control mb-2 mr-sm-2"
                             id="last"
                             value={this.state.lastName}
                             onChange={this.onChangeLastName}
-                          />
+                          /> */}
+                          <Field type="text" class="form-control mb-2 mr-sm-2" name="lastName" />
+                          {errors.lastName && touched.lastName ? (
+                            <div style={{ color: 'red' }}>{errors.lastName}</div>
+                          ) : null}
                         </div>
                       </div>
                     </div>
@@ -337,9 +335,13 @@ export default class studentAdd extends Component {
                       <label for="address" class="mr-sm-2">
                         Street Address
                       </label>
-                      <input type="text" class="form-control mb-2 mr-sm-2" id="address" 
+                      {/* <input type="text" class="form-control mb-2 mr-sm-2" id="address" 
                       value={this.state.address}
-                      onChange={this.onChangeAddress}/>
+                      onChange={this.onChangeAddress}/> */}
+                      <Field type="text" class="form-control mb-2 mr-sm-2" name="address" />
+                      {errors.address && touched.address ? (
+                        <div style={{ color: 'red' }}>{errors.address}</div>
+                      ) : null}
                     </div>
                     <div class="row">
                       <div class="col-sm">
@@ -347,9 +349,13 @@ export default class studentAdd extends Component {
                           <label for="school" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                             School
                           </label>
-                          <input type="text" class="form-control mb-2 mr-sm-2" id="school"
+                          {/* <input type="text" class="form-control mb-2 mr-sm-2" id="school"
                             value={this.state.school}
-                            onChange={this.onChangeSchool} />
+                            onChange={this.onChangeSchool} /> */}
+                          <Field type="text" class="form-control mb-2 mr-sm-2" name="school" />
+                          {errors.school && touched.school ? (
+                            <div style={{ color: 'red' }}>{errors.school}</div>
+                          ) : null}
                         </div>
                       </div>
                       <div class="col-sm">
@@ -357,9 +363,13 @@ export default class studentAdd extends Component {
                           <label for="email" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                             Email
                           </label>
-                          <input type="email" class="form-control mb-2 mr-sm-2" id="email" 
+                          {/* <input type="email" class="form-control mb-2 mr-sm-2" id="email" 
                             value={this.state.email}
-                            onChange={this.onChangeEmail}/>
+                            onChange={this.onChangeEmail}/> */}
+                          <Field type="text" class="form-control mb-2 mr-sm-2" name="email" />
+                          {errors.email && touched.email ? (
+                            <div style={{ color: 'red' }}>{errors.email}</div>
+                          ) : null}
                         </div>
                       </div>
                     </div>                                           
@@ -387,9 +397,13 @@ export default class studentAdd extends Component {
                       <label for="age" class="mr-sm-2 text-left d-block">
                         Age
                       </label>
-                      <input type="text" class="form-control mt-2 mb-2 mr-sm-2" id="age" 
+                      {/* <input type="text" class="form-control mt-2 mb-2 mr-sm-2" id="age" 
                             value={this.state.age}
-                            onChange={this.onChangeAge}/>
+                            onChange={this.onChangeAge}/> */}
+                          <Field type="text" class="form-control mt-2 mb-2 mr-sm-2" name="age" value={(/^\d+$/.test(values.age) || values.age == '') ? values.age : ''}/>
+                          {errors.age && touched.age ? (
+                            <div style={{ color: 'red' }}>{errors.age}</div>
+                          ) : null}
                     </div>
                       </div>
                       <div class="col-sm">
@@ -416,9 +430,13 @@ export default class studentAdd extends Component {
                           <label for="cellphone" class="mr-sm-2 text-left d-block">
                             Cell Phone
                           </label>
-                          <input type="text" class="form-control mb-2 mr-sm-2" id="cellphone" 
+                          {/* <input type="text" class="form-control mb-2 mr-sm-2" id="cellphone" 
                             value={this.state.cellPhone}
-                            onChange={this.onChangeCellPhone}/>
+                            onChange={this.onChangeCellPhone}/> */}
+                          <Field type="text" class="form-control mb-2 mr-sm-2" name="cellPhone" value={(/^\d+$/.test(values.cellPhone) || values.cellPhone == '') ? values.cellPhone : ''} />
+                          {errors.cellPhone && touched.cellPhone ? (
+                            <div style={{ color: 'red' }}>{errors.cellPhone}</div>
+                          ) : null}
                         </div>
                       </div>
                       <div className="col-sm">
@@ -426,9 +444,13 @@ export default class studentAdd extends Component {
                           <label for="homephone" class="mr-sm-2 text-left d-block">
                             Home Phone No
                           </label>
-                          <input type="text" class="form-control mb-2 mr-sm-2" id="homephone"
+                          {/* <input type="text" class="form-control mb-2 mr-sm-2" id="homephone"
                             value={this.state.homePhone}
-                            onChange={this.onChangeHomePhone} />
+                            onChange={this.onChangeHomePhone} /> */}
+                          <Field type="text" class="form-control mt-2 mb-2 mr-sm-2" name="homePhone" value={(/^\d+$/.test(values.homePhone) || values.homePhone == '') ? values.homePhone : ''} />
+                          {errors.homePhone && touched.homePhone ? (
+                            <div style={{ color: 'red' }}>{errors.homePhone}</div>
+                          ) : null}
                         </div>
                       </div>
                     </div>
@@ -440,9 +462,13 @@ export default class studentAdd extends Component {
                       <label for="school" class="mr-sm-2 text-left d-block" style={{ width: 180 }}>
                         Person responsible for bill
                     </label>
-                      <input type="text" class="form-control mb-2 mr-sm-2" id="school"
+                      {/* <input type="text" class="form-control mb-2 mr-sm-2" id="school"
                             value={this.state.responsible}
-                            onChange={this.onChangeResponsible} />
+                            onChange={this.onChangeResponsible} /> */}
+                      <Field type="text" class="form-control mb-2 mr-sm-2" name="responsible" />
+                      {errors.responsible && touched.responsible ? (
+                        <div style={{ color: 'red' }}>{errors.responsible}</div>
+                      ) : null}
                     </div>
                     <div className="form-group mb-2">
                       <label for="sex" class="mr-sm-2 text-left d-block" style={{ width: 180 }}>
@@ -485,9 +511,13 @@ export default class studentAdd extends Component {
                       <label for="homephone" class="mr-sm-2 text-left d-block" style={{ width: 182 }}>
                         Instructor Audition
                       </label>
-                      <input type="text" class="form-control mb-2 mr-sm-2" id="homephone" 
+                      {/* <input type="text" class="form-control mb-2 mr-sm-2" id="homephone" 
                             value={this.state.instructorAudition}
-                            onChange={this.onChangeInstructorAudition}/>
+                            onChange={this.onChangeInstructorAudition}/> */}
+                      <Field type="text" class="form-control mb-2 mr-sm-2" name="instructor" />
+                      {errors.instructor && touched.instructor ? (
+                        <div style={{ color: 'red' }}>{errors.instructor}</div>
+                      ) : null}
                     </div>
 
                     <div className="form-group mb-2">
@@ -543,13 +573,17 @@ export default class studentAdd extends Component {
                           <label for="middle" class="mr-sm-2">
                             Days
                         </label>
-                          <input
+                          {/* <input
                             type="text"
                             class="form-control mb-2 mr-sm-2"
                             id="middle"
                             value={this.state.days}
                             onChange={this.onChangeDays}
-                          />
+                          /> */}
+                          <Field type="text" class="form-control mb-2 mr-sm-2" name="days" />
+                          {errors.days && touched.days ? (
+                            <div style={{ color: 'red' }}>{errors.days}</div>
+                          ) : null}
                         </div>
                       </div>
                       <div class="col-sm">
@@ -557,14 +591,34 @@ export default class studentAdd extends Component {
                           <label for="last" class="mr-sm-2">
                             Hours
                         </label>
-                          <input
+                          {/* <input
                             type="text"
                             class="form-control mb-2 mr-sm-2"
                             id="last"
                             value={this.state.hours}
                             onChange={this.onChangeHours}
-                          />
+                          /> */}
+                          <Field type="text" class="form-control mb-2 mr-sm-2" name="hours" />
+                          {errors.hours && touched.hours ? (
+                            <div style={{ color: 'red' }}>{errors.hours}</div>
+                          ) : null}
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="container" style={{ marginLeft: 0, paddingLeft: 0}}>
+                    <div class="row">
+                      <div class="col-sm mb-3">
+                        <div className="form-group">
+                          <label for="middle" class="mr-sm-2 text-left d-block">
+                            Student / Parent Signature
+                        </label>
+                        </div>
+                        <div className="form-group">
+                          <input type="file" name="signature" onChange={this.onChangeSignature} />
+                        </div>
+                          {$imagePreview}
                       </div>
                     </div>
                   </div>
@@ -574,7 +628,7 @@ export default class studentAdd extends Component {
                       Submit
                     </button>
                   </div>
-                </form>
+                </Form>
               </div>
             )}
         </Formik>
