@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 export default class SideBar extends Component {
     render(){
+      const username = JSON.parse(localStorage["appState"]).user.username
         return (
           <aside className="main-sidebar">
             <section className="sidebar">
@@ -17,7 +18,7 @@ export default class SideBar extends Component {
                   />
                 </div>
                 <div className="pull-left info">
-                  <p>Alexander Pierce</p>
+                  <p>{username}</p>
                   <a href="">
                     <i className="fa fa-circle text-success" /> Online
                   </a>

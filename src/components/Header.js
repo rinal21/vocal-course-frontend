@@ -1,6 +1,14 @@
 import React, {Component} from 'react';
 
 export default class Header extends Component {
+    logout = () => {
+        let appState = {
+            isLoggedIn: false,
+            user: {}
+        };
+        localStorage["appState"] = JSON.stringify(appState);
+        this.setState(appState);
+    }
     render(){
         return (
             <header className="main-header">
@@ -13,7 +21,7 @@ export default class Header extends Component {
                         <span className="sr-only">Toggle navigation</span>
                     </a>
                     <div className="navbar-custom-menu">
-                        <ul className="nav navbar-nav">
+                        {/* <ul className="nav navbar-nav">
                             <li className="dropdown messages-menu">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown">
                                     <i className="fa fa-envelope-o"></i>
@@ -39,6 +47,9 @@ export default class Header extends Component {
                                     </li>
                                 </ul>
                             </li>
+                        </ul> */}
+                        <ul className="nav navbar-nav">
+                        <a href="" onClick={this.logout} style={{color: 'white'}}>Logout</a>
                         </ul>
                     </div>
                 </nav>

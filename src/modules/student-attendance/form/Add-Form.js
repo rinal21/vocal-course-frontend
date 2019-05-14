@@ -173,7 +173,7 @@ export default class studentAttendances extends Component {
                   </label>
                     <label>: &nbsp;</label>
                     <label class="radio-inline mr-2">
-                      <input type="radio" name="optattandance" value="1"
+                      <input type="radio" name="optattandance" value="1" required
                         checked={this.state.selectedAttendance === "1"}
                         onChange={this.onChangeAttendance} />Absent
                     </label>
@@ -186,28 +186,6 @@ export default class studentAttendances extends Component {
                       onChange={this.onChangeAttendance} />Attend
                     </label>
                   </div>
-                  {/* <div className="form-inline mb-2">
-                    <label for="permission" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Is With Permission
-                  </label>
-                    <label>: &nbsp;</label>
-                    <label>
-                      <input type="checkbox" name="permission" value="1" class="checkbox"
-                        checked={this.state.permission === "1"}
-                        onChange={this.onChangePermission} />
-                    </label>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="permission" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Is Attend
-                  </label>
-                    <label>: &nbsp;</label>
-                    <label>
-                      <input type="checkbox" name="attend" value="1" class="checkbox"
-                        checked={this.state.attend === "1"}
-                        onChange={this.onChangeAttend} />
-                    </label>
-                  </div> */}
                   
                   <div className="form-group">
                     <button type="submit" class="btn btn-primary mb-2">

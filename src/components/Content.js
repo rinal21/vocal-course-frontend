@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { Route, Switch } from "react-router-dom";
 import Home from "../modules/Home";
 import About from "../modules/About";
+import { PrivateRoute } from "../components/PrivateRoute"
+import { withRouter } from "react-router-dom"
 
 import StudentList from "../modules/student/Student-List";
 import StudentAdd from "../modules/student/Student-Add";
@@ -38,51 +40,74 @@ import TransactionList from "../modules/transaction/Transaction-List";
 import TransactionAdd from "../modules/transaction/Transaction-Add";
 import TransactionEdit from "../modules/transaction/Transaction-Edit";
 
-import studentAttendances from '../modules/student-attendance/form/Add-Form';
-export default class Content extends Component {
+import Login from '../modules/login-admin/Login-Form';
+// import studentAttendances from '../modules/student-attendance/form/Add-Form';
+
+class Template extends Component {
   render() {
-    return (
-      <div className="content-wrapper">
-        <section className="content-header">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="box">
-                <div className="content">
-                  <Route exact path="/" component={Home} />
-                  <Route path="/about" component={About} />
-                  <Route exact path="/student" component={StudentList} />
-                  <Route exact path="/student/add" component={StudentAdd} />
-                  <Route exact path="/student/edit" component={StudentEdit} />
-                  <Route exact path="/user" component={UserList} />
-                  <Route exact path="/user/add" component={UserAdd} />
-                  <Route exact path="/user/edit" component={UserEdit} />
-                  <Route exact path="/class" component={ClassList} />
-                  <Route exact path="/class/add" component={ClassAdd} />
-                  <Route exact path="/class/edit" component={ClassEdit} />
-                  <Route exact path="/teacher" component={TeacherList} />
-                  <Route exact path="/teacher/add" component={TeacherAdd} />
-                  <Route exact path="/teacher/edit" component={TeacherEdit} />
-                  <Route exact path="/pricing" component={PricingList} />
-                  <Route exact path="/pricing/add" component={PricingAdd} />
-                  <Route exact path="/pricing/edit" component={PricingEdit} />
-                  <Route exact path="/payroll" component={PayrollList} />
-                  <Route exact path="/payroll/add" component={PayrollAdd} />
-                  <Route exact path="/teacher-attendance" component={TeacherAttendanceList} />
-                  <Route exact path="/teacher-attendance/add" component={TeacherAttendanceAdd} />
-                  <Route exact path="/teacher-attendance/edit" component={TeacherAttendanceEdit} />
-                  <Route exact path="/student-attendance" component={StudentAttendanceList} />
-                  <Route exact path="/student-attendance/add" component={StudentAttendanceAdd} />
-                  <Route exact path="/student-attendance/edit" component={StudentAttendanceEdit} />
-                  <Route exact path="/transaction" component={TransactionList} />
-                  <Route exact path="/transaction/add" component={TransactionAdd} />
-                  <Route exact path="/transaction/edit" component={TransactionEdit} />
+    switch (this.props.type) {
+      case 'dashboard':
+        return (
+          <div className="content-wrapper">
+            <section className="content-header">
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="box">
+                    <div className="content">
+                      {this.props.children}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </section>
           </div>
-        </section>
-      </div>
+        )
+      default:
+        return (this.props.children)
+    }
+  }
+}
 
+class Content extends Component {
+  render() {
+    let templateType = localStorage["appState"] ? (JSON.parse(localStorage["appState"]).isLoggedIn ? 'dashboard' : 'login') : 'login'
+
+    return (
+      <>
+        <Template type={templateType}>
+          <Route path="/login" component={Login} />
+          <PrivateRoute exact path="/" component={Home} />
+          <PrivateRoute path="/about" component={About} />
+          <PrivateRoute exact path="/student" component={StudentList} />
+          <PrivateRoute exact path="/student/add" component={StudentAdd} />
+          <PrivateRoute exact path="/student/edit" component={StudentEdit} />
+          <PrivateRoute exact path="/user" component={UserList} />
+          <PrivateRoute exact path="/user/add" component={UserAdd} />
+          <PrivateRoute exact path="/user/edit" component={UserEdit} />
+          <PrivateRoute exact path="/class" component={ClassList} />
+          <PrivateRoute exact path="/class/add" component={ClassAdd} />
+          <PrivateRoute exact path="/class/edit" component={ClassEdit} />
+          <PrivateRoute exact path="/teacher" component={TeacherList} />
+          <PrivateRoute exact path="/teacher/add" component={TeacherAdd} />
+          <PrivateRoute exact path="/teacher/edit" component={TeacherEdit} />
+          <PrivateRoute exact path="/pricing" component={PricingList} />
+          <PrivateRoute exact path="/pricing/add" component={PricingAdd} />
+          <PrivateRoute exact path="/pricing/edit" component={PricingEdit} />
+          <PrivateRoute exact path="/payroll" component={PayrollList} />
+          <PrivateRoute exact path="/payroll/add" component={PayrollAdd} />
+          <PrivateRoute exact path="/teacher-attendance" component={TeacherAttendanceList} />
+          <PrivateRoute exact path="/teacher-attendance/add" component={TeacherAttendanceAdd} />
+          <PrivateRoute exact path="/teacher-attendance/edit" component={TeacherAttendanceEdit} />
+          <PrivateRoute exact path="/student-attendance" component={StudentAttendanceList} />
+          <PrivateRoute exact path="/student-attendance/add" component={StudentAttendanceAdd} />
+          <PrivateRoute exact path="/student-attendance/edit" component={StudentAttendanceEdit} />
+          <PrivateRoute exact path="/transaction" component={TransactionList} />
+          <PrivateRoute exact path="/transaction/add" component={TransactionAdd} />
+          <PrivateRoute exact path="/transaction/edit" component={TransactionEdit} />
+        </Template>
+      </>
     );
   }
 }
+
+export default withRouter(Content)
