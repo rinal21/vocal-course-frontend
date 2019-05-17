@@ -138,43 +138,51 @@ export default class teacherList extends Component {
       }())
     })
   };
-    render() {
-        return(
-            <div>
-              <div class="box-header">
+  render() {
+    return (
+      <section className="content-header">
+        <div className="row">
+          <div className="col-md-12">
+            <div className="box">
+              <div className="content">
+                <div class="box-header">
                   <NavLink to="/teacher-attendance/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Teacher Attendance</NavLink>
                   <div class="float-right">
-                  <DatePicker
-                        selected={this.state.filterDate}
-                        onChange={this.onChangeFilterDate}
-                        dateFormat="d-MM-yyyy"
-                        peekNextMonth
-                        dropdownMode="select"
-                        className="form-control"
-                      />
+                    <DatePicker
+                      selected={this.state.filterDate}
+                      onChange={this.onChangeFilterDate}
+                      dateFormat="d-MM-yyyy"
+                      peekNextMonth
+                      dropdownMode="select"
+                      className="form-control"
+                    />
                   </div>
-              </div>
+                </div>
                 <MDBDataTable
-                    striped
-                    bordered
-                    hover
-                    data={this.data(this.state.teachers)}
-                    btn
+                  striped
+                  bordered
+                  hover
+                  data={this.data(this.state.teachers)}
+                  btn
                 />
                 <MDBContainer>
-              <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
-                <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
-                <MDBModalBody>
-                  Are you sure you want to delete it ?
-                </MDBModalBody>
-                <MDBModalFooter>
-                  <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
-                  <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
-                </MDBModalFooter>
-              </MDBModal>
-            </MDBContainer>
+                  <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
+                    <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
+                    <MDBModalBody>
+                      Are you sure you want to delete it ?
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                      <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
+                      <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
+                    </MDBModalFooter>
+                  </MDBModal>
+                </MDBContainer>
+              </div>
             </div>
-        )
-    }
+          </div>
+        </div>
+      </section>
+    )
+  }
 }
 

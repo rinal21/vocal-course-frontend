@@ -8,6 +8,7 @@ export default class userList extends Component {
     super(props)
 
     this.state = {
+      token: JSON.parse(localStorage['appState']).user.auth_token,
       users: [],
       deleteConfirm: false,
       deleteId : ''
@@ -36,7 +37,7 @@ export default class userList extends Component {
   }
 
   fetchData = () => {
-    fetch('http://localhost:8000/api/users')
+    fetch(`http://localhost:8000/api/users?token=${this.state.token}`)
     .then(response => response.json())
     .then((json) => {
       this.setState({
@@ -99,31 +100,39 @@ export default class userList extends Component {
   };
   render() {
     return (
-      <div>
-        <div class="box-header">
-          <NavLink to="/user/add" class="btn btn-success"><i class="fa fa-plus"></i> Add User</NavLink>
-        </div>
+      <section className="content-header">
+        <div className="row">
+          <div className="col-md-12">
+            <div className="box">
+              <div className="content">
+                <div class="box-header">
+                  <NavLink to="/user/add" class="btn btn-success"><i class="fa fa-plus"></i> Add User</NavLink>
+                </div>
 
-        <MDBDataTable
-          striped
-          bordered
-          hover
-          data={this.data(this.state.users)}
-          btn
-        />
-        <MDBContainer>
-          <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
-            <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
-            <MDBModalBody>
-              Are you sure you want to delete it ?
-                </MDBModalBody>
-            <MDBModalFooter>
-              <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
-              <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
-            </MDBModalFooter>
-          </MDBModal>
-        </MDBContainer>
-      </div>
+                <MDBDataTable
+                  striped
+                  bordered
+                  hover
+                  data={this.data(this.state.users)}
+                  btn
+                />
+                <MDBContainer>
+                  <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
+                    <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
+                    <MDBModalBody>
+                      Are you sure you want to delete it ?
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                      <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
+                      <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
+                    </MDBModalFooter>
+                  </MDBModal>
+                </MDBContainer>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     )
   }
 }

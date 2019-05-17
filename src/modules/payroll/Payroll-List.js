@@ -15,7 +15,8 @@ export default class classList extends Component {
       fromDate: new Date(),
       toDate: new Date(),
       deleteConfirm: false,
-      deleteId : ''
+      deleteId : '',
+      totalAll: 0
     }
     this.delete = this.delete.bind(this);
     this.filterData = this.filterData.bind(this);
@@ -36,11 +37,15 @@ export default class classList extends Component {
   filterData = (fromDate, toDate) => {
     const from = moment(fromDate).format("YYYY-MM-DD")
     const to = moment(toDate).format("YYYY-MM-DD")
+    var total = 0
     fetch('http://localhost:8000/api/payrolls?from_date=' + from + '&to_date=' + to)
       .then(response => response.json())
       .then((json) => {
-        console.log(json)
+        json.map((data) => {
+          total += data.total
+        })
         this.setState({
+          totalAll: total,
           payrolls: json
         })
       })
@@ -146,52 +151,66 @@ export default class classList extends Component {
       }())
     })
   };
-    render() {
-      return (
-        <div>
-          <div>
-              <div class="form-inline">
-                <DatePicker
-                  selected={this.state.fromDate}
-                  onChange={this.onChangeFromDate}
-                  selectsStart
-                  startDate={this.state.fromDate}
-                  endDate={this.state.toDate}
-                  dateFormat="d-MM-yyyy"
-                  peekNextMonth
-                  dropdownMode="select"
-                  className="form-control"
-                />
-                <label style={{ marginLeft: 10, marginRight: 10 }}>-</label>
-                <DatePicker
-                  selected={this.state.toDate}
-                  onChange={this.onChangeToDate}
-                  selectsEnd
-                  startDate={this.state.fromDate}
-                  endDate={this.state.toDate}
-                  dateFormat="d-MM-yyyy"
-                  peekNextMonth
-                  dropdownMode="select"
-                  className="form-control"
-                />
+  render() {
+    console.log(this.state.totalAll)
+    return (
+      <>
+        <section className="content-header">
+          <div className="row">
+            <div className="col-md-12">
+              <div className="box">
+                <div className="content">
+                  <div>
+                    <div class="form-inline">
+                      <DatePicker
+                        selected={this.state.fromDate}
+                        onChange={this.onChangeFromDate}
+                        selectsStart
+                        startDate={this.state.fromDate}
+                        endDate={this.state.toDate}
+                        dateFormat="MMMM/yyyy"
+                        showMonthYearPicker
+                        dropdownMode="select"
+                        className="form-control"
+                      />
+                      <label style={{ marginLeft: 10, marginRight: 10 }}>-</label>
+                      <DatePicker
+                        selected={this.state.toDate}
+                        onChange={this.onChangeToDate}
+                        selectsEnd
+                        startDate={this.state.fromDate}
+                        endDate={this.state.toDate}
+                        dateFormat="MMMM/yyyy"
+                        showMonthYearPicker
+                        dropdownMode="select"
+                        className="form-control"
+                      />
 
-                <button type="button" class="btn btn-info" color="#fff" style={{marginLeft: 10}} onClick={() => this.filterData(this.state.fromDate, this.state.toda)} ><i class="fa fa-print"></i>
-                  Generate
-                </button>
-              </div>
-                  
-              </div>
-                <MDBDataTable
+                      <button type="button" class="btn btn-info" color="#fff" style={{ marginLeft: 10 }} onClick={() => this.filterData(this.state.fromDate, this.state.toDate)} ><i class="fa fa-print"></i>
+                        Generate
+                      </button>
+                    </div>
+
+                  </div>
+                  <MDBDataTable
                     sortable={true}
                     fixed={false}
                     // order={['name', 'desc' ]}
                     striped
                     bordered
                     hover
-                    data={this.data(this.state.payrolls )}
-                />
+                    data={this.data(this.state.payrolls)}
+                  />
+
+                  <p>Total : {this.state.totalAll}</p>
+                </div>
+              </div>
             </div>
-        )
-    }
+          </div>
+        </section>
+
+      </>
+    )
+  }
 }
 

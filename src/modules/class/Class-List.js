@@ -88,34 +88,42 @@ export default class classList extends Component {
       }())
     })
   };
-    render() {
-        return(
-            <div>
-              <div className="box-header">
+  render() {
+    return (
+      <section className="content-header">
+        <div className="row">
+          <div className="col-md-12">
+            <div className="box">
+              <div className="content">
+                <div className="box-header">
                   <NavLink to="/class/add" className="btn btn-success"><i className="fa fa-plus"></i> Add Class</NavLink>
-              </div>
+                </div>
                 <MDBDataTable
-                    striped
-                    bordered
-                    hover
-                    data={this.data(this.state.classes)}
-                    btn
+                  striped
+                  bordered
+                  hover
+                  data={this.data(this.state.classes)}
+                  btn
                 />
-            
-            <MDBContainer>
-              <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
-                <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
-                <MDBModalBody>
-                  Are you sure you want to delete it ?
-                </MDBModalBody>
-                <MDBModalFooter>
-                  <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
-                  <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
-                </MDBModalFooter>
-              </MDBModal>
-            </MDBContainer>
+
+                <MDBContainer>
+                  <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
+                    <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
+                    <MDBModalBody>
+                      Are you sure you want to delete it ?
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                      <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
+                      <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
+                    </MDBModalFooter>
+                  </MDBModal>
+                </MDBContainer>
+              </div>
             </div>
-        )
+          </div>
+        </div>
+      </section>
+    )
     }
 }
 
