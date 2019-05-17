@@ -43,8 +43,13 @@ export default class studentList extends Component {
   }
 
   componentDidMount = () => {
+    const { students } = this.state
     // ajax call
     this.fetchData()
+
+    // console.log(students)
+    
+    // students[0] && this.tableAttandanceGroup()
   }
 
   fetchData = () => {
@@ -54,17 +59,126 @@ export default class studentList extends Component {
         this.setState({
           students: json
         })
+        // this.tableAttandanceGroup(json)
       })
   }
 
   filterData = (filterDate) => {
-    fetch('http://localhost:8000/api/student_attendances/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
+    fetch('http://localhost:8000/api/student_attendances/filterDate?date=' + moment(filterDate).format("YYYY-MM-DD"))
       .then(response => response.json())
       .then((json) => {
         this.setState({
           students: json
         })
       })
+  }
+
+  tableAttandanceGroup = (students) => {
+    let table = []
+
+    // console.log(students[1][0])
+
+    students.forEach((student) => {
+      Array.isArray(student) ?
+      table.push(
+        <section className="content-header">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="box">
+                  <div className="content">
+                    <div class="box-header">
+                    <h5>Class : {student[0].class_name}</h5>
+                      <NavLink to="/student-attendance/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
+                      <div class="float-right">
+                        <DatePicker
+                          selected={this.state.filterDate}
+                          onChange={this.onChangeFilterDate}
+                          dateFormat="d-MM-yyyy"
+                          peekNextMonth
+                          dropdownMode="select"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                    <MDBDataTable
+                      striped
+                      bordered
+                      hover
+                      data={this.data(student)}
+                      btn
+                    />
+                    <MDBContainer>
+                      <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
+                        <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
+                        <MDBModalBody>
+                          Are you sure you want to delete it ?
+                        </MDBModalBody>
+                        <MDBModalFooter>
+                          <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
+                          <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
+                        </MDBModalFooter>
+                      </MDBModal>
+                    </MDBContainer>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+      ) : table.push(
+        <section className="content-header">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="box">
+                  <div className="content">
+                    <div class="box-header">
+                    <h5>Class : {student}</h5>
+                      <NavLink to="/student-attendance/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
+                      <div class="float-right">
+                        <DatePicker
+                          selected={this.state.filterDate}
+                          onChange={this.onChangeFilterDate}
+                          dateFormat="d-MM-yyyy"
+                          peekNextMonth
+                          dropdownMode="select"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                    <MDBDataTable
+                      striped
+                      bordered
+                      hover
+                      data={this.data(student)}
+                      btn
+                    />
+                    <MDBContainer>
+                      <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
+                        <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
+                        <MDBModalBody>
+                          Are you sure you want to delete it ?
+                        </MDBModalBody>
+                        <MDBModalFooter>
+                          <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
+                          <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
+                        </MDBModalFooter>
+                      </MDBModal>
+                    </MDBContainer>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+      )
+    });
+
+    // students.map((student, index) => {
+    //   console.log(student[0])
+      // student[index] && student[index][] && console.log(student)
+    // })
+
+    return(
+      table
+    )
   }
 
   data = (students) => {
@@ -112,7 +226,7 @@ export default class studentList extends Component {
       rows: (function () {
         let rowData = []
 
-        students.map((data) => {
+        Array.isArray(students) && students.map((data) => {
           rowData.push({
             date: data.date,
             name: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
@@ -139,41 +253,98 @@ export default class studentList extends Component {
     })
   }
     render() {
+      const { students } = this.state
+      // console.log(students)
+      // console.log(json[1][1].first_name)
         return(
-            <div>
-              <div class="box-header">
-                  <NavLink to="/student-attendance/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
-                  <div class="float-right">
-                  <DatePicker
-                        selected={this.state.filterDate}
-                        onChange={this.onChangeFilterDate}
-                        dateFormat="d-MM-yyyy"
-                        peekNextMonth
-                        dropdownMode="select"
-                        className="form-control"
-                      />
+          <>
+          {students[0] && this.tableAttandanceGroup(students)}
+          {/* <section className="content-header">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="box">
+                  <div className="content">
+                    <div class="box-header">
+                      <NavLink to="/student-attendance/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
+                      <div class="float-right">
+                        <DatePicker
+                          selected={this.state.filterDate}
+                          onChange={this.onChangeFilterDate}
+                          dateFormat="d-MM-yyyy"
+                          peekNextMonth
+                          dropdownMode="select"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                    <MDBDataTable
+                      striped
+                      bordered
+                      hover
+                      data={this.data(this.state.students)}
+                      btn
+                    />
+                    <MDBContainer>
+                      <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
+                        <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
+                        <MDBModalBody>
+                          Are you sure you want to delete it ?
+                        </MDBModalBody>
+                        <MDBModalFooter>
+                          <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
+                          <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
+                        </MDBModalFooter>
+                      </MDBModal>
+                    </MDBContainer>
                   </div>
+                </div>
               </div>
-                <MDBDataTable
-                    striped
-                    bordered
-                    hover
-                    data={this.data(this.state.students)}
-                    btn
-                />
-                <MDBContainer>
-              <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
-                <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
-                <MDBModalBody>
-                  Are you sure you want to delete it ?
-        </MDBModalBody>
-                <MDBModalFooter>
-                  <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
-                  <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
-                </MDBModalFooter>
-              </MDBModal>
-            </MDBContainer>
             </div>
+          </section>
+
+            <section className="content-header">
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="box">
+                    <div className="content">
+                      <div class="box-header">
+                        <NavLink to="/student-attendance/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
+                        <div class="float-right">
+                          <DatePicker
+                            selected={this.state.filterDate}
+                            onChange={this.onChangeFilterDate}
+                            dateFormat="d-MM-yyyy"
+                            peekNextMonth
+                            dropdownMode="select"
+                            className="form-control"
+                          />
+                        </div>
+                      </div>
+                      <MDBDataTable
+                        striped
+                        bordered
+                        hover
+                        data={this.data(this.state.students)}
+                        btn
+                      />
+                      <MDBContainer>
+                        <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
+                          <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
+                          <MDBModalBody>
+                            Are you sure you want to delete it ?
+                          </MDBModalBody>
+                          <MDBModalFooter>
+                            <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
+                            <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
+                          </MDBModalFooter>
+                        </MDBModal>
+                      </MDBContainer>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section> */}
+          </>
         )
     }
 }
