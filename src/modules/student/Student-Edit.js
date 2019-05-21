@@ -4,8 +4,8 @@ import StudentEditForm from "./form/Edit-Form"
 
 export default class studentEdit extends Component {
     render() {
-        const { studentId } = this.props.location.state
-
+        const { studentId, status } = this.props.location.state
+        
         return(
             <div>
                 <div className="box-header with-border">
@@ -15,7 +15,8 @@ export default class studentEdit extends Component {
                 </div>
                 <div className="box-body">
                     <StudentEditForm
-                        studentId={studentId} />
+                        studentId={studentId}
+                        status={status} />
                 </div>
             </div>
         )

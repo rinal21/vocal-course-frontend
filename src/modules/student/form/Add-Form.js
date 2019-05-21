@@ -145,7 +145,7 @@ export default class studentAdd extends Component {
     const { redirect, imgPreviewUrl } = this.state;
     let $imagePreview = null;
     if (redirect) {
-      return <Redirect to='/student' />;
+      return <Redirect to='/student-trial' />;
     }
 
     if (imgPreviewUrl) {
@@ -261,6 +261,7 @@ export default class studentAdd extends Component {
                 .then(() => {
                   alert("The file is successfully uploaded");
                 }))
+              .then(() => alert("Student's data will be printing"))
               .then(() => this.setState({ redirect: true }));
           }
         }

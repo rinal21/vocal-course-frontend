@@ -5,7 +5,10 @@ import About from "../modules/About";
 import { PrivateRoute } from "../components/PrivateRoute"
 import { withRouter } from "react-router-dom"
 
-import StudentList from "../modules/student/Student-List";
+import StudentListPaid from "../modules/student/Student-List-Paid";
+import StudentListUnpaid from "../modules/student/Student-List-Unpaid";
+import StudentListTrial from "../modules/student/Student-List-Trial";
+import StudentListPending from "../modules/student/Student-List-Pending";
 import StudentAdd from "../modules/student/Student-Add";
 import StudentEdit from "../modules/student/Student-Edit";
 
@@ -49,17 +52,7 @@ class Template extends Component {
       case 'dashboard':
         return (
           <div className="content-wrapper">
-            <section className="content-header">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="box">
-                    <div className="content">
-                      {this.props.children}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
+            {this.props.children}
           </div>
         )
       default:
@@ -78,7 +71,10 @@ class Content extends Component {
           <Route path="/login" component={Login} />
           <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute path="/about" component={About} />
-          <PrivateRoute exact path="/student" component={StudentList} />
+          <PrivateRoute exact path="/student-paid" component={StudentListPaid} />
+          <PrivateRoute exact path="/student-unpaid" component={StudentListUnpaid} />
+          <PrivateRoute exact path="/student-trial" component={StudentListTrial} />
+          <PrivateRoute exact path="/student-pending" component={StudentListPending} />
           <PrivateRoute exact path="/student/add" component={StudentAdd} />
           <PrivateRoute exact path="/student/edit" component={StudentEdit} />
           <PrivateRoute exact path="/user" component={UserList} />

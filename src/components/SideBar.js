@@ -44,53 +44,79 @@ export default class SideBar extends Component {
                   </span>
                 </div>
               </form>
-                <ul className="sidebar-menu" data-widget="tree">
-                  <li className="header">MAIN NAVIGATION</li>
-                  <li>
-                    <Link to="/class">
-                      <i className="fa fa-users" /> <span>Class</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/user">
-                      <i className="fa fa-user" /> <span>User</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/student">
-                      <i className="fa fa-child" /> <span>Student</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/student-attendance">
-                      <i className="fa fa-check-square-o" /> <span>Student Attendance</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/teacher">
-                      <i className="fa fa-graduation-cap" /> <span>Teacher</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/teacher-attendance">
-                      <i className="fa fa-check-square-o" /> <span>Teacher Attendance</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/transaction">
-                      <i className="fa fa-exchange" /> <span>Transaction</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/pricing">
-                      <i className="fa fa-tag" /> <span>Pricing</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/payroll">
-                      <i className="fa fa-print" /> <span>Payroll</span>
-                    </Link>
-                  </li>
+              <ul className="sidebar-menu" data-widget="tree">
+                <li className="header">MAIN NAVIGATION</li>
+                <li>
+                  <Link to="/class">
+                    <i className="fa fa-users" /> <span>Class</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/user">
+                    <i className="fa fa-user" /> <span>User</span>
+                  </Link>
+                </li>
+                <li className="treeview">
+                  <a href="">
+                    <i className="fa fa-child" />
+                    <span>Student</span>
+                    <span className="pull-right-container">
+                      <i className="fa fa-angle-left pull-right" />
+                    </span>
+                  </a>
+                  <ul className="treeview-menu">
+                    <li>
+                      <Link to="/student-paid">
+                        <i className="fa fa-circle-o" /> <span>Paid(Registered)</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/student-unpaid">
+                        <i className="fa fa-circle-o" /> <span>Unpaid</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/student-trial">
+                        <i className="fa fa-circle-o" /> <span>Trial</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/student-pending">
+                        <i className="fa fa-circle-o" /> <span>Pending</span>
+                      </Link>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <Link to="/student-attendance">
+                    <i className="fa fa-check-square-o" /> <span>Student Attendance</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/teacher">
+                    <i className="fa fa-graduation-cap" /> <span>Teacher</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/teacher-attendance">
+                    <i className="fa fa-check-square-o" /> <span>Teacher Attendance</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/transaction">
+                    <i className="fa fa-exchange" /> <span>Transaction</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/pricing">
+                    <i className="fa fa-tag" /> <span>Pricing</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/payroll">
+                    <i className="fa fa-print" /> <span>Payroll</span>
+                  </Link>
+                </li>
                   {/* <li className="treeview">
                     <a href="">
                       <i className="fa fa-pie-chart" />

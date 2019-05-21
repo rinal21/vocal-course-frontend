@@ -268,10 +268,16 @@ export default class studentEdit extends Component {
   }
 
   render() {
+    const { status } = this.props;
     const { redirect, isLoaded, imgPreviewUrl } = this.state;
     let $imagePreview = null;
     if (redirect) {
-      return <Redirect to='/student' />;
+      if (status == 2)
+        return <Redirect to='/student-unpaid' />;
+      else if (status = 3)
+        return <Redirect to='/student-paid' />;
+      else if (status = 4)
+        return <Redirect to='/student-paid' />;
     }
 
     if (imgPreviewUrl) {
@@ -352,43 +358,53 @@ export default class studentEdit extends Component {
          }}
         validationSchema={StudentSchema}
             onSubmit={values => {
-              const obj = {
-                class: this.state.classId,
-                teacher: this.state.teacherId,
-                firstName: values.firstName,
-                middleName: values.middleName,
-                lastName: values.lastName,
-                address: values.address,
-                school: values.school,
-                email: values.email,
-                birthDate: moment(this.state.selectedBirthDate).format("YYYY-MM-DD hh:mm:ss"),
-                age: values.age,
-                sex: this.state.selectedSex,
-                cellPhone: values.cellPhone,
-                homePhone: values.homePhone,
-                responsible: values.responsible,
-                reason: this.state.selectedReason,
-                instructor: values.instructor,
-                result: this.state.result,
-                days: values.days,
-                hours: values.hours,
-              };
-              const formData = new FormData();
-              formData.append('signature', this.state.signature);
-              formData.append('picName', values.firstName + this.state.classId + '.png');
-              const config = {
-                headers: {
-                  'content-type': 'multipart/form-data'
-                }
-              };
-              console.log(obj)
-              axios.patch('http://localhost:8000/api/student/' + this.props.studentId, obj)
-                .then(res => console.log(res.data))
-                .then(axios.post("http://localhost:8000/api/student/upload", formData, config)
-                  .then(() => {
-                    alert("The file is successfully uploaded");
-                  }))
-                .then(() => this.setState({ redirect: true }));
+              if (this.props.status == 4) {
+                const obj = {
+                  class: this.state.classId,
+                  teacher: this.state.teacherId,
+                  firstName: values.firstName,
+                  middleName: values.middleName,
+                  lastName: values.lastName,
+                  address: values.address,
+                  school: values.school,
+                  email: values.email,
+                  birthDate: moment(this.state.selectedBirthDate).format("YYYY-MM-DD hh:mm:ss"),
+                  age: values.age,
+                  sex: this.state.selectedSex,
+                  cellPhone: values.cellPhone,
+                  homePhone: values.homePhone,
+                  responsible: values.responsible,
+                  reason: this.state.selectedReason,
+                  instructor: values.instructor,
+                  result: this.state.result,
+                  days: values.days,
+                  hours: values.hours,
+                };
+                const formData = new FormData();
+                formData.append('signature', this.state.signature);
+                formData.append('picName', values.firstName + this.state.classId + '.png');
+                const config = {
+                  headers: {
+                    'content-type': 'multipart/form-data'
+                  }
+                };
+                console.log(obj)
+                axios.patch('http://localhost:8000/api/student/' + this.props.studentId, obj)
+                  .then(res => console.log(res.data))
+                  .then(axios.post("http://localhost:8000/api/student/upload", formData, config)
+                    .then(() => {
+                      alert("The file is successfully uploaded");
+                    }))
+                  .then(() => this.setState({ redirect: true }));
+              } else {
+                const obj = {
+                  status: this.props.status,
+                };
+                console.log(obj)
+                axios.patch('http://localhost:8000/api/student_status/' + this.props.studentId, obj)
+                  .then(res => console.log(res.data))
+                  .then(() => this.setState({ redirect: true }));
+              }
             }
           }
       >
