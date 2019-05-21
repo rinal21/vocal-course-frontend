@@ -59,7 +59,6 @@ export default class studentList extends Component {
         this.setState({
           students: json
         })
-        // this.tableAttandanceGroup(json)
       })
   }
 
@@ -76,9 +75,7 @@ export default class studentList extends Component {
   tableAttandanceGroup = (students) => {
     let table = []
 
-    // console.log(students[1][0])
-
-    students.forEach((student) => {
+    students.forEach((student, index) => {
       Array.isArray(student) ?
       table.push(
         <section className="content-header">
@@ -86,9 +83,10 @@ export default class studentList extends Component {
               <div className="col-md-12">
                 <div className="box">
                   <div className="content">
-                    <div class="box-header">
-                    <h5>Class : {student[0].class_name}</h5>
-                      <NavLink to="/student-attendance/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
+                  {index < 1 && (
+                      <>
+                      <NavLink to="/student-attendance/add" class="btn btn-success" style={{marginBottom: 10}}><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
+                      
                       <div class="float-right">
                         <DatePicker
                           selected={this.state.filterDate}
@@ -99,7 +97,9 @@ export default class studentList extends Component {
                           className="form-control"
                         />
                       </div>
-                    </div>
+                    </>
+                    )}
+                    <h5>Class : {student[0].class_name}</h5>
                     <MDBDataTable
                       striped
                       bordered
@@ -130,9 +130,10 @@ export default class studentList extends Component {
               <div className="col-md-12">
                 <div className="box">
                   <div className="content">
-                    <div class="box-header">
-                    <h5>Class : {student}</h5>
-                      <NavLink to="/student-attendance/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
+                  {index < 1 && (
+                    <>
+                      <NavLink to="/student-attendance/add" class="btn btn-success" style={{marginBottom: 10}}><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
+                      
                       <div class="float-right">
                         <DatePicker
                           selected={this.state.filterDate}
@@ -143,7 +144,9 @@ export default class studentList extends Component {
                           className="form-control"
                         />
                       </div>
-                    </div>
+                    </>
+                  )}
+                  <h5>Class : {student}</h5>
                     <MDBDataTable
                       striped
                       bordered
