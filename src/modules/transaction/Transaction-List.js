@@ -14,9 +14,13 @@ export default class teacherList extends Component {
       transactions: [],
       filterDate: new Date(),
       deleteConfirm: false,
-      deleteId : ''
+      deleteId : '',
+      paidConfirm: false,
+      paidId : '',
+      totalAll: 0
     }
     this.delete = this.delete.bind(this);
+    this.paid = this.paid.bind(this);
   }
 
   onChangeFilterDate = filterDate => {
@@ -38,7 +42,6 @@ export default class teacherList extends Component {
 
   delete(id) {
     axios.delete('http://localhost:8000/api/transaction/' + id)
-      .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
       .catch(err => console.log(err))
@@ -51,16 +54,35 @@ export default class teacherList extends Component {
     });
   }
 
+  paid(id) {
+    axios.patch('http://localhost:8000/api/transaction_paid/' + id)
+      .then(() => this.setState({paidConfirm: !this.state.paidConfirm}))
+      .then(() => this.fetchData())
+      .catch(err => console.log(err))
+  }
+
+  togglepaidConfirmation = (id) => {
+    this.setState({
+      paidConfirm: !this.state.paidConfirm,
+      paidId: id
+    });
+  }
+
   componentDidMount = () => {
     // ajax call
     this.fetchData()
   }
 
   fetchData = () => {
+    var total = 0
     fetch('http://localhost:8000/api/transactions')
     .then(response => response.json())
     .then((json) => {
+      json.map((data) => {
+        total += data.cost
+      })
       this.setState({
+        totalAll: total,
         transactions: json
       })
     })
@@ -68,6 +90,7 @@ export default class teacherList extends Component {
 
   data = (transactions) => {
     const deleteConfirm = this.toggleDeleteConfirmation
+    const paidConfirm = this.togglepaidConfirmation
 
     return ({
       columns: [
@@ -108,6 +131,12 @@ export default class teacherList extends Component {
           width: 500
         },
         {
+          label: 'Status',
+          field: 'status',
+          sort: 'desc',
+          width: 500
+        },
+        {
           label: 'Action',
           field: 'action',
           sort: 'disabled',
@@ -125,6 +154,7 @@ export default class teacherList extends Component {
             payment: data.payment_date,
             receipt: data.receipt_number,
             cost: data.cost,
+            status: data.status == 0 ? 'Pending' : 'paid',
             edit:
               <div>
                 <NavLink
@@ -135,7 +165,8 @@ export default class teacherList extends Component {
                     }
                   }}
                   className="btn btn-primary">Edit</NavLink>
-                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 10 }}>Delete</button>
+                {data.status == 0 && <button onClick={() => paidConfirm(data.id)} className="btn btn-warning" style={{ position: "relative", left: 20 }}>paid</button>}
               </div>
           })
         })
@@ -145,7 +176,6 @@ export default class teacherList extends Component {
     })
   };
   render() {
-    console.log(this.state.filterDate)
     return (
       <section className="content-header">
         <div className="row">
@@ -158,7 +188,7 @@ export default class teacherList extends Component {
                     <DatePicker
                       selected={this.state.filterDate}
                       onChange={this.onChangeFilterDate}
-                      dateFormat="MM/yyyy"
+                      dateFormat="MMMM/yyyy"
                       showMonthYearPicker
                       className="form-control"
                     />
@@ -183,6 +213,21 @@ export default class teacherList extends Component {
                     </MDBModalFooter>
                   </MDBModal>
                 </MDBContainer>
+
+                <MDBContainer>
+                  <MDBModal isOpen={this.state.paidConfirm} toggle={this.togglepaidConfirmation} size="sm" centered>
+                    <MDBModalHeader toggle={this.togglepaidConfirmation}>paid Confirmation</MDBModalHeader>
+                    <MDBModalBody>
+                      Are you sure this transaction has been paid ?
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                      <MDBBtn color="secondary" onClick={this.togglepaidConfirmation}>No</MDBBtn>
+                      <MDBBtn color="success" onClick={() => this.paid(this.state.paidId)}>Yes</MDBBtn>
+                    </MDBModalFooter>
+                  </MDBModal>
+                </MDBContainer>
+
+                <p>Total transaction this month: {this.state.totalAll}</p>
               </div>
             </div>
           </div>

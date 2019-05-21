@@ -87,7 +87,7 @@ export default class transactionEdit extends Component {
       .then(response => response.json())
       .then((json) => {
         this.setState({
-          students: json.data
+          students: json
         })
       })
   }

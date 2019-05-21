@@ -86,7 +86,7 @@ export default class transactionAdd extends Component {
       .then(response => response.json())
       .then((json) => {
         this.setState({
-          students: json.data
+          students: json
         })
       })
   }
@@ -118,10 +118,12 @@ export default class transactionAdd extends Component {
     return (
       function () {
         let rowData = []
-        students.map((data) => {
-          rowData.push({
-            value: data.id,
-            label: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
+        students.map((student) => {
+          Array.isArray(student) && student.map((data) => {
+            rowData.push({
+              value: data.id,
+              label: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
+            })
           })
         })
         return rowData
