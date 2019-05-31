@@ -254,7 +254,6 @@ export default class studentAdd extends Component {
                 'content-type': 'multipart/form-data'
               }
             };
-            console.log(obj)
             axios.post('http://localhost:8000/api/student', obj)
               .then(res => console.log(res.data))
               .then(axios.post("http://localhost:8000/api/student/upload", formData, config)
