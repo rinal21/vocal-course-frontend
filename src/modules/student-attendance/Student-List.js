@@ -83,7 +83,7 @@ export default class studentList extends Component {
               <div className="col-md-12">
                 <div className="box">
                   <div className="content">
-                  {index < 1 && (
+                  {/* {index < 1 && (
                       <>
                       <NavLink to="/student-attendance/add" class="btn btn-success" style={{marginBottom: 10}}><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
                       
@@ -98,7 +98,7 @@ export default class studentList extends Component {
                         />
                       </div>
                     </>
-                    )}
+                    )} */}
                     <h5>Class : {student[0].class_name}</h5>
                     <MDBDataTable
                       striped
@@ -130,7 +130,7 @@ export default class studentList extends Component {
               <div className="col-md-12">
                 <div className="box">
                   <div className="content">
-                  {index < 1 && (
+                  {/* {index < 1 && (
                     <>
                       <NavLink to="/student-attendance/add" class="btn btn-success" style={{marginBottom: 10}}><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
                       
@@ -145,7 +145,7 @@ export default class studentList extends Component {
                         />
                       </div>
                     </>
-                  )}
+                  )} */}
                   <h5>Class : {student}</h5>
                     <MDBDataTable
                       striped
@@ -261,6 +261,21 @@ export default class studentList extends Component {
       // console.log(json[1][1].first_name)
         return(
           <>
+          <div style={{paddingTop: 14, paddingLeft: 14, paddingRight: 14}}>
+              <NavLink to="/student-attendance/add" class="btn btn-success" style={{ marginBottom: 10 }}><i class="fa fa-plus"></i> Add Student Attendance</NavLink>
+
+              <div class="float-right">
+                <DatePicker
+                  selected={this.state.filterDate}
+                  onChange={this.onChangeFilterDate}
+                  dateFormat="d-MM-yyyy"
+                  peekNextMonth
+                  dropdownMode="select"
+                  className="form-control"
+                />
+              </div>
+          </div>
+          
           {students[0] && this.tableAttandanceGroup(students)}
           {/* <section className="content-header">
             <div className="row">
