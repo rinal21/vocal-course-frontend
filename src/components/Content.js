@@ -31,6 +31,13 @@ import PricingEdit from "../modules/pricing/Pricing-Edit";
 import PayrollList from "../modules/payroll/Payroll-List";
 import PayrollAdd from "../modules/payroll/Payroll-Add";
 
+import ScheduleList from "../modules/schedule/Schedule-List";
+import ScheduleAdd from "../modules/schedule/Schedule-Add";
+import ScheduleEdit from "../modules/schedule/Schedule-Edit";
+
+import AttendanceList from "../modules/attendance/Attendance-List";
+import AttendanceAdd from "../modules/attendance/Attendance-Add";
+
 import TeacherAttendanceList from "../modules/teacher-attendance/Teacher-List";
 import TeacherAttendanceAdd from "../modules/teacher-attendance/Teacher-Add";
 import TeacherAttendanceEdit from "../modules/teacher-attendance/Teacher-Edit";
@@ -91,6 +98,11 @@ class Content extends Component {
           <PrivateRoute exact path="/pricing/edit" component={PricingEdit} />
           <PrivateRoute exact path="/payroll" component={PayrollList} />
           <PrivateRoute exact path="/payroll/add" component={PayrollAdd} />
+          <PrivateRoute exact path="/schedule" component={ScheduleList} />
+          <PrivateRoute exact path="/schedule/add" component={ScheduleAdd} />
+          <PrivateRoute exact path="/schedule/edit" component={ScheduleEdit} />
+          <PrivateRoute exact path="/attendance" component={AttendanceList} />
+          <PrivateRoute exact path="/attendance/add" component={AttendanceAdd} />
           <PrivateRoute exact path="/teacher-attendance" component={TeacherAttendanceList} />
           <PrivateRoute exact path="/teacher-attendance/add" component={TeacherAttendanceAdd} />
           <PrivateRoute exact path="/teacher-attendance/edit" component={TeacherAttendanceEdit} />

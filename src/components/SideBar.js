@@ -47,6 +47,11 @@ export default class SideBar extends Component {
               <ul className="sidebar-menu" data-widget="tree">
                 <li className="header">MAIN NAVIGATION</li>
                 <li>
+                  <Link to="/">
+                    <i className="fa fa-dashboard" /> <span>Dashboard</span>
+                  </Link>
+                </li>
+                <li>
                   <Link to="/class">
                     <i className="fa fa-users" /> <span>Class</span>
                   </Link>
@@ -88,20 +93,30 @@ export default class SideBar extends Component {
                   </ul>
                 </li>
                 <li>
+                  <Link to="/schedule">
+                    <i className="fa fa-calendar" /> <span>Schedule</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/attendance">
+                    <i className="fa fa-check-square-o" /> <span>Attendance</span>
+                  </Link>
+                </li>
+                {/* <li>
                   <Link to="/student-attendance">
                     <i className="fa fa-check-square-o" /> <span>Student Attendance</span>
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to="/teacher">
                     <i className="fa fa-graduation-cap" /> <span>Teacher</span>
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/teacher-attendance">
                     <i className="fa fa-check-square-o" /> <span>Teacher Attendance</span>
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to="/transaction">
                     <i className="fa fa-exchange" /> <span>Transaction</span>
