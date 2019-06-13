@@ -64,6 +64,8 @@ export default class attendanceEdit extends Component {
   onChangeStudents = (selectedStudent) =>  {
     this.setState({ selectedStudent });
     this.setState({ studentId: selectedStudent.value})
+    
+    this.fetchTeachersByStudent(selectedStudent.value)
   }
 
   onChangeTeachers = (selectedTeacher) =>  {
@@ -74,6 +76,8 @@ export default class attendanceEdit extends Component {
   onChangeClass = (selectedClass) =>  {
     this.setState({ selectedClass });
     this.setState({ classId: selectedClass.value})
+
+    this.fetchStudentsByClass(selectedClass.value)
   }
 
   onChangeDateSchedule = dateSchedule => {
@@ -89,8 +93,8 @@ export default class attendanceEdit extends Component {
 
   componentDidMount = () => {
     // ajax call
-    this.fetchTeachers()
-    this.fetchStudents()
+    // this.fetchTeachers()
+    // this.fetchStudents()
     this.fetchClasses()
     this.fetchDatas()
   }
@@ -128,8 +132,8 @@ export default class attendanceEdit extends Component {
       })
   }
 
-  fetchTeachers = () => {
-    fetch('http://localhost:8000/api/teachers')
+  fetchTeachersByStudent = (student) => {
+    fetch('http://localhost:8000/api/teachers/filterStudent?student=' + student)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -138,8 +142,8 @@ export default class attendanceEdit extends Component {
       })
   }
 
-  fetchStudents = () => {
-    fetch('http://localhost:8000/api/students')
+  fetchStudentsByClass = (name) => {
+    fetch('http://localhost:8000/api/students/filterClass?class=' + name)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -147,6 +151,26 @@ export default class attendanceEdit extends Component {
         })
       })
   }
+
+  // fetchTeachers = () => {
+  //   fetch('http://localhost:8000/api/teachers')
+  //     .then(response => response.json())
+  //     .then((json) => {
+  //       this.setState({
+  //         teachers: json.data
+  //       })
+  //     })
+  // }
+
+  // fetchStudents = () => {
+  //   fetch('http://localhost:8000/api/students?status=3')
+  //     .then(response => response.json())
+  //     .then((json) => {
+  //       this.setState({
+  //         students: json
+  //       })
+  //     })
+  // }
 
   fetchClasses = () => {
     fetch('http://localhost:8000/api/classes')
@@ -179,12 +203,10 @@ export default class attendanceEdit extends Component {
       function () {
         let rowData = []
         students.map((student) => {
-          Array.isArray(student) && student.map((data) => {
             rowData.push({
-              value: data.id,
-              label: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
+              value: student.id,
+              label: student.first_name + ' ' + student.middle_name + ' ' + student.last_name,
             })
-          })
         })
         return rowData
       }()
@@ -314,6 +336,19 @@ export default class attendanceEdit extends Component {
                     </select>
                   </div>
                   <div className="form-inline mb-2">
+                    <label for="class" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Class
+                    </label>
+                    <label>: &nbsp;</label>
+                    <div style={{ display: 'inline-block', width: 223.2 }}>
+                      <Select
+                        value={this.state.selectedClass}
+                        onChange={this.onChangeClass}
+                        options={this.dataClasses(this.state.classes)}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-inline mb-2">
                     <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Student Name
                   </label>
@@ -338,20 +373,6 @@ export default class attendanceEdit extends Component {
                         options={this.dataTeachers(this.state.teachers)}
                       />
                     </div>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="class" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Class
-                    </label>
-                    <label>: &nbsp;</label>
-                    <div style={{ display: 'inline-block', width: 223.2 }}>
-                      <Select
-                        value={this.state.selectedClass}
-                        onChange={this.onChangeClass}
-                        options={this.dataClasses(this.state.classes)}
-                      />
-                    </div>
-
                   </div>
                   
                   <div className="form-group">

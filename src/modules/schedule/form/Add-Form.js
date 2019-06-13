@@ -64,6 +64,8 @@ export default class attendanceAdd extends Component {
   onChangeStudents = (selectedStudent) =>  {
     this.setState({ selectedStudent });
     this.setState({ studentId: selectedStudent.value})
+    
+    this.fetchTeachersByStudent(selectedStudent.value)
   }
 
   onChangeTeachers = (selectedTeacher) =>  {
@@ -73,7 +75,10 @@ export default class attendanceAdd extends Component {
 
   onChangeClass = (selectedClass) =>  {
     this.setState({ selectedClass });
-    this.setState({ classId: selectedClass.value})
+    this.setState({ 
+      classId: selectedClass.value
+    })
+    this.fetchStudentsByClass(selectedClass.value)
   }
 
   onChangeDateSchedule = dateSchedule => {
@@ -89,13 +94,11 @@ export default class attendanceAdd extends Component {
 
   componentDidMount = () => {
     // ajax call
-    this.fetchTeachers()
-    this.fetchStudents()
     this.fetchClasses()
   }
 
-  fetchTeachers = () => {
-    fetch('http://localhost:8000/api/teachers')
+  fetchTeachersByStudent = (student) => {
+    fetch('http://localhost:8000/api/teachers/filterStudent?student=' + student)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -104,8 +107,8 @@ export default class attendanceAdd extends Component {
       })
   }
 
-  fetchStudents = () => {
-    fetch('http://localhost:8000/api/students')
+  fetchStudentsByClass = (name) => {
+    fetch('http://localhost:8000/api/students/filterClass?class=' + name)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -141,17 +144,17 @@ export default class attendanceAdd extends Component {
   };
 
   dataStudents = (students) => {
+
     return (
       function () {
         let rowData = []
         students.map((student) => {
-          Array.isArray(student) && student.map((data) => {
-            rowData.push({
-              value: data.id,
-              label: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
-            })
+          rowData.push({
+            value: student.id,
+            label: student.first_name + ' ' + student.middle_name + ' ' + student.last_name,
           })
         })
+
         return rowData
       }()
     )
@@ -191,7 +194,9 @@ export default class attendanceAdd extends Component {
   }
 
   render() {
-    const { redirect } = this.state;
+    console.log('coba', this.state.students)
+    const { redirect } = this.state
+
     if (redirect) {
       return <Redirect to='/schedule' />;
     }
@@ -277,6 +282,19 @@ export default class attendanceAdd extends Component {
                       <option value={'19:00'}>19:00</option>
                       <option value={'19:40'}>19:40</option>
                     </select>
+                  </div>  
+                  <div className="form-inline mb-2">
+                    <label for="class" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Class
+                    </label>
+                    <label>: &nbsp;</label>
+                    <div style={{ display: 'inline-block', width: 223.2 }}>
+                      <Select
+                        value={this.state.selectedClass}
+                        onChange={this.onChangeClass}
+                        options={this.dataClasses(this.state.classes)}
+                      />
+                    </div>
                   </div>
                   <div className="form-inline mb-2">
                     <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
@@ -289,6 +307,7 @@ export default class attendanceAdd extends Component {
                         onChange={this.onChangeStudents}
                         options={this.dataStudents(this.state.students)}
                       />
+                      
                     </div>
                   </div>
                   <div className="form-inline mb-2">
@@ -303,20 +322,6 @@ export default class attendanceAdd extends Component {
                         options={this.dataTeachers(this.state.teachers)}
                       />
                     </div>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="class" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Class
-                    </label>
-                    <label>: &nbsp;</label>
-                    <div style={{ display: 'inline-block', width: 223.2 }}>
-                      <Select
-                        value={this.state.selectedClass}
-                        onChange={this.onChangeClass}
-                        options={this.dataClasses(this.state.classes)}
-                      />
-                    </div>
-
                   </div>
                   
                   <div className="form-group">
