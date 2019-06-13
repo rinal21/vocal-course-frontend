@@ -31,9 +31,9 @@ export default class attendancesList extends Component {
     this.onChangeTeacher = this.onChangeTeacher.bind(this);
   }
 
-  onChangeStudentStatus(index, e, id) {
+  onChangeStudentStatus(e, id) {
     this.setState({
-      studentStatus: update(this.state.studentStatus, {[index]: {$set: e.target.value}})
+      studentStatus: update(this.state.studentStatus, {[id]: {$set: e.target.value}})
     })
     const obj = {
       student_status: e.target.value
@@ -45,9 +45,9 @@ export default class attendancesList extends Component {
       })
   }
 
-  onChangeTeacherStatus(index, e, id) {
+  onChangeTeacherStatus(e, id) {
     this.setState({
-      teacherStatus: update(this.state.teacherStatus, {[index]: {$set: e.target.value}})
+      teacherStatus: update(this.state.teacherStatus, {[id]: {$set: e.target.value}})
     })
     const obj = {
       teacher_status: e.target.value
@@ -59,9 +59,9 @@ export default class attendancesList extends Component {
       })
   }
 
-  onChangeStudent(index, e, id) {
+  onChangeStudent(e, id) {
     this.setState({
-      studentSelected: update(this.state.studentSelected, {[index]: {$set: e.target.value}})
+      studentSelected: update(this.state.studentSelected, {[id]: {$set: e.target.value}})
     })
     const obj = {
       student_id: e.target.value
@@ -74,9 +74,9 @@ export default class attendancesList extends Component {
       })
   }
 
-  onChangeTeacher(index, e, id) {
+  onChangeTeacher(e, id) {
     this.setState({
-      teacherSelected: update(this.state.teacherSelected, {[index]: {$set: e.target.value}})
+      teacherSelected: update(this.state.teacherSelected, {[id]: {$set: e.target.value}})
     })
     const obj = {
       teacher_id: e.target.value
@@ -150,21 +150,23 @@ export default class attendancesList extends Component {
         this.setState({
           attendances: json,
         })
+        console.log(json)
         json.map((data, index) => {
           this.setState({
-            studentStatus: update(this.state.studentStatus, {[index]: {$set: data.student_status}}),
-            teacherStatus: update(this.state.teacherStatus, {[index]: {$set: data.teacher_status}}),
-            studentSelected: update(this.state.studentSelected, {[index]: {$set: data.student_id}}),
-            teacherSelected: update(this.state.teacherSelected, {[index]: {$set: data.teacher_id}})
+            studentStatus: update(this.state.studentStatus, {[data[0].attendances_id]: {$set: data[0].student_status}}),
+            teacherStatus: update(this.state.teacherStatus, {[data[0].attendances_id]: {$set: data[0].teacher_status}}),
+            studentSelected: update(this.state.studentSelected, {[data[0].attendances_id]: {$set: data[0].student_id}}),
+            teacherSelected: update(this.state.teacherSelected, {[data[0].attendances_id]: {$set: data[0].teacher_id}})
           })
         })
       })
   }
 
   fetchStudents = () => {
-    fetch('http://localhost:8000/api/students')
+    fetch('http://localhost:8000/api/students?status=3')
       .then(response => response.json())
       .then((json) => {
+        console.log('student', json)
         this.setState({
           students: json
         })
@@ -188,12 +190,13 @@ export default class attendancesList extends Component {
         this.setState({
           attendances: json
         })
+        console.log('coba', json)
         json.map((data, index) => {
           this.setState({
-            studentStatus: update(this.state.studentStatus, {[index]: {$set: data.student_status}}),
-            teacherStatus: update(this.state.teacherStatus, {[index]: {$set: data.teacher_status}}),
-            studentSelected: update(this.state.studentSelected, {[index]: {$set: data.student_id}}),
-            teacherSelected: update(this.state.teacherSelected, {[index]: {$set: data.teacher_id}})
+            studentStatus: update(this.state.studentStatus, {[data[0].attendances_id]: {$set: data[0].student_status}}),
+            teacherStatus: update(this.state.teacherStatus, {[data[0].attendances_id]: {$set: data[0].teacher_status}}),
+            studentSelected: update(this.state.studentSelected, {[data[0].attendances_id]: {$set: data[0].student_id}}),
+            teacherSelected: update(this.state.teacherSelected, {[data[0].attendances_id]: {$set: data[0].teacher_id}})
           })
         })
       })
@@ -246,33 +249,29 @@ export default class attendancesList extends Component {
           sort: 'asc',
           width: 150
         },
-        // {
-        //   label: 'Action',
-        //   field: 'action',
-        //   sort: 'disabled',
-        //   width: 100
-        // }
       ],
       rows: (function () {
         let rowData = []
 
+        // console.log('bang',students)
         attendances.map((data, index) => {
+          // console.log('coba1 studentID:',data.student_id,'isi:', studentSelected[data.student_id], 'class', data.class_name)
           rowData.push({
             day: data.day,
             time: data.time,
-            student: <select class="form-control" onChange={(e) => onChangeStudent(index, e, data.attendances_id)} value={studentSelected[index]}>
+            student: <select class="form-control" onChange={(e) => onChangeStudent(e, data.attendances_id)} value={studentSelected[data.attendances_id]}>
               {createStudentPicker(students)}
             </select>,
-            status_student: <select class="form-control" onChange={(e) => onChangeStudentStatus(index, e, data.attendances_id)} value={studentStatus[index]}>
+            status_student: <select class="form-control" onChange={(e) => onChangeStudentStatus(e, data.attendances_id)} value={studentStatus[data.attendances_id]}>
               <option value="0"></option>
               <option value="1">Absent</option>
               <option value="2">With Permission</option>  
               <option value="3">Attend</option>
             </select>,
-            teacher: <select class="form-control" onChange={(e) => onChangeTeacher(index, e, data.attendances_id)} value={teacherSelected[index]}>
+            teacher: <select class="form-control" onChange={(e) => onChangeTeacher(e, data.attendances_id)} value={teacherSelected[data.attendances_id]}>
             {createTeacherPicker(teachers)}
           </select>,
-            teacher_student: <select class="form-control" onChange={(e) => onChangeTeacherStatus(index, e, data.attendances_id)} value={teacherStatus[index]}>
+            teacher_student: <select class="form-control" onChange={(e) => onChangeTeacherStatus(e, data.attendances_id)} value={teacherStatus[data.attendances_id]}>
               <option value="0"></option>
               <option value="1">Absent</option>
               <option value="2">With Permission</option>
@@ -280,37 +279,47 @@ export default class attendancesList extends Component {
             </select>
           })
         })
-
         return rowData
       }())
     })
+    
   };
-  render() {
-    // console.log(this.state.teachers)
-    return (
-      <section className="content-header">
+
+  tableAttendancesGroup = (attendances) => {
+    let table = []
+
+    attendances.forEach((attendance, index) => {
+      // console.log('coba2',attendance)
+
+      table.push(
+        <section className="content-header">
         <div className="row">
           <div className="col-md-12">
             <div className="box">
               <div className="content">
+              <h5>Class : {attendance[0].class_name}</h5>
                 <div class="box-header">
                   {/* <NavLink to="/schedule/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Schedule</NavLink> */}
-                  <div class="float-right">
-                    <DatePicker
-                      selected={this.state.filterDate}
-                      onChange={this.onChangeFilterDate}
-                      dateFormat="d-MM-yyyy"
-                      peekNextMonth
-                      dropdownMode="select"
-                      className="form-control"
-                    />
+                    <div class="float-right">
+                      {index < 1 && (
+                        <>
+                          <DatePicker
+                            selected={this.state.filterDate}
+                            onChange={this.onChangeFilterDate}
+                            dateFormat="d-MM-yyyy"
+                            peekNextMonth
+                            dropdownMode="select"
+                            className="form-control"
+                          />
+                        </>
+                      )}
                   </div>
                 </div>
                 <MDBDataTable
                   striped
                   bordered
                   hover
-                  data={this.data(this.state.attendances)}
+                  data={this.data(attendance)}
                   btn
                 />
                 <MDBContainer>
@@ -330,6 +339,20 @@ export default class attendancesList extends Component {
           </div>
         </div>
       </section>
+      )
+    });
+    return(
+      table
+    )
+  }
+
+  render() {
+    // console.log('coba3',this.state.studentSelected[6])
+    const { attendances } = this.state
+    return (
+      <>
+        {this.tableAttendancesGroup(attendances)}
+      </>
     )
   }
 }
