@@ -5,6 +5,7 @@ import update from 'react-addons-update';
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import axios from 'axios';
+import Loader from 'react-loader-spinner'
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -16,12 +17,19 @@ export default class attendancesList extends Component {
       attendances: [],
       filterDate: new Date(),
       deleteConfirm: false,
+      classes: [],
+      classSelected: [],
       students: [],
       studentSelected: [],
       teachers: [],
       teacherSelected: [],
       studentStatus: [],
       teacherStatus: [],
+      tables: [],
+      isLoaded: false,
+      isFilterDate: false,
+      isChangeClass: false,
+      loading: false,
       deleteId : ''
     }
     this.delete = this.delete.bind(this);
@@ -29,26 +37,36 @@ export default class attendancesList extends Component {
     this.onChangeTeacherStatus = this.onChangeTeacherStatus.bind(this);
     this.onChangeStudent = this.onChangeStudent.bind(this);
     this.onChangeTeacher = this.onChangeTeacher.bind(this);
+    this.onChangeClass = this.onChangeClass.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
 
-  onChangeStudentStatus(e, id) {
-    this.setState({
-      studentStatus: update(this.state.studentStatus, {[id]: {$set: e.target.value}})
-    })
+  async onChangeStudentStatus(e, id){
     const obj = {
       student_status: e.target.value
     };
+    console.log('ler', e.target.value)
     axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
       })
+
+      await this.promisedSetState({
+        studentStatus: update(this.state.studentStatus, {[id]: {$set: e.target.value}})
+      });
+      this.tableAttendancesGroup()
   }
 
-  onChangeTeacherStatus(e, id) {
-    this.setState({
-      teacherStatus: update(this.state.teacherStatus, {[id]: {$set: e.target.value}})
-    })
+  promisedSetState = (newState) => {
+    return new Promise((resolve) => {
+        this.setState(newState, () => {
+            resolve()
+        });
+    });
+}
+
+  async onChangeTeacherStatus(e, id) {
     const obj = {
       teacher_status: e.target.value
     };
@@ -57,12 +75,32 @@ export default class attendancesList extends Component {
       .catch(error => {
         console.log(error.message);
       })
+    await this.promisedSetState({
+      teacherStatus: update(this.state.teacherStatus, { [id]: { $set: e.target.value } })
+    });
+
+    this.tableAttendancesGroup()
   }
 
-  onChangeStudent(e, id) {
-    this.setState({
-      studentSelected: update(this.state.studentSelected, {[id]: {$set: e.target.value}})
-    })
+  onChangeClass = async (e, id) => {
+    const obj = {
+      class_id: e.target.value
+    };
+    console.log(obj, id)
+    await axios.patch('http://localhost:8000/api/attendance/' + id, obj)
+      .then(res => console.log(res.data))
+      .catch(error => {
+        console.log(error.message);
+      })
+    await this.promisedSetState({
+      isChangeClass: true,
+      isLoaded: false
+    });
+
+    this.tableAttendancesGroup()
+  }
+
+  async onChangeStudent(e, id) {
     const obj = {
       student_id: e.target.value
     };
@@ -72,12 +110,14 @@ export default class attendancesList extends Component {
       .catch(error => {
         console.log(error.message);
       })
+    await this.promisedSetState({
+      studentSelected: update(this.state.studentSelected, { [id]: { $set: e.target.value } })
+    });
+
+    this.tableAttendancesGroup()
   }
 
-  onChangeTeacher(e, id) {
-    this.setState({
-      teacherSelected: update(this.state.teacherSelected, {[id]: {$set: e.target.value}})
-    })
+  async onChangeTeacher(e, id) {
     const obj = {
       teacher_id: e.target.value
     };
@@ -86,13 +126,18 @@ export default class attendancesList extends Component {
       .catch(error => {
         console.log(error.message);
       })
+    await this.promisedSetState({
+      teacherSelected: update(this.state.teacherSelected, { [id]: { $set: e.target.value } })
+    });
+
+    this.tableAttendancesGroup()
   }
 
   onChangeFilterDate = filterDate => {
     this.setState({
       filterDate: filterDate
     });
-    this.filterData(filterDate)
+    this.filterData(filterDate, false)
   }
 
   delete(id) {
@@ -112,18 +157,19 @@ export default class attendancesList extends Component {
 
   componentDidMount = () => {
     // ajax call
-    this.fetchData()
-    this.fetchStudents()
-    this.fetchTeachers()
+    this.tableAttendancesGroup()
   }
 
   createStudentPicker = (students) => {
     let opt = []
-
-    students.map((student) => {
-      Array.isArray(student) && student.map((data) => {
-        opt.push(<option value={data.id}>{data.first_name + ' ' + data.middle_name + ' ' + data.last_name}</option>)
-      })
+    students.map((student, index) => {
+      if(index == 0){
+        opt.push(<option key='' value=''></option>)
+        opt.push(<option key={student.id} value={student.id}>{student.first_name + ' ' + student.middle_name + ' ' + student.last_name}</option>)
+      }
+      else{
+        opt.push(<option key={student.id} value={student.id}>{student.first_name + ' ' + student.middle_name + ' ' + student.last_name}</option>)
+      }
     })
 
     return (
@@ -134,7 +180,25 @@ export default class attendancesList extends Component {
   createTeacherPicker = (teachers) => {
     let opt = []
 
-    teachers.map((data) => {
+    teachers.map((data, index) => {
+      if(index == 0){
+        opt.push(<option key='' value=''></option>)
+        opt.push(<option value={data.id}>{data.name}</option>)
+      }
+      else{
+        opt.push(<option value={data.id}>{data.name}</option>)
+      }
+    })
+
+    return (
+        opt
+    )
+  }
+
+  createClassPicker = (classes) => {
+    let opt = []
+
+    classes.map((data) => {
       opt.push(<option value={data.id}>{data.name}</option>)
     })
 
@@ -144,72 +208,111 @@ export default class attendancesList extends Component {
   }
 
   fetchData = () => {
-    fetch('http://localhost:8000/api/attendances')
+    return new Promise(async(resolve, reject) => {
+      await fetch('http://localhost:8000/api/attendances')
       .then(response => response.json())
-      .then((json) => {
-        this.setState({
+      .then( (json) => {
+         this.setState({
           attendances: json,
         })
-        console.log(json)
-        json.map((data, index) => {
-          this.setState({
-            studentStatus: update(this.state.studentStatus, {[data[0].attendances_id]: {$set: data[0].student_status}}),
-            teacherStatus: update(this.state.teacherStatus, {[data[0].attendances_id]: {$set: data[0].teacher_status}}),
-            studentSelected: update(this.state.studentSelected, {[data[0].attendances_id]: {$set: data[0].student_id}}),
-            teacherSelected: update(this.state.teacherSelected, {[data[0].attendances_id]: {$set: data[0].teacher_id}})
+        json.map((subarray) => {
+          subarray.map((data) => {
+            this.promisedSetState({
+              classSelected: update(this.state.classSelected, {[data.attendances_id]: {$set: data.class_id}}),
+              studentStatus: update(this.state.studentStatus, {[data.attendances_id]: {$set: data.student_status}}),
+              teacherStatus: update(this.state.teacherStatus, {[data.attendances_id]: {$set: data.teacher_status}}),
+              studentSelected: update(this.state.studentSelected, {[data.attendances_id]: {$set: data.student_id}}),
+              teacherSelected: update(this.state.teacherSelected, {[data.attendances_id]: {$set: data.teacher_id}})
+            })
           })
         })
+        
       })
+      resolve()
+    })
   }
 
-  fetchStudents = () => {
-    fetch('http://localhost:8000/api/students?status=3')
+  fetchStudentsByClass = (name) => {
+    return new Promise((resolve, reject) => {
+    fetch('http://localhost:8000/api/students/filterClass?class=' + name)
       .then(response => response.json())
       .then((json) => {
-        console.log('student', json)
-        this.setState({
-          students: json
-        })
+        this.setState(prevState => ({
+          students: [...prevState.students, json]
+        }))
+        resolve()
       })
+    })
   }
 
   fetchTeachers = () => {
+    return new Promise((resolve, reject) => {
     fetch('http://localhost:8000/api/teachers')
       .then(response => response.json())
       .then((json) => {
         this.setState({
-          teachers: json.data
+          teachers: json.data,
         })
+        resolve()
       })
+    })
   }
 
-  filterData = (filterDate) => {
-    fetch('http://localhost:8000/api/attendances/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
+  fetchClasses = () => {
+    return new Promise((resolve, reject) => {
+    fetch('http://localhost:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
+          classes: json.data,
+        })
+        resolve()
+      })
+    })
+  }
+
+  filterData = (filterDate, isChangeClass) => {
+    return new Promise((resolve, reject) => {
+    fetch('http://localhost:8000/api/attendances/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
+      .then(response => response.json())
+      .then(async(json) => {
+        await this.promisedSetState({
           attendances: json
         })
         console.log('coba', json)
-        json.map((data, index) => {
-          this.setState({
-            studentStatus: update(this.state.studentStatus, {[data[0].attendances_id]: {$set: data[0].student_status}}),
-            teacherStatus: update(this.state.teacherStatus, {[data[0].attendances_id]: {$set: data[0].teacher_status}}),
-            studentSelected: update(this.state.studentSelected, {[data[0].attendances_id]: {$set: data[0].student_id}}),
-            teacherSelected: update(this.state.teacherSelected, {[data[0].attendances_id]: {$set: data[0].teacher_id}})
+        json.map((subarray) => {
+          subarray.map((data) => {
+            this.setState({
+              classSelected: update(this.state.classSelected, {[data.attendances_id]: {$set: data.class_id}}),
+              studentStatus: update(this.state.studentStatus, {[data.attendances_id]: {$set: data.student_status}}),
+              teacherStatus: update(this.state.teacherStatus, {[data.attendances_id]: {$set: data.teacher_status}}),
+              studentSelected: update(this.state.studentSelected, {[data.attendances_id]: {$set: data.student_id}}),
+              teacherSelected: update(this.state.teacherSelected, {[data.attendances_id]: {$set: data.teacher_id}}),
+              isLoaded: false,
+              isFilterDate: true,
+              isChangeClass: false
+            })
           })
         })
+        if(!isChangeClass) {
+          this.tableAttendancesGroup()
+        }
       })
+      resolve()
+    })
+
   }
 
-  data = (attendances) => {
-    const {studentStatus, teachers, teacherStatus, teacherSelected, students, studentSelected} = this.state
+  data = (attendances, i) => {
+    const {studentStatus, teachers, teacherStatus, teacherSelected, students, studentSelected, classes, classSelected} = this.state
     const onChangeStudentStatus = this.onChangeStudentStatus
     const onChangeTeacherStatus = this.onChangeTeacherStatus
     const onChangeStudent = this.onChangeStudent
     const onChangeTeacher = this.onChangeTeacher
+    const onChangeClass = this.onChangeClass
     const createStudentPicker = this.createStudentPicker
     const createTeacherPicker = this.createTeacherPicker
+    const createClassPicker = this.createClassPicker
 
     return ({
       columns: [
@@ -224,6 +327,12 @@ export default class attendancesList extends Component {
           field: 'time',
           sort: 'asc',
           width: 270
+        },
+        {
+          label: 'Class',
+          field: 'class',
+          sort: 'asc',
+          width: 200
         },
         {
           label: 'Student\'s Name',
@@ -250,17 +359,24 @@ export default class attendancesList extends Component {
           width: 150
         },
       ],
-      rows: (function () {
+      rows: ( function () {
         let rowData = []
+        // console.log('bang', students)
+        for (const attendance of attendances) {
+          
+          let data = attendance
 
-        // console.log('bang',students)
-        attendances.map((data, index) => {
+        // attendances.map((data, index) => {
+          console.log('bang', students)
           // console.log('coba1 studentID:',data.student_id,'isi:', studentSelected[data.student_id], 'class', data.class_name)
           rowData.push({
             day: data.day,
             time: data.time,
+            class: <select class="form-control" onChange={(e) => onChangeClass(e, data.attendances_id)} value={classSelected[data.attendances_id]}>
+              { createClassPicker(classes)}
+            </select>,
             student: <select class="form-control" onChange={(e) => onChangeStudent(e, data.attendances_id)} value={studentSelected[data.attendances_id]}>
-              {createStudentPicker(students)}
+              { createStudentPicker(students[i])}
             </select>,
             status_student: <select class="form-control" onChange={(e) => onChangeStudentStatus(e, data.attendances_id)} value={studentStatus[data.attendances_id]}>
               <option value="0"></option>
@@ -278,18 +394,51 @@ export default class attendancesList extends Component {
               <option value="3">Attend</option>
             </select>
           })
-        })
+        }
+        // console.log('ajg',rowData)
         return rowData
       }())
     })
     
   };
 
-  tableAttendancesGroup = (attendances) => {
-    let table = []
+  tableAttendancesGroup = async () => {
+    this.setState({loading: false})
+    if(!this.state.isLoaded) {
+      console.log('dor', this.state.isLoaded)
+      if (!this.state.isFilterDate) {
+        // console.log('bang1')
+        await this.fetchData()
+      }
 
-    attendances.forEach((attendance, index) => {
-      // console.log('coba2',attendance)
+      if(this.state.isChangeClass){
+        // console.log('dor3')
+        if (this.state.isFilterDate) {
+          console.log('dor1', this.state.isFilterDate)
+          // console.log('dor', this.state.filterDate)
+          await this.filterData(this.state.filterDate, this.state.isChangeClass)
+        }
+      }
+      
+      await this.fetchClasses()
+      await this.fetchTeachers()
+
+      this.setState({students: []})
+
+      for (const attendance of this.state.attendances) { 
+        console.log('isi', attendance[0].class_id)
+        await this.fetchStudentsByClass(attendance[0].class_id)
+      }
+      await this.promisedSetState({
+        isLoaded: true
+      })
+    }
+
+    const { attendances } = this.state
+    let table = []
+    var i = 0
+
+      for (const attendance of attendances) {
 
       table.push(
         <section className="content-header">
@@ -299,9 +448,8 @@ export default class attendancesList extends Component {
               <div className="content">
               <h5>Class : {attendance[0].class_name}</h5>
                 <div class="box-header">
-                  {/* <NavLink to="/schedule/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Schedule</NavLink> */}
                     <div class="float-right">
-                      {index < 1 && (
+                      {i < 1 && (
                         <>
                           <DatePicker
                             selected={this.state.filterDate}
@@ -319,7 +467,7 @@ export default class attendancesList extends Component {
                   striped
                   bordered
                   hover
-                  data={this.data(attendance)}
+                  data={await this.data(attendance, i)}
                   btn
                 />
                 <MDBContainer>
@@ -340,18 +488,30 @@ export default class attendancesList extends Component {
         </div>
       </section>
       )
-    });
-    return(
-      table
-    )
+      i++
+    }
+    console.log('table', table)
+    this.setState({
+      tables: table,
+      loading: true
+    })
   }
 
   render() {
     // console.log('coba3',this.state.studentSelected[6])
-    const { attendances } = this.state
+    const { loading, tables } = this.state
+    // console.log('studentOK', attendances)
+    // console.log('status', classSelected)
+    // console.log('loaded', isLoaded)
     return (
+      
       <>
-        {this.tableAttendancesGroup(attendances)}
+      {loading ? tables : <center><Loader
+         type="Oval"
+         color="#00BFFF"
+         height="500"	
+         width="100"
+      /></center> }
       </>
     )
   }
