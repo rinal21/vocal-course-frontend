@@ -4,6 +4,7 @@ export default class Header extends Component {
     logout = () => {
         let appState = {
             isLoggedIn: false,
+            isLogout: true,
             user: {}
         };
         localStorage["appState"] = JSON.stringify(appState);

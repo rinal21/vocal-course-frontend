@@ -3,7 +3,8 @@ import { Route } from "react-router-dom"
 
 class Redirect extends Component {
     componentDidMount() {
-        alert('You must login first')
+        localStorage.getItem("appState") === null && alert('You must login first')
+        localStorage["appState"] && JSON.parse(localStorage["appState"]).isLogout && localStorage.removeItem("appState");
         window.location.replace('/login')
     }
 

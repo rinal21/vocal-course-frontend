@@ -74,6 +74,7 @@ export default class loginForm extends Component {
                                     };
                                     let appState = {
                                         isLoggedIn: true,
+                                        isLogout: false,
                                         user: userData
                                     };
                                     // save app state with user date in local storage
