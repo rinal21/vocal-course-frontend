@@ -48,7 +48,8 @@ export default class schedulesList extends Component {
   }
 
   fetchData = () => {
-    fetch('http://localhost:8000/api/schedules')
+    const branch = JSON.parse(localStorage["appState"]).user.branchId
+    fetch('http://localhost:8000/api/schedules?branch=' + branch)
       .then(response => response.json())
       .then((json) => {
         this.setState({
