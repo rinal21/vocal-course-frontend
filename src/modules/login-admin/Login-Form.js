@@ -3,6 +3,7 @@ import { MDBDataTable  } from 'mdbreact';
 import { NavLink } from "react-router-dom";
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import Select from 'react-select';
 import { Redirect } from 'react-router-dom'
 
 import axios from 'axios';
@@ -12,11 +13,16 @@ export default class loginForm extends Component {
         super(props);
         this.state = {
             isLoggedIn: false,
+            selectedBranch: '',
+            branchId: '',
+            branches: [],
             user: {}
         };
+        this.onChangeBranch = this.onChangeBranch.bind(this);
     }
   
     componentDidMount = () => {
+        this.fetchBranches()
         document.body.classList.remove('hold-transition', 'skin-blue' ,'sidebar-mini')
         document.body.classList.add('hold-transition', 'login-page')
     }
@@ -25,6 +31,36 @@ export default class loginForm extends Component {
         document.body.classList.remove('hold-transition', 'login-page')
         document.body.classList.add('hold-transition', 'skin-blue' ,'sidebar-mini')
     }
+
+    fetchBranches = () => {
+        fetch('http://localhost:8000/api/branches')
+          .then(response => response.json())
+          .then((json) => {
+            this.setState({
+              branches: json.data
+            })
+          })
+      }
+
+    onChangeBranch = (selectedBranch) =>  {
+        this.setState({ selectedBranch });
+        this.setState({ branchId: selectedBranch.value })
+    }
+
+    dataBranches = (branches) => {
+        return (
+          function () {
+            let rowData = []
+            branches.map((data) => {
+              rowData.push({
+                value: data.id,
+                label: data.name,
+              })
+            })
+            return rowData
+          }()
+        )
+      }
 
     render() {
         const ClassSchema = Yup.object().shape({
@@ -51,7 +87,8 @@ export default class loginForm extends Component {
                     onSubmit={values => {
                         const obj = {
                             username: values.username,
-                            password: values.password
+                            password: values.password,
+                            branchId: this.state.selectedBranch.value
                         };
                         // axios.post('http://localhost:8000/api/class', obj)
                         //     .then(res => console.log(res.data))
@@ -70,12 +107,14 @@ export default class loginForm extends Component {
                                         id: json.data.data.id,
                                         email: json.data.data.email,
                                         auth_token: json.data.data.auth_token,
+                                        branchId: json.data.data.branch_id,
+                                        branchName: this.state.selectedBranch.label,
                                         timestamp: new Date().toString()
                                     };
                                     let appState = {
                                         isLoggedIn: true,
                                         isLogout: false,
-                                        user: userData
+                                        user: userData,
                                     };
                                     // save app state with user date in local storage
                                     localStorage["appState"] = JSON.stringify(appState);
@@ -120,6 +159,15 @@ export default class loginForm extends Component {
                                                     {/* <input type="password" name="password" className="form-control" placeholder="Password" required=" " /> */}
                                                     <span className="glyphicon glyphicon-lock form-control-feedback"></span>
                                                 </div>
+                                                <div className="form-group has-feedback">
+                                                    <Select
+                                                        value={this.state.selectedBranch}
+                                                        onChange={this.onChangeBranch}
+                                                        options={this.dataBranches(this.state.branches)}
+                                                    />
+                                                    <span className="glyphicon glyphicon-lock form-control-feedback"></span>
+                                                </div>
+
                                                 <div className="row" style={{ marginLeft: 0 }}>
                                                     <div className="col-xs-4">
                                                         <button type="submit" className="btn btn-primary btn-block btn-flat">Sign In</button>
