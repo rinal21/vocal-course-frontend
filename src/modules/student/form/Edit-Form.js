@@ -274,9 +274,9 @@ export default class studentEdit extends Component {
     if (redirect) {
       if (status == 2)
         return <Redirect to='/student-unpaid' />;
-      else if (status = 3)
+      else if (status == 3)
         return <Redirect to='/student-paid' />;
-      else if (status = 4)
+      else if (status == 4)
         return <Redirect to='/student-paid' />;
     }
 
