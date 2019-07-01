@@ -324,18 +324,18 @@ export default class studentEdit extends Component {
         .min(3, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Required'),
-      instructor: Yup.string()
-        .min(3, 'Too Short!')
-        .max(50, 'Too Long!')
-        .required('Required'),
-      days: Yup.number()
-        .min(2, 'Too Short!')
-        .max(360, 'Too Long!')
-        .required('Required'),
-      hours: Yup.number()
-        .min(2, 'Too Short!')
-        .max(365, 'Too Long!')
-        .required('Required'),
+      // instructor: Yup.string()
+      //   .min(3, 'Too Short!')
+      //   .max(50, 'Too Long!')
+      //   .required('Required'),
+      // days: Yup.number()
+      //   .min(2, 'Too Short!')
+      //   .max(360, 'Too Long!')
+      //   .required('Required'),
+      // hours: Yup.number()
+      //   .min(2, 'Too Short!')
+      //   .max(365, 'Too Long!')
+      //   .required('Required'),
     });
     return (
       <div>
@@ -358,7 +358,7 @@ export default class studentEdit extends Component {
          }}
         validationSchema={StudentSchema}
             onSubmit={values => {
-              if (this.props.status == 4) {
+              if (this.props.status == 4 || this.props.status == 2) {
                 const obj = {
                   class: this.state.classId,
                   teacher: this.state.teacherId,
@@ -379,6 +379,7 @@ export default class studentEdit extends Component {
                   result: this.state.result,
                   days: values.days,
                   hours: values.hours,
+                  status: this.props.status,
                 };
                 const formData = new FormData();
                 formData.append('signature', this.state.signature);
@@ -422,7 +423,7 @@ export default class studentEdit extends Component {
                         <div class="col-sm">
                           <div className="form-group">
                             <label for="first" class="mr-sm-2">
-                              First Name
+                              First Name <label style={{color: 'red'}}>*</label>
                         </label>
                             {/* <input
                           type="text"
@@ -440,7 +441,7 @@ export default class studentEdit extends Component {
                         <div class="col-sm">
                           <div className="form-group">
                             <label for="middle" class="mr-sm-2">
-                              Middle
+                              Middle <label style={{color: 'red'}}>*</label>
                       </label>
                             {/* <input
                           type="text"
@@ -458,7 +459,7 @@ export default class studentEdit extends Component {
                         <div class="col-sm">
                           <div className="form-group">
                             <label for="last" class="mr-sm-2">
-                              Last
+                              Last <label style={{color: 'red'}}>*</label>
                         </label>
                             {/* <input
                           type="text"
@@ -476,7 +477,7 @@ export default class studentEdit extends Component {
                       </div>
                       <div className="form-group">
                         <label for="address" class="mr-sm-2">
-                          Street Address
+                          Street Address <label style={{color: 'red'}}>*</label>
                     </label>
                         {/* <input type="text" class="form-control mb-2 mr-sm-2" id="address" 
                     value={this.state.address}
@@ -490,7 +491,7 @@ export default class studentEdit extends Component {
                         <div class="col-sm">
                           <div className="form-group">
                             <label for="school" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                              School
+                              School <label style={{color: 'red'}}>*</label>
                         </label>
                             {/* <input type="text" class="form-control mb-2 mr-sm-2" id="school"
                           value={this.state.school}
@@ -504,7 +505,7 @@ export default class studentEdit extends Component {
                         <div class="col-sm">
                           <div className="form-group">
                             <label for="email" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                              Email
+                              Email <label style={{color: 'red'}}>*</label>
                         </label>
                             {/* <input type="email" class="form-control mb-2 mr-sm-2" id="email" 
                           value={this.state.email}
@@ -538,7 +539,7 @@ export default class studentEdit extends Component {
                         <div class="col-sm">
                           <div className="form-group">
                             <label for="age" class="mr-sm-2 text-left d-block">
-                              Age
+                              Age <label style={{color: 'red'}}>*</label>
                     </label>
                             {/* <input type="text" class="form-control mt-2 mb-2 mr-sm-2" id="age" 
                           value={this.state.age}
@@ -571,7 +572,7 @@ export default class studentEdit extends Component {
                         <div class="col-sm">
                           <div className="form-group">
                             <label for="cellphone" class="mr-sm-2 text-left d-block">
-                              Cell Phone
+                              Cell Phone <label style={{color: 'red'}}>*</label>
                         </label>
                             {/* <input type="text" class="form-control mb-2 mr-sm-2" id="cellphone" 
                           value={this.state.cellPhone}
@@ -585,7 +586,7 @@ export default class studentEdit extends Component {
                         <div className="col-sm">
                           <div className="form-group">
                             <label for="homephone" class="mr-sm-2 text-left d-block">
-                              Home Phone No
+                              Home Phone No <label style={{color: 'red'}}>*</label>
                         </label>
                             {/* <input type="text" class="form-control mb-2 mr-sm-2" id="homephone"
                           value={this.state.homePhone}
@@ -602,8 +603,8 @@ export default class studentEdit extends Component {
                     <hr />
                     <div class="container" style={{ marginLeft: 0, paddingLeft: 0 }}>
                       <div className="form-group">
-                        <label for="school" class="mr-sm-2 text-left d-block" style={{ width: 180 }}>
-                          Person responsible for bill
+                        <label for="school" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                          Person responsible for bill <label style={{color: 'red'}}>*</label>
                   </label>
                         {/* <input type="text" class="form-control mb-2 mr-sm-2" id="school"
                           value={this.state.responsible}
