@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { MDBDataTable, MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter  } from 'mdbreact';
 import { NavLink } from "react-router-dom";
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -12,7 +13,13 @@ export default class studentListUnpaid extends Component {
     this.state = {
       students: [],
       filterDate: new Date(),
+      paymentStudentData: [],
+      paymentConfirm: false,
+      paymentId: '',
+      detailStudent: false,
+      detailStudentInfo: {},
       deleteConfirm: false,
+      redirect: false,
       deleteId : ''
     }
     this.delete = this.delete.bind(this);
@@ -27,11 +34,150 @@ export default class studentListUnpaid extends Component {
       .catch(err => console.log(err))
   }
 
+  togglePaymentConfirmation = (id, first_name, middle_name, last_name, teacher_id, teacher_name) => {
+    this.setState({
+      paymentConfirm: !this.state.paymentConfirm,
+      paymentId: id,
+      paymentStudentData: {id, first_name, middle_name, last_name, teacher_id, teacher_name}
+    });
+  }
+
   toggleDeleteConfirmation = (id) => {
     this.setState({
       deleteConfirm: !this.state.deleteConfirm,
       deleteId: id
     });
+  }
+
+  toggleDetailStudent = (id) => {
+    if (id) {
+      fetch('http://localhost:8000/api/student/' + id)
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          detailStudentInfo: json,
+          detailStudent: !this.state.detailStudent
+        })
+      })
+    }
+    else {
+      this.setState({
+        detailStudent: false
+      })
+    }
+  }
+
+  UpdateStatusPayment = (id) => {
+    const obj = {
+      status: '3',
+    };
+    console.log(obj)
+    axios.patch('http://localhost:8000/api/student_status/' + id, obj)
+      .then(res => console.log(res.data))
+      .then(() => this.setState({ redirect: true }));
+  }
+
+  showDetailStudent = () => {
+    const { detailStudentInfo } = this.state
+    let data = detailStudentInfo[0]
+
+    if (data) {
+      return (
+        <>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Name
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.first_name + ' ' + data.middle_name + ' ' + data.last_name}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Birth Date
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.birth_date}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Age
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.age}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Sex
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.sex}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Address
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.street_address}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Cellphone No
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.cell_phone}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Homephone No
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.home_phone_no}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Email
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.email}</label>
+          </div>
+          <div className="form-inline mb-2">
+          <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              School
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.school}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Person Responsible for Bill
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.person_responsible_for_bill}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Class
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.class_name}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Teacher's Name
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.teacher_name}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Registration Date
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.date}</label>
+          </div>
+        </>
+      )
+    }
   }
 
   componentDidMount = () => {
@@ -83,6 +229,8 @@ export default class studentListUnpaid extends Component {
 
   data = (students) => {
     const deleteConfirm = this.toggleDeleteConfirmation
+    const paymentConfirm = this.togglePaymentConfirmation
+    const detailStudent = this.toggleDetailStudent
 
     return ({
       columns: [
@@ -150,16 +298,22 @@ export default class studentListUnpaid extends Component {
             email: data.email,
             action: 
               <div>
-                <NavLink
+              <button onClick={() => detailStudent(data.id)} className="btn btn-default" >Detail</button>
+
+                {/* <NavLink
                   to={{
-                    pathname: 'student/edit',
+                    pathname: 'transaction/add',
                     state: {
                       studentId: data.id,
+                      studentName: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
+                      teacherId: data.teacher_id,
+                      teacherName: data.teacher_name,
                       status: 3
                     }
                   }}
-                  className="btn btn-primary">Paid</NavLink>
-                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+                  className="btn btn-primary" style={{ position: "relative", left: 5 }}>Pay</NavLink> */}
+                <button onClick={() => paymentConfirm(data.id, data.first_name, data.middle_name, data.last_name, data.teacher_id, data.teacher_name)} className="btn btn-primary" style={{ position: "relative", left: 5 }}>Pay</button>
+                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 10 }}>Delete</button>
               </div>
           })
         })
@@ -180,7 +334,7 @@ export default class studentListUnpaid extends Component {
               <div className="col-md-12">
                 <div className="box">
                   <div className="content">
-                    <h5>Class : {student[0].class_name}</h5>
+                    <h5>Class : {student[0].class_name ? student[0].class_name : 'None'}</h5>
                     {index < 1 && (
                       <>
                         <NavLink to="/student/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student</NavLink>
@@ -196,18 +350,6 @@ export default class studentListUnpaid extends Component {
                       data={this.data(student)}
                       btn
                     />
-                    <MDBContainer>
-                      <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
-                        <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
-                        <MDBModalBody>
-                          Are you sure you want to delete it ?
-                        </MDBModalBody>
-                        <MDBModalFooter>
-                          <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
-                          <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
-                        </MDBModalFooter>
-                      </MDBModal>
-                    </MDBContainer>
                   </div>
                 </div>
               </div>
@@ -236,18 +378,6 @@ export default class studentListUnpaid extends Component {
                       data={this.data(student)}
                       btn
                     />
-                    <MDBContainer>
-                      <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
-                        <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
-                        <MDBModalBody>
-                          Are you sure you want to delete it ?
-                        </MDBModalBody>
-                        <MDBModalFooter>
-                          <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
-                          <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
-                        </MDBModalFooter>
-                      </MDBModal>
-                    </MDBContainer>
                   </div>
                 </div>
               </div>
@@ -261,10 +391,65 @@ export default class studentListUnpaid extends Component {
   }
 
   render() {
-    const { students } = this.state
+    const { students, redirect, paymentStudentData } = this.state
+    
+    if (redirect) {
+      return <Redirect to='/student-paid' />;
+    }
+
+    console.log('coba', this.state.paymentStudentData.id)
+
     return (
       <>
       {students[0] && this.tableStudentsGroup(students)}
+        <MDBContainer>
+          <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
+            <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
+            <MDBModalBody>
+              Are you sure you want to delete it ?
+                        </MDBModalBody>
+            <MDBModalFooter>
+              <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
+              <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
+            </MDBModalFooter>
+          </MDBModal>
+        </MDBContainer>
+
+        <MDBContainer>
+          <MDBModal isOpen={this.state.detailStudent} toggle={this.toggleDetailStudent} size="md" centered>
+            <MDBModalHeader toggle={this.toggleDetailStudent}>Detail Student</MDBModalHeader>
+              <MDBModalBody>
+                {this.state.detailStudent && this.showDetailStudent()}
+              </MDBModalBody>
+            <MDBModalFooter>
+              <MDBBtn color="secondary" onClick={this.toggleDetailStudent}>Close</MDBBtn>
+            </MDBModalFooter>
+          </MDBModal>
+        </MDBContainer>
+
+        <MDBContainer>
+          <MDBModal isOpen={this.state.paymentConfirm} toggle={this.paymentConfirm} size="md" centered>
+            <MDBModalHeader toggle={this.togglePaymentConfirmation}>Detail Student</MDBModalHeader>
+              <MDBModalBody>
+                Payed ?
+              </MDBModalBody>
+            <MDBModalFooter>
+              <MDBBtn color="success" onClick={() => this.UpdateStatusPayment(this.state.paymentId)}>Yes</MDBBtn>
+              <NavLink
+                  to={{
+                    pathname: 'transaction/add',
+                    state: {
+                      studentId: paymentStudentData.id,
+                      studentName: paymentStudentData.first_name + ' ' + paymentStudentData.middle_name + ' ' + paymentStudentData.last_name,
+                      teacherId: paymentStudentData.teacher_id,
+                      teacherName: paymentStudentData.teacher_name,
+                      status: 3
+                    }
+                  }}
+                  className="btn btn-danger" >No</NavLink>
+            </MDBModalFooter>
+          </MDBModal>
+        </MDBContainer>
       
       {/* <section className="content-header">
         <div className="row">
