@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { MDBDataTable, MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter  } from 'mdbreact';
 import { NavLink } from "react-router-dom";
 import axios from 'axios';
+import ReactToPrint from "react-to-print";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -12,7 +13,11 @@ export default class studentListPaid extends Component {
     this.state = {
       students: [],
       filterDate: new Date(),
+      studentId: '',
+      detailStudent: false,
+      detailStudentInfo: [],
       deleteConfirm: false,
+      layoutPrint: '',
       deleteId : ''
     }
     this.delete = this.delete.bind(this);
@@ -28,10 +33,138 @@ export default class studentListPaid extends Component {
   }
 
   toggleDeleteConfirmation = (id) => {
-    this.setState({
-      deleteConfirm: !this.state.deleteConfirm,
-      deleteId: id
-    });
+    if (id) {
+      this.setState({
+        deleteConfirm: !this.state.deleteConfirm,
+        deleteId: id
+      });
+    }
+    else {
+      this.setState({
+        deleteConfirm: false
+      });
+    }
+  }
+
+  toggleDetailStudent = (id) => {
+    if (id) {
+      fetch('http://localhost:8000/api/student/' + id)
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          detailStudentInfo: json,
+          detailStudent: !this.state.detailStudent
+        })
+      })
+    }
+    else {
+      this.setState({
+        detailStudent: false
+      })
+    }
+  }
+
+  showDetailStudent = () => {
+    const { detailStudentInfo } = this.state
+    let data = detailStudentInfo[0]
+
+    if (data) {
+      return (
+        <>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Name
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.first_name + ' ' + data.middle_name + ' ' + data.last_name}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Birth Date
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.birth_date}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Age
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.age}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Sex
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.sex}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Address
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.street_address}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Cellphone No
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.cell_phone}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Homephone No
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.home_phone_no}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Email
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.email}</label>
+          </div>
+          <div className="form-inline mb-2">
+          <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              School
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.school}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Person Responsible for Bill
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.person_responsible_for_bill}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Class
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.class_name}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Teacher's Name
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.teacher_name}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Registration Date
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.date}</label>
+          </div>
+        </>
+      )
+    }
   }
 
   componentDidMount = () => {
@@ -83,6 +216,7 @@ export default class studentListPaid extends Component {
 
   data = (students) => {
     const deleteConfirm = this.toggleDeleteConfirmation
+    const detailStudent = this.toggleDetailStudent
 
     return ({
       columns: [
@@ -132,7 +266,7 @@ export default class studentListPaid extends Component {
           label: 'Action',
           field: 'action',
           sort: 'disabled',
-          width: 10
+          width: 1000
         }
       ],
       rows: (function () {
@@ -150,6 +284,7 @@ export default class studentListPaid extends Component {
             email: data.email,
             action: 
               <div>
+                <button onClick={() => detailStudent(data.id)} className="btn btn-default" >Detail</button>
                 <NavLink
                   to={{
                     pathname: 'student/edit',
@@ -158,8 +293,8 @@ export default class studentListPaid extends Component {
                       status: 4
                     }
                   }}
-                  className="btn btn-primary">Edit</NavLink>
-                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+                  className="btn btn-primary" style={{ position: "relative", left: 5 }}>Edit</NavLink>
+                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 10 }}>Delete</button>
               </div>
           })
         })
@@ -180,7 +315,7 @@ export default class studentListPaid extends Component {
               <div className="col-md-12">
                 <div className="box">
                   <div className="content">
-                    <h5>Class : {student[0].class_name}</h5>
+                    <h5>Class : {student[0].class_name ? student[0].class_name : 'None'}</h5>
                     {index < 1 && (
                       <>
                         <NavLink to="/student/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student</NavLink>
@@ -196,18 +331,6 @@ export default class studentListPaid extends Component {
                       data={this.data(student)}
                       btn
                     />
-                    <MDBContainer>
-                      <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
-                        <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
-                        <MDBModalBody>
-                          Are you sure you want to delete it ?
-                        </MDBModalBody>
-                        <MDBModalFooter>
-                          <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
-                          <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
-                        </MDBModalFooter>
-                      </MDBModal>
-                    </MDBContainer>
                   </div>
                 </div>
               </div>
@@ -219,7 +342,6 @@ export default class studentListPaid extends Component {
               <div className="col-md-12">
                 <div className="box">
                   <div className="content">
-                    
                     {index < 1 && (
                       <>
                         <NavLink to="/student/add" class="btn btn-success" style={{marginBottom: 10}}><i class="fa fa-plus"></i> Add Student</NavLink>
@@ -236,18 +358,6 @@ export default class studentListPaid extends Component {
                       data={this.data(student)}
                       btn
                     />
-                    <MDBContainer>
-                      <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
-                        <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
-                        <MDBModalBody>
-                          Are you sure you want to delete it ?
-                        </MDBModalBody>
-                        <MDBModalFooter>
-                          <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
-                          <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
-                        </MDBModalFooter>
-                      </MDBModal>
-                    </MDBContainer>
                   </div>
                 </div>
               </div>
@@ -265,41 +375,145 @@ export default class studentListPaid extends Component {
     return (
       <>
       {students[0] && this.tableStudentsGroup(students)}
-      
-      {/* <section className="content-header">
-        <div className="row">
-          <div className="col-md-12">
-            <div className="box">
-              <div className="content">
-                <div class="box-header">
-                  <NavLink to="/student/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student</NavLink>
-                </div>
-                <MDBDataTable
-                  striped
-                  bordered
-                  hover
-                  data={this.data(this.state.students)}
-                  btn
-                />
-                <MDBContainer>
-                  <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
-                    <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
-                    <MDBModalBody>
-                      Are you sure you want to delete it ?
-                    </MDBModalBody>
-                    <MDBModalFooter>
-                      <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
-                      <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
-                    </MDBModalFooter>
-                  </MDBModal>
-                </MDBContainer>
-              </div>
-            </div>
-          </div>
+        <MDBContainer>
+          <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
+            <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
+              <MDBModalBody>
+                Are you sure you want to delete it ?
+              </MDBModalBody>
+            <MDBModalFooter>
+              <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
+              <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
+            </MDBModalFooter>
+          </MDBModal>
+        </MDBContainer>
+
+        <MDBContainer>
+          <MDBModal isOpen={this.state.detailStudent} toggle={this.toggleDetailStudent} size="md" centered>
+            <MDBModalHeader toggle={this.toggleDetailStudent}>Detail Student</MDBModalHeader>
+              <MDBModalBody>
+                {this.state.detailStudent && this.showDetailStudent()}
+              </MDBModalBody>
+            <MDBModalFooter>
+            <ReactToPrint
+                trigger={() => <button className="btn btn-default"><i className="fa fa-print" />Print</button>}
+                content={() => this.state.layoutPrint}
+              />
+              <MDBBtn color="secondary" onClick={this.toggleDetailStudent}>Close</MDBBtn>
+            </MDBModalFooter>
+          </MDBModal>
+        </MDBContainer>
+
+        <div className="d-none">
+        {this.state.detailStudent && <ComponentToPrint
+            ref={el => (this.state.layoutPrint = el)} 
+            dataStudent={this.state.detailStudentInfo}/>}
         </div>
-      </section> */}
       </>
     )
   }
 }
 
+class ComponentToPrint extends React.Component {
+  render() {
+    const { dataStudent } = this.props
+    let data = dataStudent[0]
+      return (
+        <>
+        <div className="content-wrapper" style={{backgroundColor: 'white'}}>
+        <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Name
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.first_name + ' ' + data.middle_name + ' ' + data.last_name}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Birth Date
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.birth_date}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Age
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.age}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Sex
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.sex}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Address
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.street_address}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Cellphone No
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.cell_phone}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Homephone No
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.home_phone_no}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Email
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.email}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              School
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.school}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Person Responsible for Bill
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.person_responsible_for_bill}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Class
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.class_name}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Teacher's Name
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.teacher_name}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Registration Date
+              </label>
+            <label>: &nbsp;</label>
+            <label>{data.date}</label>
+          </div>
+        </div>
+        </>
+      );
+  }
+}
