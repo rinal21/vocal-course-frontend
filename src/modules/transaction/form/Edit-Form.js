@@ -16,19 +16,29 @@ export default class transactionEdit extends Component {
       teachers: [],
       teacherId: '',
       selectedTeacher: '',
+      transactionsType: [],
+      transactionTypeId: '',
+      selectedTransactionType: '',
       students: [],
       studentId: '',
       selectedStudent: '',
+      accounts: [],
+      accountId: '',
+      selectedAccount: '',
       pricings: [],
       pricingId: '',
       selectedPricing: '',
       cost: '',
       royalty: '',
       receiptNumber: '',
+      selectedPaymentMethod: '',
       note: '',
       level: ''
     };
+    this.onChangeTransactionType = this.onChangeTransactionType.bind(this);
+    this.onChangeAccount = this.onChangeAccount.bind(this);
     this.onChangePaymentDate = this.onChangePaymentDate.bind(this);
+    this.onChangePaymentMethod = this.onChangePaymentMethod.bind(this);
     this.onChangeStudents = this.onChangeStudents.bind(this);
     this.onChangeTeacher = this.onChangeTeacher.bind(this);
     this.onChangeReceiptNumber = this.onChangeReceiptNumber.bind(this);
@@ -43,6 +53,18 @@ export default class transactionEdit extends Component {
     });
   }
 
+  onChangePaymentMethod = changeEvent => {
+    this.setState({selectedPaymentMethod: changeEvent.target.value})  
+  }
+  onChangeTransactionType = (selectedTransactionType) =>  {
+    this.setState({ selectedTransactionType });
+    this.setState({ transactionTypeId: selectedTransactionType.value})
+  }
+
+  onChangeAccount = (selectedAccount) =>  {
+    this.setState({ selectedAccount });
+    this.setState({ accountId: selectedAccount.value})
+  }
   onChangeStudents = (selectedStudent) =>  {
     this.setState({ selectedStudent });
     this.setState({ studentId: selectedStudent.value})
@@ -66,10 +88,22 @@ export default class transactionEdit extends Component {
 
   componentDidMount = () => {
     // ajax call
+    this.fetchAccounts()
     this.fetchTeachers()
     this.fetchStudents()
     this.fetchPricings()
+    this.fetchTransactionsType()
     this.fetchDatas()
+  }
+
+  fetchTransactionsType = () => {
+    fetch('http://localhost:8000/api/transactions_type')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          transactionsType: json.data
+        })
+      })
   }
 
   fetchTeachers = () => {
@@ -83,11 +117,21 @@ export default class transactionEdit extends Component {
   }
   
   fetchStudents = () => {
-    fetch('http://localhost:8000/api/students')
+    fetch('http://localhost:8000/api/students?status=3')
       .then(response => response.json())
       .then((json) => {
         this.setState({
           students: json
+        })
+      })
+  }
+
+  fetchAccounts = () => {
+    fetch('http://localhost:8000/api/accounts')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          accounts: json.data
         })
       })
   }
@@ -115,61 +159,67 @@ export default class transactionEdit extends Component {
       })
   }
 
-    fetchDatas = () => {
-        const { transactionId } = this.props
-        fetch('http://localhost:8000/api/transaction/' + transactionId)
-            .then(response => response.json())
-            .then((json) => {
-                json.map((data, index) => {
-                    if (data.type_by_difficulty == 1) {
-                        data.type_by_difficulty = 'Basic'
-                    } else if (data.type_by_difficulty == 2) {
-                        data.type_by_difficulty = 'Intermediate'
-                    } else if (data.type_by_participant == 3) {
-                        data.type_by_difficulty = 'Pre adv & adv'
-                    }
+  fetchDatas = () => {
+    const { transactionId } = this.props
+    fetch('http://localhost:8000/api/transaction/' + transactionId)
+      .then(response => response.json())
+      .then((json) => {
+        json.map((data, index) => {
+          if (data.type_by_difficulty == 1) {
+            data.type_by_difficulty = 'Basic'
+          } else if (data.type_by_difficulty == 2) {
+            data.type_by_difficulty = 'Intermediate'
+          } else if (data.type_by_difficulty == 3) {
+            data.type_by_difficulty = 'Pre adv & adv'
+          }
 
-                    //   if(data.type_by_teacher == 1){
-                    //     data.type_by_teacher = 'Regular teacher class'
-                    //   }else if(data.type_by_participant == 2){
-                    //     data.type_by_teacher = 'Senior teacher class'
-                    //   }
+          //   if(data.type_by_teacher == 1){
+          //     data.type_by_teacher = 'Regular teacher class'
+          //   }else if(data.type_by_participant == 2){
+          //     data.type_by_teacher = 'Senior teacher class'
+          //   }
 
-                    if (data.type_by_participant == 1) {
-                        data.type_by_participant = 'Private'
-                    } else if (data.type_by_participant == 2) {
-                        data.type_by_participant = 'Semi Private'
-                    } else if (data.type_by_participant == 3) {
-                        data.type_by_participant = 'Group'
-                    }
-                    this.setState({
-                        selectedStudent: [{
-                            value: data.student_id,
-                            label: data.first_name + ' ' + data.middle_name + ' ' + data.last_name
-                        }],
-                        selectedTeacher: [{
-                            value: data.teacher_id,
-                            label: data.teacher_name
-                        }],
-                        selectedPricing: [{
-                            value: data.pricing_id,
-                            label: data.class_name + ' - ' + data.type_by_difficulty + ' - ' + data.type_by_participant
-                        }],
-                        pricingId: data.pricing_id,
-                        teacherId: data.teacher_id,
-                        studentId: data.student_id,
-                        paymentDate: data.payment_date,
-                        receiptNumber: data.receipt_number,
-                        cost: data.cost,
-                        royalty: data.royalty,
-                        note: data.note,
-                    })
-                })
-                // this.setState({
-                //   datas: json
-                // })
-            })
-    }
+          if (data.type_by_participant == 1) {
+            data.type_by_participant = 'Private'
+          } else if (data.type_by_participant == 2) {
+            data.type_by_participant = 'Semi Private'
+          } else if (data.type_by_participant == 3) {
+            data.type_by_participant = 'Group'
+          }
+          this.setState({
+            selectedStudent: [{
+              value: data.student_id,
+              label: data.first_name + ' ' + data.middle_name + ' ' + data.last_name
+            }],
+            selectedTeacher: [{
+              value: data.teacher_id,
+              label: data.teacher_name
+            }],
+            selectedPricing: [{
+              value: data.pricing_id,
+              label: data.class_name + ' - ' + data.type_by_difficulty + ' - ' + data.type_by_participant
+            }],
+            selectedTransactionType: [{
+              value: data.transaction_type_id,
+              label: data.transaction_type_name
+            }],
+            transactionTypeId: data.transaction_type_id,
+            pricingId: data.pricing_id,
+            teacherId: data.teacher_id,
+            studentId: data.student_id,
+            paymentDate: data.payment_date,
+            receiptNumber: data.receipt_number,
+            cost: data.cost,
+            royalty: data.royalty,
+            note: data.note,
+            selectedPaymentMethod: data.status
+          })
+        })
+        // this.setState({
+        //   datas: json
+        // })
+      })
+  }
 
   dataStudents = (students) => {
     return (
@@ -201,6 +251,36 @@ export default class transactionEdit extends Component {
     )
   }
 
+  dataAccounts = (accounts) => {
+    return (
+      function () {
+        let rowData = []
+        accounts.map((data) => {
+          rowData.push({
+            value: data.id,
+            label: data.name,
+          })
+        })
+        return rowData
+      }()
+    )
+  }
+
+  dataTransactionsType = (transactionsType) => {
+    return (
+      function () {
+        let rowData = []
+        transactionsType.map((data) => {
+          rowData.push({
+            value: data.id,
+            label: data.name,
+          })
+        })
+        return rowData
+      }()
+    )
+  }
+
   dataPricings = (pricings) => {
     return (
       function () {
@@ -210,7 +290,7 @@ export default class transactionEdit extends Component {
             data.type_by_difficulty = 'Basic'
           }else if(data.type_by_difficulty == 2){
             data.type_by_difficulty = 'Intermediate'
-          }else if(data.type_by_participant == 3){
+          }else if(data.type_by_difficulty == 3){
             data.type_by_difficulty = 'Pre adv & adv'
           }
 
@@ -246,8 +326,11 @@ export default class transactionEdit extends Component {
       receipt_number: this.state.receiptNumber,
       cost: this.state.cost,
       pricing: this.state.pricingId,
+      account: this.state.accountId,
       royalty: this.state.royalty,
-      note: this.state.note
+      transaction_type: this.state.transactionTypeId,
+      note: this.state.note,
+      status: this.state.selectedPaymentMethod,  
     };
     console.log(obj)
       axios.patch('http://localhost:8000/api/transaction/' + this.props.transactionId, obj)
@@ -333,6 +416,19 @@ export default class transactionEdit extends Component {
                       />
                     </div>
                   </div>
+                  <div className="form-inline mb-2">
+                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Transaction Type
+                  </label>
+                    <label>: &nbsp;</label>
+                    <div style={{ display: 'inline-block', width: 290 }}>
+                      <Select
+                        value={this.state.selectedTransactionType}
+                        onChange={this.onChangeTransactionType}
+                        options={this.dataTransactionsType(this.state.transactionsType)}
+                      />
+                    </div>
+                  </div>
                   {/* <div className="form-inline mb-2">
                     <label for="level" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Level
@@ -399,6 +495,22 @@ export default class transactionEdit extends Component {
                     <textarea class="form-control mr-sm-2" id="note" 
                     value={this.state.note}
                     onChange={this.onChangeNote}/>
+                  </div>
+                  <div className="form-inline mb-2">
+                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Payment Method
+                  </label>
+                    <label>: &nbsp;</label>
+                    <label class="radio-inline mr-2">
+                      <input type="radio" name="optPayment" value="0"
+                        checked={this.state.selectedPaymentMethod == "0"}
+                        onChange={this.onChangePaymentMethod} />Pending
+                          </label>
+                    <label style={{ marginRight: 10 }}>/</label>
+                    <label class="radio-inline"><input type="radio" name="optPayment" value="1"
+                      checked={this.state.selectedPaymentMethod == "1"}
+                      onChange={this.onChangePaymentMethod} />Cash
+                          </label>
                   </div>
 
                   <div className="form-group">

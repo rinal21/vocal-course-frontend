@@ -19,6 +19,9 @@ export default class transactionAdd extends Component {
       students: [],
       studentId: '',
       selectedStudent: '',
+      transactionsType: [],
+      transactionTypeId: '',
+      selectedTransactionType: '',
       pricings: [],
       pricingId: '',
       selectedPricing: '',
@@ -26,9 +29,12 @@ export default class transactionAdd extends Component {
       royalty: '',
       receiptNumber: '',
       note: '',
+      selectedPaymentMethod: '',
       level: ''
     };
+    this.onChangeTransactionType = this.onChangeTransactionType.bind(this);
     this.onChangePaymentDate = this.onChangePaymentDate.bind(this);
+    this.onChangePaymentMethod = this.onChangePaymentMethod.bind(this);
     this.onChangeStudents = this.onChangeStudents.bind(this);
     this.onChangeTeacher = this.onChangeTeacher.bind(this);
     this.onChangeReceiptNumber = this.onChangeReceiptNumber.bind(this);
@@ -43,9 +49,29 @@ export default class transactionAdd extends Component {
     });
   }
 
+  onChangePaymentMethod = changeEvent => {
+    this.setState({selectedPaymentMethod: changeEvent.target.value})  
+  }
+
   onChangeStudents = (selectedStudent) =>  {
     this.setState({ selectedStudent });
     this.setState({ studentId: selectedStudent.value})
+
+    fetch('http://localhost:8000/api/student/' + selectedStudent.value)
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          selectedTeacher : {
+            value: json[0].teacher_id,
+            label: json[0].teacher_name
+          },
+          teacherId: json[0].teacher_id
+        })
+      })
+  }
+  onChangeTransactionType = (selectedTransactionType) =>  {
+    this.setState({ selectedTransactionType });
+    this.setState({ transactionTypeId: selectedTransactionType.value})
   }
   onChangeTeacher = (selectedTeacher) =>  {
     this.setState({ selectedTeacher });
@@ -69,6 +95,25 @@ export default class transactionAdd extends Component {
     this.fetchTeachers()
     this.fetchStudents()
     this.fetchPricings()
+    this.fetchTransactionsType()
+    this.props.studentId && this.fetchDatas()
+  }
+
+  fetchDatas = () => {
+    const { studentId, studentName, teacherId, teacherName } = this.props
+
+    this.setState({
+      selectedTeacher: {
+        value: teacherId,
+        label: teacherName
+      },
+      teacherId: teacherId,
+      selectedStudent: {
+        value: studentId,
+        label: studentName
+      },
+      studentId: studentId
+    })
   }
 
   fetchTeachers = () => {
@@ -82,11 +127,21 @@ export default class transactionAdd extends Component {
   }
   
   fetchStudents = () => {
-    fetch('http://localhost:8000/api/students')
+    fetch('http://localhost:8000/api/students?status=3')
       .then(response => response.json())
       .then((json) => {
         this.setState({
           students: json
+        })
+      })
+  }
+
+  fetchTransactionsType = () => {
+    fetch('http://localhost:8000/api/transactions_type')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          transactionsType: json.data
         })
       })
   }
@@ -146,6 +201,21 @@ export default class transactionAdd extends Component {
     )
   }
 
+  dataTransactionsType = (transactionsType) => {
+    return (
+      function () {
+        let rowData = []
+        transactionsType.map((data) => {
+          rowData.push({
+            value: data.id,
+            label: data.name,
+          })
+        })
+        return rowData
+      }()
+    )
+  }
+
   dataPricings = (pricings) => {
     return (
       function () {
@@ -191,8 +261,10 @@ export default class transactionAdd extends Component {
       receipt_number: this.state.receiptNumber,
       cost: this.state.cost,
       pricing: this.state.pricingId,
+      transaction_type: this.state.transactionTypeId,
       royalty: this.state.royalty,
-      note: this.state.note
+      note: this.state.note,
+      status: this.state.selectedPaymentMethod,  
     };
     console.log(obj)
     axios.post('http://localhost:8000/api/transaction', obj)
@@ -239,6 +311,19 @@ export default class transactionAdd extends Component {
           }) => (
               <div>
                 <form onSubmit={this.onSubmit}>
+                <div className="form-inline mb-2">
+                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Student Name
+                  </label>
+                    <label>: &nbsp;</label>
+                    <div style={{ display: 'inline-block', width: 223.2 }}>
+                      <Select
+                        value={this.state.selectedStudent}
+                        onChange={this.onChangeStudents}
+                        options={this.dataStudents(this.state.students)}
+                      />
+                    </div>
+                  </div>
                   <div className="form-inline mb-2">
                     <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Teacher Name
@@ -249,19 +334,6 @@ export default class transactionAdd extends Component {
                         value={this.state.selectedTeacher}
                         onChange={this.onChangeTeacher}
                         options={this.dataTeachers(this.state.teachers)}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Student Name
-                  </label>
-                    <label>: &nbsp;</label>
-                    <div style={{ display: 'inline-block', width: 223.2 }}>
-                      <Select
-                        value={this.state.selectedStudent}
-                        onChange={this.onChangeStudents}
-                        options={this.dataStudents(this.state.students)}
                       />
                     </div>
                   </div>
@@ -278,6 +350,20 @@ export default class transactionAdd extends Component {
                       />
                     </div>
                   </div>
+                  <div className="form-inline mb-2">
+                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Transaction Type
+                  </label>
+                    <label>: &nbsp;</label>
+                    <div style={{ display: 'inline-block', width: 290 }}>
+                      <Select
+                        value={this.state.selectedTransactionType}
+                        onChange={this.onChangeTransactionType}
+                        options={this.dataTransactionsType(this.state.transactionsType)}
+                      />
+                    </div>
+                  </div>
+                  
                   {/* <div className="form-inline mb-2">
                     <label for="level" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Level
@@ -344,6 +430,22 @@ export default class transactionAdd extends Component {
                     <textarea class="form-control mr-sm-2" id="note" 
                     value={this.state.note}
                     onChange={this.onChangeNote}/>
+                  </div>
+                  <div className="form-inline mb-2">
+                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Payment Method
+                  </label>
+                    <label>: &nbsp;</label>
+                    <label class="radio-inline mr-2">
+                      <input type="radio" name="optPayment" value="0"
+                        checked={this.state.selectedPaymentMethod === "0"}
+                        onChange={this.onChangePaymentMethod} />Pending
+                          </label>
+                    <label style={{ marginRight: 10 }}>/</label>
+                    <label class="radio-inline"><input type="radio" name="optPayment" value="1"
+                      checked={this.state.selectedPaymentMethod === "1"}
+                      onChange={this.onChangePaymentMethod} />Cash
+                          </label>
                   </div>
 
                   <div className="form-group">
