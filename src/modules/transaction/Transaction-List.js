@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import axios from 'axios';
 import moment from "moment";
 import DatePicker from "react-datepicker";
-
+import ReactToPrint from "react-to-print";
 
 export default class teacherList extends Component {
   constructor(props) {
@@ -17,6 +17,10 @@ export default class teacherList extends Component {
       deleteId : '',
       paidConfirm: false,
       paidId : '',
+      detailTransaction: [],
+      printConfirm: false,
+      printId : '',
+      layoutPrint: '',
       totalAll: 0
     }
     this.delete = this.delete.bind(this);
@@ -61,11 +65,29 @@ export default class teacherList extends Component {
       .catch(err => console.log(err))
   }
 
-  togglepaidConfirmation = (id) => {
+  togglePaidConfirmation = (id) => {
     this.setState({
       paidConfirm: !this.state.paidConfirm,
       paidId: id
     });
+  }
+
+  togglePrintConfirmation = (id) => {
+    if (id) {
+      fetch('http://localhost:8000/api/transaction/' + id)
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          detailTransaction: json,
+          printConfirm: !this.state.printConfirm
+        })
+      })
+    }
+    else {
+      this.setState({
+        printConfirm: false
+      })
+    }
   }
 
   componentDidMount = () => {
@@ -90,7 +112,8 @@ export default class teacherList extends Component {
 
   data = (transactions) => {
     const deleteConfirm = this.toggleDeleteConfirmation
-    const paidConfirm = this.togglepaidConfirmation
+    const paidConfirm = this.togglePaidConfirmation
+    const printConfirm = this.togglePrintConfirmation
 
     return ({
       columns: [
@@ -166,7 +189,9 @@ export default class teacherList extends Component {
                   }}
                   className="btn btn-primary">Edit</NavLink>
                 <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 10 }}>Delete</button>
-                {data.status == 0 && <button onClick={() => paidConfirm(data.id)} className="btn btn-warning" style={{ position: "relative", left: 20 }}>paid</button>}
+                {data.status == 0 ? <button onClick={() => paidConfirm(data.id)} className="btn btn-warning" style={{ position: "relative", left: 20 }}>paid</button> 
+                : <button onClick={() => printConfirm(data.id)} className="btn btn-default" style={{ position: "relative", left: 20 }}><i className="fa fa-print" />Print</button>
+                }
               </div>
           })
         })
@@ -215,19 +240,41 @@ export default class teacherList extends Component {
                 </MDBContainer>
 
                 <MDBContainer>
-                  <MDBModal isOpen={this.state.paidConfirm} toggle={this.togglepaidConfirmation} size="sm" centered>
-                    <MDBModalHeader toggle={this.togglepaidConfirmation}>paid Confirmation</MDBModalHeader>
+                  <MDBModal isOpen={this.state.paidConfirm} toggle={this.togglePaidConfirmation} size="sm" centered>
+                    <MDBModalHeader toggle={this.togglePaidConfirmation}>paid Confirmation</MDBModalHeader>
                     <MDBModalBody>
                       Are you sure this transaction has been paid ?
                     </MDBModalBody>
                     <MDBModalFooter>
-                      <MDBBtn color="secondary" onClick={this.togglepaidConfirmation}>No</MDBBtn>
+                      <MDBBtn color="secondary" onClick={this.togglePaidConfirmation}>No</MDBBtn>
                       <MDBBtn color="success" onClick={() => this.paid(this.state.paidId)}>Yes</MDBBtn>
                     </MDBModalFooter>
                   </MDBModal>
                 </MDBContainer>
 
+                <MDBContainer>
+                  <MDBModal isOpen={this.state.printConfirm} toggle={this.togglePrintConfirmation} size="md" centered>
+                    <MDBModalHeader toggle={this.togglePrintConfirmation}>Detail Student</MDBModalHeader>
+                    <MDBModalBody>
+                      Do you want to print this Transaction ?
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                      <ReactToPrint
+                        trigger={() => <button className="btn btn-default"><i className="fa fa-print" />Print</button>}
+                        content={() => this.state.layoutPrint}
+                      />
+                      <MDBBtn color="secondary" onClick={this.togglePrintConfirmation}>Close</MDBBtn>
+                    </MDBModalFooter>
+                  </MDBModal>
+                </MDBContainer>
+
                 <p>Total transaction this month: {this.state.totalAll}</p>
+                
+                <div className="d-none">
+                  {this.state.printConfirm && <ComponentToPrint
+                    ref={el => (this.state.layoutPrint = el)}
+                    dataTransaction={this.state.detailTransaction} />}
+                </div>
               </div>
             </div>
           </div>
@@ -237,3 +284,101 @@ export default class teacherList extends Component {
   }
 }
 
+class ComponentToPrint extends React.Component {
+  render() {
+    const { dataTransaction } = this.props
+    let data = dataTransaction[0]
+
+    if(data.type_by_difficulty == 1){
+      data.type_by_difficulty = 'Basic'
+    }else if(data.type_by_difficulty == 2){
+      data.type_by_difficulty = 'Intermediate'
+    }else if(data.type_by_participant == 3){
+      data.type_by_difficulty = 'Pre adv & adv'
+    }
+
+    if(data.type_by_teacher == 1){
+      data.type_by_teacher = 'Regular teacher class'
+    }else if(data.type_by_participant == 2){
+      data.type_by_teacher = 'Senior teacher class'
+    }
+
+    if(data.type_by_participant == 1){
+      data.type_by_participant = 'Private'
+    }else if(data.type_by_participant == 2){
+      data.type_by_participant = 'Semi Private'
+    }else if(data.type_by_participant == 3){
+      data.type_by_participant = 'Group'
+    }
+    
+    return (
+      <>
+        <div className="content-wrapper" style={{ backgroundColor: 'white' }}>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Student's Name
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.first_name + ' ' + data.middle_name + ' ' + data.last_name}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Teacher's Name
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.teacher_name}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Class
+            </label>
+          <label>: &nbsp;</label>
+            <label>{data.class_name + ' - ' + data.type_by_difficulty + ' - ' + data.type_by_participant}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Payment Date
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.payment_date}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Receipt Number
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.receipt_number}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Cost
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.cost}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Royalty
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.royalty}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Note
+            </label>
+            <label>: &nbsp;</label>
+            <label>{data.note}</label>
+          </div>
+          <div className="form-inline mb-2">
+            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+              Total
+            </label>
+            <label>: &nbsp;</label>
+            <label>{Number(data.cost) + Number(data.royalty)}</label>
+          </div>
+        </div>
+      </>
+    );
+  }
+}
