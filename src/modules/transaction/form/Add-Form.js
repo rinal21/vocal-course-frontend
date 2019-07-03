@@ -29,7 +29,7 @@ export default class transactionAdd extends Component {
       royalty: '',
       receiptNumber: '',
       note: '',
-      selectedPaymentMethod: '',
+      selectedPaymentMethod: '0',
       level: ''
     };
     this.onChangeTransactionType = this.onChangeTransactionType.bind(this);
