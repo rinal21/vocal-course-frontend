@@ -207,6 +207,7 @@ export default class teacherList extends Component {
           <div className="col-md-12">
             <div className="box">
               <div className="content">
+                <b><h4>Transaction</h4></b>
                 <div class="box-header">
                   <NavLink to="/transaction/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Transaction</NavLink>
                   <div class="float-right">
@@ -279,6 +280,11 @@ export default class teacherList extends Component {
             </div>
           </div>
         </div>
+        <div >
+                  {/* {<ComponentToPrint
+                    ref={el => (this.state.layoutPrint = el)}
+                    dataTransaction={this.state.detailTransaction} />} */}
+                </div>
       </section>
     )
   }
@@ -288,18 +294,19 @@ class ComponentToPrint extends React.Component {
   render() {
     const { dataTransaction } = this.props
     let data = dataTransaction[0]
+    console.log('coba', data)
 
     if(data.type_by_difficulty == 1){
       data.type_by_difficulty = 'Basic'
     }else if(data.type_by_difficulty == 2){
       data.type_by_difficulty = 'Intermediate'
-    }else if(data.type_by_participant == 3){
+    }else if(data.type_by_difficulty == 3){
       data.type_by_difficulty = 'Pre adv & adv'
     }
 
     if(data.type_by_teacher == 1){
       data.type_by_teacher = 'Regular teacher class'
-    }else if(data.type_by_participant == 2){
+    }else if(data.type_by_teacher == 2){
       data.type_by_teacher = 'Senior teacher class'
     }
 
@@ -312,73 +319,130 @@ class ComponentToPrint extends React.Component {
     }
     
     return (
-      <>
-        <div className="content-wrapper" style={{ backgroundColor: 'white' }}>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Student's Name
-            </label>
-            <label>: &nbsp;</label>
-            <label>{data.first_name + ' ' + data.middle_name + ' ' + data.last_name}</label>
+      <div id="invoice">
+      <div class="invoice overflow-auto">
+          <div style={{minWidth: 600}}>
+              <header>
+                  <div class="row">
+                      <div class="col">
+                          <a target="_blank" href="https://lobianijs.com">
+                              <img src="https://yt3.ggpht.com/a-/AAuE7mCbB4dWqCTd2rLPl4yneC5bjucikvCKXq-XNw=s900-mo-c-c0xffffffff-rj-k-no" height="120px" data-holder-rendered="true" />
+                              </a>
+                      </div>
+                      <div class="col company-details">
+                          <h2 class="name">
+                              <a target="_blank" href="https://lobianijs.com">
+                              Admin KBL
+                              </a>
+                          </h2>
+                          <div>Jln. Kemang Raya No.3, Jakarta Selatan</div>
+                          <div>021 - 7521645</div>
+                          <div>kbl@example.com</div>
+                      </div>
+                  </div>
+              </header>
+              <main>
+                  <div class="row contacts">
+                      <div class="col invoice-to">
+                          <div class="text-gray-light">INVOICE TO:</div>
+                          {/* Student Name */}
+                          <h2 class="to">{data.first_name + ' ' + data.middle_name + ' ' + data.last_name}</h2> 
+                          {/* Adress */}
+                          <div class="address">{data.street_address}</div>
+                          {/* Email */}
+                          <div class="email"><a href="mailto:john@example.com">{data.email}</a></div>
+                      </div>
+                      <div class="col invoice-details">
+                          <h1 class="invoice-id">Receipt Number {data.receipt_number}</h1>
+                          {/* Payment Date */}
+                          <div class="date">Payment Date: {data.payment_date}</div>
+                          {/* <div class="date">Due Date: 30/10/2018</div> */}
+                      </div>
+                  </div>
+                  <table border="0" cellspacing="0" cellpadding="0">
+                      <thead>
+                          <tr>
+                              <th>#</th>
+                              <th class="text-left">Transaction Type</th>
+                              <th class="text-left">Class</th>
+                              <th class="text-left">Level</th>
+                              <th class="text-left">Participant</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {/* <tr>
+                              <td class="no">04</td>
+                              <td class="text-left"><h3>
+                                  <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
+                                  Youtube channel
+                                  </a>
+                                  </h3>
+                                 <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
+                                     Useful videos
+                                 </a> 
+                                 to improve your Javascript skills. Subscribe and stay tuned :)
+                              </td>
+                              <td class="unit">$0.00</td>
+                              <td class="qty">100</td>
+                              <td class="total">$0.00</td>
+                          </tr> */}
+                          <tr>
+                              <td class="no">01</td>
+                              <td class="text-left">{data.transaction_type_name}</td>
+                              <td class="text-left">{data.class_name}</td>
+                              <td class="text-left">{data.type_by_difficulty}</td>
+                              <td class="text-left">{data.type_by_participant}</td>
+                          </tr>
+                          {/* <tr>
+                              <td class="no">02</td>
+                              <td class="text-left"><h3>Website Development</h3>Developing a Content Management System-based Website</td>
+                              <td class="unit">$40.00</td>
+                              <td class="qty">80</td>
+                              <td class="total">$3,200.00</td>
+                          </tr>
+                          <tr>
+                              <td class="no">03</td>
+                              <td class="text-left"><h3>Search Engines Optimization</h3>Optimize the site for search engines (SEO)</td>
+                              <td class="unit">$40.00</td>
+                              <td class="qty">20</td>
+                              <td class="total">$800.00</td>
+                          </tr> */}
+                      </tbody>
+                      <tfoot>
+                        <div>
+                        <tr>
+                              <td colspan="2"></td>
+                              <td colspan="2">Cost</td>
+                              <td>{data.cost}</td>
+                          </tr>
+                          <tr>
+                              <td colspan="2"></td>
+                              <td colspan="2">Royalty</td>
+                              <td>{data.royalty}</td>
+                          </tr>
+                          <tr>
+                              <td colspan="2"></td>
+                              <td colspan="2">GRAND TOTAL</td>
+                              <td>{Number(data.cost) + Number(data.royalty)}</td>
+                          </tr>
+                        </div>
+                      </tfoot>
+                  </table>
+                  <div class="thanks">Thank you!</div>
+                  <div class="notices">
+                      <div>Note:</div>
+                      <div class="notice">{data.note}</div>
+                  </div>
+              </main>
+              <footer>
+                  Invoice was created on a computer and is valid without the signature and seal.
+              </footer>
           </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Teacher's Name
-            </label>
-            <label>: &nbsp;</label>
-            <label>{data.teacher_name}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Class
-            </label>
-          <label>: &nbsp;</label>
-            <label>{data.class_name + ' - ' + data.type_by_difficulty + ' - ' + data.type_by_participant}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Payment Date
-            </label>
-            <label>: &nbsp;</label>
-            <label>{data.payment_date}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Receipt Number
-            </label>
-            <label>: &nbsp;</label>
-            <label>{data.receipt_number}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Cost
-            </label>
-            <label>: &nbsp;</label>
-            <label>{data.cost}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Royalty
-            </label>
-            <label>: &nbsp;</label>
-            <label>{data.royalty}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Note
-            </label>
-            <label>: &nbsp;</label>
-            <label>{data.note}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Total
-            </label>
-            <label>: &nbsp;</label>
-            <label>{Number(data.cost) + Number(data.royalty)}</label>
-          </div>
-        </div>
-      </>
+          {/* DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom */}
+          <div></div>
+      </div>
+  </div>
+        
     );
   }
 }
