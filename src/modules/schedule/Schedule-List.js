@@ -146,6 +146,7 @@ export default class schedulesList extends Component {
           <div className="col-md-12">
             <div className="box">
               <div className="content">
+                <b><h4>Schedule</h4></b>
                 <div class="box-header">
                   <NavLink to="/schedule/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Schedule</NavLink>
                   <div class="float-right">

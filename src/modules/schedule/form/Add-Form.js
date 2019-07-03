@@ -184,6 +184,7 @@ export default class attendanceAdd extends Component {
       teacher: this.state.teacherId,
       student: this.state.studentId,
       class: this.state.classId,
+      branch: JSON.parse(localStorage["appState"]).user.branchId
     };
     axios.post('http://localhost:8000/api/schedule', obj)
       .then(res => console.log(res.data))

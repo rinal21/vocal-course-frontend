@@ -105,6 +105,7 @@ export default class userList extends Component {
           <div className="col-md-12">
             <div className="box">
               <div className="content">
+                <b><h4>User</h4></b>
                 <div class="box-header">
                   <NavLink to="/user/add" class="btn btn-success"><i class="fa fa-plus"></i> Add User</NavLink>
                 </div>

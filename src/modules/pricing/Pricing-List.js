@@ -159,6 +159,7 @@ export default class pricingList extends Component {
             <div className="col-md-12">
               <div className="box">
                 <div className="content">
+                <b><h4>Pricing</h4></b>
                   <div class="box-header">
                     <NavLink to="/pricing/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Pricing</NavLink>
                   </div>

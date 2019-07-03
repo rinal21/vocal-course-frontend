@@ -279,7 +279,6 @@ export default class attendancesList extends Component {
         await this.promisedSetState({
           attendances: json
         })
-        console.log('coba', json)
         json.map((subarray) => {
           subarray.map((data) => {
             this.setState({
@@ -446,7 +445,8 @@ export default class attendancesList extends Component {
           <div className="col-md-12">
             <div className="box">
               <div className="content">
-              <h5>Class : {attendance[0].class_name}</h5>
+                  <b><h4>Attendance</h4></b>
+                  <h5>Class : {attendance[0].class_name}</h5>
                 <div class="box-header">
                     <div class="float-right">
                       {i < 1 && (

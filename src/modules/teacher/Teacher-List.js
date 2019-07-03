@@ -112,6 +112,7 @@ export default class teacherList extends Component {
           <div className="col-md-12">
             <div className="box">
               <div className="content">
+                <b><h4>Teacher</h4></b>
                 <div class="box-header">
                   <NavLink to="/teacher/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Teacher</NavLink>
                 </div>

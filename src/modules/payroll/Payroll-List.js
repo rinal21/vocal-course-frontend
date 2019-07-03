@@ -160,6 +160,7 @@ export default class classList extends Component {
             <div className="col-md-12">
               <div className="box">
                 <div className="content">
+                <b><h4>Payroll</h4></b>
                   <div>
                     <div class="form-inline">
                       <DatePicker

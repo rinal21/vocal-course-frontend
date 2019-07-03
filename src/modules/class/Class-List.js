@@ -95,6 +95,7 @@ export default class classList extends Component {
           <div className="col-md-12">
             <div className="box">
               <div className="content">
+                <b><h4>Class</h4></b>
                 <div className="box-header">
                   <NavLink to="/class/add" className="btn btn-success"><i className="fa fa-plus"></i> Add Class</NavLink>
                 </div>
