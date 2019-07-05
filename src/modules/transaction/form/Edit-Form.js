@@ -68,6 +68,18 @@ export default class transactionEdit extends Component {
   onChangeStudents = (selectedStudent) =>  {
     this.setState({ selectedStudent });
     this.setState({ studentId: selectedStudent.value})
+
+    fetch('http://localhost:8000/api/student/' + selectedStudent.value)
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          selectedTeacher : {
+            value: json[0].teacher_id,
+            label: json[0].teacher_name
+          },
+          teacherId: json[0].teacher_id
+        })
+      })
   }
   onChangeTeacher = (selectedTeacher) =>  {
     this.setState({ selectedTeacher });
@@ -377,6 +389,19 @@ export default class transactionEdit extends Component {
           }) => (
               <div>
                 <form onSubmit={this.onSubmit}>
+                <div className="form-inline mb-2">
+                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Student Name
+                  </label>
+                    <label>: &nbsp;</label>
+                    <div style={{ display: 'inline-block', width: 223.2 }}>
+                      <Select
+                        value={this.state.selectedStudent}
+                        onChange={this.onChangeStudents}
+                        options={this.dataStudents(this.state.students)}
+                      />
+                    </div>
+                  </div>
                   <div className="form-inline mb-2">
                     <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Teacher Name
@@ -387,19 +412,6 @@ export default class transactionEdit extends Component {
                         value={this.state.selectedTeacher}
                         onChange={this.onChangeTeacher}
                         options={this.dataTeachers(this.state.teachers)}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Student Name
-                  </label>
-                    <label>: &nbsp;</label>
-                    <div style={{ display: 'inline-block', width: 223.2 }}>
-                      <Select
-                        value={this.state.selectedStudent}
-                        onChange={this.onChangeStudents}
-                        options={this.dataStudents(this.state.students)}
                       />
                     </div>
                   </div>

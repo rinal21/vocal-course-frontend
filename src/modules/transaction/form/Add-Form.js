@@ -174,12 +174,10 @@ export default class transactionAdd extends Component {
       function () {
         let rowData = []
         students.map((student) => {
-          Array.isArray(student) && student.map((data) => {
             rowData.push({
-              value: data.id,
-              label: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
+              value: student.id,
+              label: student.first_name + ' ' + student.middle_name + ' ' + student.last_name,
             })
-          })
         })
         return rowData
       }()
