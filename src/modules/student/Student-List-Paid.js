@@ -3,8 +3,10 @@ import { MDBDataTable, MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHea
 import { NavLink } from "react-router-dom";
 import axios from 'axios';
 import ReactToPrint from "react-to-print";
+import Select from 'react-select';
 
 import "react-datepicker/dist/react-datepicker.css";
+import { array } from "prop-types";
 
 export default class studentListPaid extends Component {
   constructor(props) {
@@ -14,15 +16,70 @@ export default class studentListPaid extends Component {
       students: [],
       filterDate: new Date(),
       studentId: '',
+      classes: [],
+      classId: '',
+      selectedClass: null,
       detailStudent: false,
       detailStudentInfo: [],
       deleteConfirm: false,
       layoutPrint: '',
+      transactions: [],
       deleteId : ''
     }
     this.delete = this.delete.bind(this);
     this.onChangeFilterDate = this.onChangeFilterDate.bind(this);
+    this.onChangeClass = this.onChangeClass.bind(this);
   }
+
+  componentDidMount = () => {
+    // ajax call
+    this.fetchData()
+    this.fetchClasses()
+  }
+
+  onChangeClass = (selectedClass) =>  {
+    this.setState({ selectedClass });
+    this.setState({ 
+      classId: selectedClass.value
+    })
+    this.fetchStudentsByClass(selectedClass.value)
+  }
+
+  fetchStudentsByClass = (id) => {
+    fetch('http://localhost:8000/api/students/filterClass?status=3&classId=' + id)
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          students: json
+        })
+      })
+  }
+
+  fetchClasses = () => {
+    fetch('http://localhost:8000/api/classes')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          classes: json.data
+        })
+      })
+  }
+
+  dataClasses = (classes) => {
+    return (
+      function () {
+        let rowData = []
+
+        classes.map((data, index) => {
+          rowData.push({
+            value: data.id,
+            label: data.name,
+          })
+        })
+        return rowData
+      }()
+    )
+  };
 
   delete(id) {
     axios.delete('http://localhost:8000/api/student/' + id)
@@ -54,6 +111,14 @@ export default class studentListPaid extends Component {
         this.setState({
           detailStudentInfo: json,
           detailStudent: !this.state.detailStudent
+        })
+      })
+
+      fetch('http://localhost:8000/api/student_transaction/' + id)
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          transactions: json
         })
       })
     }
@@ -167,11 +232,6 @@ export default class studentListPaid extends Component {
     }
   }
 
-  componentDidMount = () => {
-    // ajax call
-    this.fetchData()
-  }
-
   createYearPicker = () => {
     let opt = []
 
@@ -180,7 +240,7 @@ export default class studentListPaid extends Component {
     }
 
     return (
-      <select class="form-control" style={{ width: 100 }} id="year-picker" onChange={this.onChangeFilterDate}>
+      <select class="form-control" style={{ width: 100, position:'absolute', top:107, right: 16, zIndex: 1 }} id="year-picker" onChange={this.onChangeFilterDate}>
         {opt}
       </select>
     )
@@ -195,7 +255,7 @@ export default class studentListPaid extends Component {
   }
 
   filterData = (filterDate) => {
-    fetch('http://localhost:8000/api/students/filterYear?date=' + filterDate)
+    fetch('http://localhost:8000/api/students/filterYear?status=3&date=' + filterDate)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -214,6 +274,85 @@ export default class studentListPaid extends Component {
       })
   }
 
+  dataTransaction = (transactions) => {
+    return ({
+      columns: [
+        {
+          label: 'Date',
+          field: 'date',
+          sort: 'asc',
+          width: 500
+        },
+        {
+          label: 'Receipt Number',
+          field: 'receipt',
+          sort: 'desc',
+          width: 500
+        },
+        {
+          label: 'Status',
+          field: 'status',
+          width: 10
+        },
+        {
+          label: 'Cost',
+          field: 'cost',
+          width: 10
+        },
+        {
+          label: 'Transaction Type',
+          field: 'transaction',
+          width: 10
+        }
+        // {
+        //   label: 'School',
+        //   field: 'school',
+        //   width: 10
+        // },
+        // {
+        //   label: 'Email',
+        //   field: 'email',
+        //   width: 10
+        // },
+        // {
+        //   label: 'Action',
+        //   field: 'action',
+        //   sort: 'disabled',
+        //   width: 1000
+        // }
+      ],
+      rows: (function () {
+        let rowData = []
+        transactions.map((data, index) => {
+          rowData.push({
+            date: data.payment_date,
+            receipt: data.receipt_number,
+            status: data.status,
+            cost: data.cost,
+            transaction: data.transaction_type
+          })
+        })
+        return rowData
+      }())
+    })
+  }
+
+  tableHistoryTransactions = () => {
+    const { transactions } = this.state
+
+    if (transactions.length > 0) {
+      return (
+        <MDBDataTable
+          striped
+          bordered
+          hover
+          data={this.dataTransaction(transactions)}
+          btn
+        />
+      )
+    }
+  }
+
   data = (students) => {
     const deleteConfirm = this.toggleDeleteConfirmation
     const detailStudent = this.toggleDetailStudent
@@ -230,12 +369,12 @@ export default class studentListPaid extends Component {
           label: 'Age',
           field: 'age',
           sort: 'desc',
-          width: 500
+          width: 100
         },
         {
           label: 'Sex',
           field: 'sex',
-          width: 10
+          width: 100
         },
         {
           label: 'Address',
@@ -248,8 +387,8 @@ export default class studentListPaid extends Component {
           width: 10
         },
         {
-          label: 'Home Phone',
-          field: 'homePhone',
+          label: 'Class',
+          field: 'class',
           width: 10
         },
         {
@@ -279,7 +418,7 @@ export default class studentListPaid extends Component {
             sex: data.sex,
             address: data.street_address,
             cellPhone: data.cell_phone,
-            homePhone: data.home_phone_no,
+            class: data.class_name,
             school: data.school,
             email: data.email,
             action: 
@@ -305,30 +444,38 @@ export default class studentListPaid extends Component {
 
   tableStudentsGroup = (students) => {
     let table = []
+    let i = 0
 
-    students.forEach((student, index) => {
-
-      Array.isArray(student) ?
-      table.push(
-        <section className="content-header">
+        table.push(
+          <section className="content-header">
             <div className="row">
               <div className="col-md-12">
                 <div className="box">
                   <div className="content">
-                    <h5>Class : {student[0].class_name ? student[0].class_name : 'None'}</h5>
-                    {index < 1 && (
-                      <>
+                    <h4>Students - Paid</h4>
+                    {/* <h5>Class : {student[0].class_name ? student[0].class_name : 'None'}</h5> */}
+                    <div class="row">
+                      <div class="col-sm-12 col-md-6">
                         <NavLink to="/student/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student</NavLink>
-                        <div class="float-right">
-                          {this.createYearPicker()}
+                      </div>
+                      <div class="col-sm-12 col-md-6">
+                        <div style={{ display: 'inline-block', width: 223.2 }}>
+                          <Select
+                            value={this.state.selectedClass}
+                            onChange={this.onChangeClass}
+                            options={this.dataClasses(this.state.classes)}
+                          />
                         </div>
-                      </>
-                    )}
+
+                      </div>
+                    </div>
+                    {this.createYearPicker()}
                     <MDBDataTable
+                      responsive
                       striped
                       bordered
                       hover
-                      data={this.data(student)}
+                      data={this.data(students)}
                       btn
                     />
                   </div>
@@ -336,35 +483,36 @@ export default class studentListPaid extends Component {
               </div>
             </div>
           </section>
-      ) : table.push(
-        <section className="content-header">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="box">
-                  <div className="content">
-                    {index < 1 && (
-                      <>
-                        <NavLink to="/student/add" class="btn btn-success" style={{marginBottom: 10}}><i class="fa fa-plus"></i> Add Student</NavLink>
-                        <div class="float-right">
-                          {this.createYearPicker()}
-                        </div>
-                      </>
-                    )}
-                    <h5>Class : {student}</h5>
-                    <MDBDataTable
-                      striped
-                      bordered
-                      hover
-                      data={this.data(student)}
-                      btn
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-      )
-    });
+        )
+      
+      // : table.push(
+      //   <section className="content-header">
+      //       <div className="row">
+      //         <div className="col-md-12">
+      //           <div className="box">
+      //             <div className="content">
+      //               {index < 1 && (
+      //                 <>
+      //                   <NavLink to="/student/add" class="btn btn-success" style={{marginBottom: 10}}><i class="fa fa-plus"></i> Add Student</NavLink>
+      //                   <div class="float-right">
+      //                     {this.createYearPicker()}
+      //                   </div>
+      //                 </>
+      //               )}
+      //               <h5>Class : {student}</h5>
+      //               <MDBDataTable
+      //                 striped
+      //                 bordered
+      //                 hover
+      //                 data={this.data(student)}
+      //                 btn
+      //               />
+      //             </div>
+      //           </div>
+      //         </div>
+      //       </div>
+      //     </section>
+      // )
     return(
       table
     )
@@ -372,9 +520,45 @@ export default class studentListPaid extends Component {
 
   render() {
     const { students } = this.state
+    console.log('coba', students)
     return (
       <>
-      {students[0] && this.tableStudentsGroup(students)}
+      {/* {students && this.tableStudentsGroup(students)} */}
+      <section className="content-header">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="box">
+                  <div className="content">
+                        <h4>Students - Paid</h4>
+                    {/* <h5>Class : {student[0].class_name ? student[0].class_name : 'None'}</h5> */}
+                        <div class="row">
+                          <div class="col-sm-12 col-md-6">
+                            <NavLink to="/student/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student</NavLink>
+                          </div>
+                        <div style={{ position: 'absolute', width: 223.2, top: 83, left: 278, zIndex: 1 }}>
+                      <label style={{marginBottom: 0}}>Class</label>
+                          <Select
+                            value={this.state.selectedClass}
+                            onChange={this.onChangeClass}
+                            options={this.dataClasses(this.state.classes)}
+                          />
+                        </div>
+
+                    </div>
+                    {this.createYearPicker()}
+                    <MDBDataTable
+                      striped
+                      bordered
+                      hover
+                      data={this.data(students)}
+                      btn
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
         <MDBContainer>
           <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
             <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
@@ -389,10 +573,11 @@ export default class studentListPaid extends Component {
         </MDBContainer>
 
         <MDBContainer>
-          <MDBModal isOpen={this.state.detailStudent} toggle={this.toggleDetailStudent} size="md" centered>
+          <MDBModal isOpen={this.state.detailStudent} toggle={this.toggleDetailStudent} size="lg" centered>
             <MDBModalHeader toggle={this.toggleDetailStudent}>Detail Student</MDBModalHeader>
               <MDBModalBody>
                 {this.state.detailStudent && this.showDetailStudent()}
+                {this.tableHistoryTransactions()}
               </MDBModalBody>
             <MDBModalFooter>
             <ReactToPrint
