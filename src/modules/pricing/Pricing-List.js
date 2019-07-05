@@ -62,18 +62,18 @@ export default class pricingList extends Component {
           sort: 'asc',
           width: 500
         },
-        {
-          label: 'Total Meetup',
-          field: 'meetup',
-          sort: 'asc',
-          width: 500
-        },
-        {
-          label: 'Duration',
-          field: 'duration',
-          sort: 'asc',
-          width: 500
-        },
+        // {
+        //   label: 'Total Meetup',
+        //   field: 'meetup',
+        //   sort: 'asc',
+        //   width: 500
+        // },
+        // {
+        //   label: 'Duration',
+        //   field: 'duration',
+        //   sort: 'asc',
+        //   width: 500
+        // },
         {
           label: 'Type by Difficulty',
           field: 'difficulty',
@@ -127,8 +127,8 @@ export default class pricingList extends Component {
           rowData.push({
             class: data.class_name,
             price: data.price,
-            meetup: data.total_meetup,
-            duration: data.duration,
+            // meetup: data.total_meetup,
+            // duration: data.duration,
             difficulty: data.type_by_difficulty,
             teacher: data.type_by_teacher,
             participant: data.type_by_participant,

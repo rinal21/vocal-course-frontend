@@ -93,14 +93,14 @@ export default class pricingAdd extends Component {
         .min(100000, 'Too Few!')
         .max(1000000, 'Too Much!')
         .required('Required'),
-      meetup: Yup.number()
-        .min(1, 'Too Few!')
-        .max(10, 'Too Much!')
-        .required('Required'),
-      duration: Yup.number()
-        .min(20, 'Too Short!')
-        .max(1000, 'Too Long!')
-        .required('Required'),
+      // meetup: Yup.number()
+      //   .min(1, 'Too Few!')
+      //   .max(10, 'Too Much!')
+      //   .required('Required'),
+      // duration: Yup.number()
+      //   .min(20, 'Too Short!')
+      //   .max(1000, 'Too Long!')
+      //   .required('Required'),
 
     });
 
@@ -110,8 +110,8 @@ export default class pricingAdd extends Component {
           initialValues={{
             classId: '',
             price: '',
-            meetup: '',
-            duration: '',
+            // meetup: '',
+            // duration: '',
             difficulty: '',
             teacher: '',
             participant: ''
@@ -121,8 +121,8 @@ export default class pricingAdd extends Component {
             const obj = {
               classId: this.state.classId,
               price: values.price,
-              meetup: values.meetup,
-              duration: values.duration,
+              // meetup: values.meetup,
+              // duration: values.duration,
               difficulty: this.state.difficulty,
               teacher: this.state.teacher,
               participant: this.state.participant
@@ -164,7 +164,7 @@ export default class pricingAdd extends Component {
                       <div style={{ color: 'red' }}>{errors.price}</div>
                     ) : null}
                   </div>
-                  <div className="form-inline mb-2">
+                  {/* <div className="form-inline mb-2">
                     <label for="totalMeetup" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Total Meetup
                 </label>
@@ -183,7 +183,7 @@ export default class pricingAdd extends Component {
                     {errors.duration && touched.duration ? (
                       <div style={{ color: 'red' }}>{errors.duration}</div>
                     ) : null}
-                  </div>
+                  </div> */}
                   <div className="form-inline mb-2">
                     <label for="difficulty" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Type by difficulty
