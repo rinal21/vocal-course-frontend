@@ -87,8 +87,7 @@ export default class loginForm extends Component {
                     onSubmit={values => {
                         const obj = {
                             username: values.username,
-                            password: values.password,
-                            branchId: this.state.selectedBranch.value
+                            password: values.password
                         };
                         // axios.post('http://localhost:8000/api/class', obj)
                         //     .then(res => console.log(res.data))
@@ -108,7 +107,7 @@ export default class loginForm extends Component {
                                         email: json.data.data.email,
                                         auth_token: json.data.data.auth_token,
                                         branchId: json.data.data.branch_id,
-                                        branchName: this.state.selectedBranch.label,
+                                        branchName: json.data.data.branch_name,
                                         timestamp: new Date().toString()
                                     };
                                     let appState = {
@@ -159,14 +158,14 @@ export default class loginForm extends Component {
                                                     {/* <input type="password" name="password" className="form-control" placeholder="Password" required=" " /> */}
                                                     <span className="glyphicon glyphicon-lock form-control-feedback"></span>
                                                 </div>
-                                                <div className="form-group has-feedback">
+                                                {/* <div className="form-group has-feedback">
                                                     <Select
                                                         value={this.state.selectedBranch}
                                                         onChange={this.onChangeBranch}
                                                         options={this.dataBranches(this.state.branches)}
                                                     />
                                                     <span className="glyphicon glyphicon-lock form-control-feedback"></span>
-                                                </div>
+                                                </div> */}
 
                                                 <div className="row" style={{ marginLeft: 0 }}>
                                                     <div className="col-xs-4">
