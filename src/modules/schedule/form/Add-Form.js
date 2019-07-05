@@ -107,8 +107,8 @@ export default class attendanceAdd extends Component {
       })
   }
 
-  fetchStudentsByClass = (name) => {
-    fetch('http://localhost:8000/api/students/filterClass?class=' + name)
+  fetchStudentsByClass = (id) => {
+    fetch('http://localhost:8000/api/students/filterClass?status=3&classId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -248,7 +248,7 @@ export default class attendanceAdd extends Component {
                         dropdownMode="select"
                         className="form-control"
                       /> */}
-                      <select class="form-control" style={{ width: 100 }} id="day-picker" onChange={this.onChangeDay}>
+                      <select class="form-control" style={{ width: 224 }} id="day-picker" onChange={this.onChangeDay}>
                       <option value={'Monday'}>Monday</option>
                       <option value={'Tuesday'}>Tuesday</option>
                       <option value={'Wednesday'}>Wednesday</option>
