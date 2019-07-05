@@ -18,6 +18,18 @@ export default class schedulesList extends Component {
       deleteId : ''
     }
     this.delete = this.delete.bind(this);
+    this.onChangeDay = this.onChangeDay.bind(this);
+  }
+
+  onChangeDay(e) {
+    const branch = JSON.parse(localStorage["appState"]).user.branchId
+    fetch('http://localhost:8000/api/schedules/filterDay?branch=' + branch + '&day=' + e.target.value)
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          schedules: json
+        })
+      })
   }
 
   onChangeFilterDate = filterDate => {
@@ -150,14 +162,23 @@ export default class schedulesList extends Component {
                 <div class="box-header">
                   <NavLink to="/schedule/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Schedule</NavLink>
                   <div class="float-right">
-                    <DatePicker
+                    {/* <DatePicker
                       selected={this.state.filterDate}
                       onChange={this.onChangeFilterDate}
                       dateFormat="d-MM-yyyy"
                       peekNextMonth
                       dropdownMode="select"
                       className="form-control"
-                    />
+                    /> */}
+                    <select class="form-control" style={{ position: 'absolute', top: 75, right: 0, width: 140, zIndex: 1 }} id="day-picker" onChange={this.onChangeDay}>
+                      <option value={'Monday'}>Monday</option>
+                      <option value={'Tuesday'}>Tuesday</option>
+                      <option value={'Wednesday'}>Wednesday</option>
+                      <option value={'Thursday'}>Thursday</option>
+                      <option value={'Friday'}>Friday</option>
+                      <option value={'Saturday'}>Saturday</option>
+                      <option value={'Sunday'}>Sunday</option>
+                    </select>
                   </div>
                 </div>
                 <MDBDataTable
