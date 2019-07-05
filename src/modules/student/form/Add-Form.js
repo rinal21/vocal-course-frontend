@@ -8,6 +8,7 @@ import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import "react-datepicker/dist/react-datepicker.css";
 import { read } from 'fs';
+import classNames from "classnames";
 
 export default class studentAdd extends Component {
   constructor(props) {
@@ -150,19 +151,76 @@ export default class studentAdd extends Component {
       $imagePreview = (<img src={imgPreviewUrl} style={{height: 200}}/>);
     }
 
+    const InputFeedback = ({ error }) =>
+      error ? <div className={classNames("input-feedback")}>{error}</div> : null;
+
+    const RadioButton = ({
+      field: { name, value, onChange, onBlur },
+      id,
+      label,
+      className,
+      ...props
+    }) => {
+      return (
+          <label class="radio-inline mr-2" htmlFor={id}>
+            <input
+              name={name}
+              id={id}
+              type="radio"
+              value={id} // could be something else for output?
+              checked={id === value}
+              onChange={onChange}
+              onBlur={onBlur}
+              className={classNames("radio-button")}
+              {...props}
+            />{label}
+          </label>
+      );
+    };
+
+    const RadioButtonGroup = ({
+      value,
+      error,
+      touched,
+      id,
+      label,
+      className,
+      children
+    }) => {
+      const classes = classNames(
+        "input-field",
+        {
+          "is-success": value || (!error && touched), // handle prefilled or user-filled
+          "is-error": !!error && touched
+        },
+        className
+      );
+    
+      return (
+        <div className={classes}>
+          <fieldset>
+            <label class="mr-sm-2 text-left d-block">
+            {label} <label style={{ color: 'red' }}>*</label>
+            </label>
+            {/* <legend>{label}</legend> */}
+            {children}
+            <div style={{ color: 'red' }}>
+              {touched && <InputFeedback error={error} />}
+            </div>
+          </fieldset>
+        </div>
+      );
+    };
+
     const StudentSchema = Yup.object().shape({
       firstName: Yup.string()
         .min(3, 'Too Short!')
         .max(30, 'Too Long!')
         .required('Required'),
       middleName: Yup.string()
-        .min(3, 'Too Short!')
-        .max(30, 'Too Long!')
-        .required('Required'),
+        .max(30, 'Too Long!'),
       lastName: Yup.string()
-        .min(3, 'Too Short!')
-        .max(30, 'Too Long!')
-        .required('Required'),
+        .max(30, 'Too Long!'),
       address: Yup.string()
         .min(5, 'Too Short!')
         .max(50, 'Too Long!')
@@ -190,6 +248,8 @@ export default class studentAdd extends Component {
         .min(3, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Required'),
+        optSex: Yup.string()
+        .required("Required"),
       // instructor: Yup.string()
       //   .min(3, 'Too Short!')
       //   .max(50, 'Too Long!')
@@ -220,6 +280,7 @@ export default class studentAdd extends Component {
             instructor: '',
             days: '',
             hours: '',
+            optSex: "",
            }}
           validationSchema={StudentSchema}
           onSubmit={values => {
@@ -234,7 +295,7 @@ export default class studentAdd extends Component {
               email: values.email,
               birthDate: moment(this.state.selectedBirthDate).format("YYYY-MM-DD hh:mm:ss"),
               age: values.age,
-              sex: this.state.selectedSex,      
+              sex: values.optSex,      
               cellPhone: values.cellPhone,
               homePhone: values.homePhone,
               responsible: values.responsible,
@@ -272,6 +333,7 @@ export default class studentAdd extends Component {
                 <h5>Student Information</h5>
                 <hr />
                 <Form>
+                  {console.log('coba', values.optSex)}
                   <div class="container" style={{ marginLeft: 0, paddingLeft: 0 }}>
                     <div class="row">
                       <div class="col-sm">
@@ -295,7 +357,7 @@ export default class studentAdd extends Component {
                       <div class="col-sm">
                         <div className="form-group">
                           <label for="middle" class="mr-sm-2">
-                            Middle <label style={{color: 'red'}}>*</label>
+                            Middle
                         </label>
                           {/* <input
                             type="text"
@@ -313,7 +375,7 @@ export default class studentAdd extends Component {
                       <div class="col-sm">
                         <div className="form-group">
                           <label for="last" class="mr-sm-2">
-                            Last <label style={{color: 'red'}}>*</label>
+                            Last
                           </label>
                           {/* <input
                             type="text"
@@ -406,8 +468,28 @@ export default class studentAdd extends Component {
                       </div>
                       <div class="col-sm">
                       <div className="form-group mb-2">
-                      <label for="sex" class="mr-sm-2 text-left d-block">
-                        Sex
+                          <RadioButtonGroup
+                            id="optSex"
+                            label="Sex"
+                            value={values.optSex}
+                            error={errors.optSex}
+                            touched={touched.optSex}
+                          >
+                            <Field
+                              component={RadioButton}
+                              name="optSex"
+                              id="F"
+                              label="Female"
+                            />
+                            <Field
+                              component={RadioButton}
+                              name="optSex"
+                              id="M"
+                              label="Male"
+                            />
+                          </RadioButtonGroup>
+                      {/* <label for="sex" class="mr-sm-2 text-left d-block">
+                        Sex <label style={{color: 'red'}}>*</label>
                       </label>
                           <label class="radio-inline mr-2">
                             <input type="radio" name="optsex" value="F"
@@ -418,7 +500,7 @@ export default class studentAdd extends Component {
                           <label class="radio-inline"><input type="radio" name="optsex" value="M"
                               checked={this.state.selectedSex === "M"}
                               onChange={this.onChangeSex} />Male
-                          </label>
+                          </label> */}
                     </div>
                       </div>
                     </div>
