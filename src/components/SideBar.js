@@ -57,6 +57,11 @@ export default class SideBar extends Component {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/room">
+                    <i className="fa fa-home" /> <span>Room</span>
+                  </Link>
+                </li>
+                <li>
                   <Link to="/user">
                     <i className="fa fa-user" /> <span>User</span>
                   </Link>
