@@ -51,7 +51,7 @@ export default class roomList extends Component {
     return ({
       columns: [
         {
-          label: 'Room Number',
+          label: 'Room\'s Name',
           field: 'no',
           width: 150
         },
@@ -67,7 +67,7 @@ export default class roomList extends Component {
 
         rooms.map((data, index) => {
           rowData.push({
-            no: data.no_room,
+            no: data.name,
             action:
               <div>
                 <NavLink
@@ -75,7 +75,7 @@ export default class roomList extends Component {
                     pathname: 'room/edit',
                     state: {
                       roomId: data.id,
-                      noRoom: data.no_room
+                      name: data.name
                     }
                   }}
                   className="btn btn-primary">Edit</NavLink>

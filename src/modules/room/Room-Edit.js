@@ -4,7 +4,7 @@ import RoomEditForm from "./form/Edit-Form"
 
 export default class roomEdit extends Component {
     render() {
-        const { noRoom, roomId } = this.props.location.state
+        const { name, roomId } = this.props.location.state
 
         return(
             <div>
@@ -16,7 +16,7 @@ export default class roomEdit extends Component {
                 <div className="box-body">
                     <RoomEditForm
                         roomId={roomId}
-                        noRoom={noRoom} />
+                        name={name} />
                 </div>
             </div>
         )
