@@ -16,6 +16,10 @@ import UserList from "../modules/user/User-List";
 import UserAdd from "../modules/user/User-Add";
 import UserEdit from "../modules/user/User-Edit";
 
+import EmployeeList from "../modules/employee/Employee-List";
+import EmployeeAdd from "../modules/employee/Employee-Add";
+import EmployeeEdit from "../modules/employee/Employee-Edit";
+
 import ClassList from "../modules/class/Class-List";
 import ClassAdd from "../modules/class/Class-Add";
 import ClassEdit from "../modules/class/Class-Edit";
@@ -95,6 +99,9 @@ class Content extends Component {
           <PrivateRoute exact path="/user" component={UserList} />
           <PrivateRoute exact path="/user/add" component={UserAdd} />
           <PrivateRoute exact path="/user/edit" component={UserEdit} />
+          <PrivateRoute exact path="/employee" component={EmployeeList} />
+          <PrivateRoute exact path="/employee/add" component={EmployeeAdd} />
+          <PrivateRoute exact path="/employee/edit" component={EmployeeEdit} />
           <PrivateRoute exact path="/class" component={ClassList} />
           <PrivateRoute exact path="/class/add" component={ClassAdd} />
           <PrivateRoute exact path="/class/edit" component={ClassEdit} />
