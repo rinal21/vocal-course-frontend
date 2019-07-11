@@ -66,6 +66,11 @@ export default class SideBar extends Component {
                     <i className="fa fa-user" /> <span>User</span>
                   </Link>
                 </li>
+                <li>
+                  <Link to="/role">
+                    <i className="fa fa-user" /> <span>Role</span>
+                  </Link>
+                </li>
                 <li className="treeview">
                   <a href="">
                     <i className="fa fa-child" />

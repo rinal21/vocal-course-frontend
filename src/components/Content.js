@@ -24,6 +24,10 @@ import RoomList from "../modules/room/Room-List";
 import RoomAdd from "../modules/room/Room-Add";
 import RoomEdit from "../modules/room/Room-Edit";
 
+import RoleList from "../modules/role/Role-List";
+import RoleAdd from "../modules/role/Role-Add";
+import RoleEdit from "../modules/role/Role-Edit";
+
 import TeacherList from "../modules/teacher/Teacher-List";
 import TeacherAdd from "../modules/teacher/Teacher-Add";
 import TeacherEdit from "../modules/teacher/Teacher-Edit";
@@ -97,6 +101,9 @@ class Content extends Component {
           <PrivateRoute exact path="/room" component={RoomList} />
           <PrivateRoute exact path="/room/add" component={RoomAdd} />
           <PrivateRoute exact path="/room/edit" component={RoomEdit} />
+          <PrivateRoute exact path="/role" component={RoleList} />
+          <PrivateRoute exact path="/role/add" component={RoleAdd} />
+          <PrivateRoute exact path="/role/edit" component={RoleEdit} />
           <PrivateRoute exact path="/teacher" component={TeacherList} />
           <PrivateRoute exact path="/teacher/add" component={TeacherAdd} />
           <PrivateRoute exact path="/teacher/edit" component={TeacherEdit} />
