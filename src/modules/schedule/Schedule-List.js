@@ -86,6 +86,12 @@ export default class schedulesList extends Component {
     return ({
       columns: [
         {
+          label: 'Room',
+          field: 'room',
+          sort: 'asc',
+          width: 150
+        },
+        {
           label: 'Day',
           field: 'day',
           sort: 'asc',
@@ -127,6 +133,7 @@ export default class schedulesList extends Component {
 
         schedules.map((data) => {
           rowData.push({
+            room: data.room_name,
             day: data.day,
             time: data.time,
             student: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,

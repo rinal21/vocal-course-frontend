@@ -15,6 +15,9 @@ export default class attendanceAdd extends Component {
       // dateSchedule: new Date(),
       day: 'Monday',
       time: '08:20',
+      rooms: [],
+      roomId: '',
+      selectedRoom: null,
       teachers: [],
       teacherId: '',
       selectedTeacher: null,
@@ -28,6 +31,7 @@ export default class attendanceAdd extends Component {
       redirect: false
     };
     this.onChangeDay = this.onChangeDay.bind(this);
+    this.onChangeRooms = this.onChangeRooms.bind(this);
     this.onChangeTeachers = this.onChangeTeachers.bind(this);
     this.onChangeClass = this.onChangeClass.bind(this);
     this.onChangeStudents = this.onChangeStudents.bind(this);
@@ -59,6 +63,11 @@ export default class attendanceAdd extends Component {
     this.setState({
       time: e.target.value
     });
+  }
+
+  onChangeRooms = (selectedRoom) =>  {
+    this.setState({ selectedRoom });
+    this.setState({ roomId: selectedRoom.value})
   }
 
   onChangeStudents = (selectedStudent) =>  {
@@ -94,6 +103,7 @@ export default class attendanceAdd extends Component {
 
   componentDidMount = () => {
     // ajax call
+    this.fetchRooms()
     this.fetchClasses()
   }
 
@@ -117,6 +127,16 @@ export default class attendanceAdd extends Component {
       })
   }
 
+  fetchRooms = () => {
+    fetch('http://localhost:8000/api/rooms')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          rooms: json.data
+        })
+      })
+  }
+
   fetchClasses = () => {
     fetch('http://localhost:8000/api/classes')
       .then(response => response.json())
@@ -126,6 +146,22 @@ export default class attendanceAdd extends Component {
         })
       })
   }
+
+  dataRooms = (rooms) => {
+    return (
+      function () {
+        let rowData = []
+
+        rooms.map((data, index) => {
+          rowData.push({
+            value: data.id,
+            label: data.room_name,
+          })
+        })
+        return rowData
+      }()
+    )
+  };
 
   dataClasses = (classes) => {
     return (
@@ -181,6 +217,7 @@ export default class attendanceAdd extends Component {
       // date: moment(this.state.dateSchedule).format("YYYY-MM-DD hh:mm:ss"),
       day: this.state.day,
       time: this.state.time,
+      room: this.state.roomId,
       teacher: this.state.teacherId,
       student: this.state.studentId,
       class: this.state.classId,
@@ -283,6 +320,19 @@ export default class attendanceAdd extends Component {
                       <option value={'19:00'}>19:00</option>
                       <option value={'19:40'}>19:40</option>
                     </select>
+                  </div>
+                  <div className="form-inline mb-2">
+                    <label for="class" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Room
+                    </label>
+                    <label>: &nbsp;</label>
+                    <div style={{ display: 'inline-block', width: 223.2 }}>
+                      <Select
+                        value={this.state.selectedRoom}
+                        onChange={this.onChangeRooms}
+                        options={this.dataRooms(this.state.rooms)}
+                      />
+                    </div>
                   </div>  
                   <div className="form-inline mb-2">
                     <label for="class" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>

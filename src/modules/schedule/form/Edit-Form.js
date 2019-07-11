@@ -15,6 +15,9 @@ export default class attendanceEdit extends Component {
       scheduleId: '',
       day: 'Monday',
       time: '08:20',
+      rooms: [],
+      roomId: '',
+      selectedRoom: null,
       teachers: [],
       teacherId: '',
       selectedTeacher: null,
@@ -28,6 +31,7 @@ export default class attendanceEdit extends Component {
       redirect: false
     };
     this.onChangeDay = this.onChangeDay.bind(this);
+    this.onChangeRooms = this.onChangeRooms.bind(this);
     this.onChangeTeachers = this.onChangeTeachers.bind(this);
     this.onChangeClass = this.onChangeClass.bind(this);
     this.onChangeStudents = this.onChangeStudents.bind(this);
@@ -47,6 +51,11 @@ export default class attendanceEdit extends Component {
         {opt}
       </select>
     )
+  }
+
+  onChangeRooms = (selectedRoom) =>  {
+    this.setState({ selectedRoom });
+    this.setState({ roomId: selectedRoom.value})
   }
 
   onChangeDay(e) {
@@ -95,6 +104,7 @@ export default class attendanceEdit extends Component {
     // ajax call
     // this.fetchTeachers()
     // this.fetchStudents()
+    this.fetchRooms()
     this.fetchClasses()
     this.fetchDatas()
   }
@@ -115,6 +125,11 @@ export default class attendanceEdit extends Component {
               value: data.class_id,
               label: data.class_name
             }],
+            selectedRoom: [{
+              value: data.room_id,
+              label: data.room_name
+            }],
+            roomId: data.room_id,
             classId: data.class_id,
             selectedTeacher: [{
               value: data.teacher_id,
@@ -128,6 +143,16 @@ export default class attendanceEdit extends Component {
         })
         this.setState({
           datas: json
+        })
+      })
+  }
+
+  fetchRooms = () => {
+    fetch('http://localhost:8000/api/rooms')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          rooms: json.data
         })
       })
   }
@@ -171,6 +196,22 @@ export default class attendanceEdit extends Component {
   //       })
   //     })
   // }
+
+  dataRooms = (rooms) => {
+    return (
+      function () {
+        let rowData = []
+
+        rooms.map((data, index) => {
+          rowData.push({
+            value: data.id,
+            label: data.room_name,
+          })
+        })
+        return rowData
+      }()
+    )
+  };
 
   fetchClasses = () => {
     fetch('http://localhost:8000/api/classes')
@@ -236,6 +277,7 @@ export default class attendanceEdit extends Component {
       time: this.state.time,
       teacher: this.state.teacherId,
       student: this.state.studentId,
+      room: this.state.roomId,
       class: this.state.classId,
     };
     axios.patch('http://localhost:8000/api/schedule/'+this.props.scheduleId, obj)
@@ -335,6 +377,19 @@ export default class attendanceEdit extends Component {
                       <option value={'19:40'}>19:40</option>
                     </select>
                   </div>
+                  <div className="form-inline mb-2">
+                    <label for="class" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                      Room
+                    </label>
+                    <label>: &nbsp;</label>
+                    <div style={{ display: 'inline-block', width: 223.2 }}>
+                      <Select
+                        value={this.state.selectedRoom}
+                        onChange={this.onChangeRooms}
+                        options={this.dataRooms(this.state.rooms)}
+                      />
+                    </div>
+                  </div> 
                   <div className="form-inline mb-2">
                     <label for="class" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Class
