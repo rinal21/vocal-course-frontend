@@ -335,7 +335,7 @@ export default class transactionEdit extends Component {
       teacher: this.state.teacherId,
       student: this.state.studentId,
       payment_date: moment(this.state.paymentDate).format("YYYY-MM-DD hh:mm:ss"),
-      receipt_number: this.state.receiptNumber,
+      // receipt_number: this.state.receiptNumber,
       cost: this.state.cost,
       pricing: this.state.pricingId,
       account: this.state.accountId,
@@ -476,7 +476,7 @@ export default class transactionEdit extends Component {
                         className="form-control"
                       />
                   </div>
-                  <div className="form-inline mb-2">
+                  {/* <div className="form-inline mb-2">
                     <label for="receipt" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Receipt Number
                     </label>
@@ -484,7 +484,7 @@ export default class transactionEdit extends Component {
                     <input type="text" class="form-control mr-sm-2" id="receipt" 
                     value={this.state.receiptNumber}
                     onChange={this.onChangeReceiptNumber}/>
-                  </div>
+                  </div> */}
                   <div className="form-inline mb-2">
                     <label for="cost" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
                       Cost
