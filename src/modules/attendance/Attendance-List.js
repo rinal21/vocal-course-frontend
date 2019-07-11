@@ -323,6 +323,12 @@ export default class attendancesList extends Component {
         let rowData = []
 
         classes.map((data, index) => {
+          if (index == 0) {
+            rowData.push({
+              value: 0,
+              label: 'All',
+            })
+          }
           rowData.push({
             value: data.id,
             label: data.name,
@@ -383,6 +389,12 @@ export default class attendancesList extends Component {
           width: 150
         },
         {
+          label: 'Room',
+          field: 'room',
+          sort: 'asc',
+          width: 150
+        },
+        {
           label: 'Time',
           field: 'time',
           sort: 'asc',
@@ -430,6 +442,7 @@ export default class attendancesList extends Component {
           // console.log('coba1 studentID:',data.student_id,'isi:', studentSelected[data.student_id], 'class', data.class_name)
           rowData.push({
             day: data.day,
+            room: data.room_name,
             time: data.time,
             class: <select class="form-control" onChange={(e) => onChangeClass(e, data.attendances_id)} value={classSelected[data.attendances_id]}>
               { createClassPicker(classes)}
@@ -502,7 +515,7 @@ export default class attendancesList extends Component {
               <div className="content">
                   <b><h4>Attendance</h4></b>
                   {/* <h5>Class : {attendances.class_name}</h5> */}
-                    <div style={{position: 'absolute', top: 70, right: 16}}>
+                    <div style={{position: 'absolute', top: 70, right: 16, zIndex: 1}}>
                           <DatePicker
                             selected={this.state.filterDate}
                             onChange={this.onChangeFilterDate}

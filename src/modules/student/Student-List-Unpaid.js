@@ -70,6 +70,12 @@ export default class studentListUnpaid extends Component {
         let rowData = []
 
         classes.map((data, index) => {
+          if (index == 0) {
+            rowData.push({
+              value: 0,
+              label: 'All',
+            })
+          }
           rowData.push({
             value: data.id,
             label: data.name,
