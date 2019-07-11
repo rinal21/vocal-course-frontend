@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { MDBDataTable, MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter  } from 'mdbreact';
 import { NavLink } from "react-router-dom";
 import axios from 'axios';
+import NumberFormat from 'react-number-format';
 
 export default class pricingList extends Component {
   constructor(props) {
@@ -126,7 +127,7 @@ export default class pricingList extends Component {
           }
           rowData.push({
             class: data.class_name,
-            price: data.price,
+            price: <NumberFormat value={data.price} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />,
             // meetup: data.total_meetup,
             // duration: data.duration,
             difficulty: data.type_by_difficulty,

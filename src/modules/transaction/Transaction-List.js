@@ -5,6 +5,7 @@ import axios from 'axios';
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import ReactToPrint from "react-to-print";
+import NumberFormat from 'react-number-format';
 
 export default class teacherList extends Component {
   constructor(props) {
@@ -176,7 +177,7 @@ export default class teacherList extends Component {
             teacher: data.teacher_name,
             payment: data.payment_date,
             receipt: data.receipt_number,
-            cost: data.cost,
+            cost: <NumberFormat value={data.cost} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />,
             status: data.status == 0 ? 'Pending' : 'paid',
             edit:
               <div>
@@ -413,17 +414,17 @@ class ComponentToPrint extends React.Component {
                         <tr>
                               <td colspan="2"></td>
                               <td colspan="2">Cost</td>
-                              <td>{data.cost}</td>
+                              <td><NumberFormat value={data.cost} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} /></td>
                           </tr>
                           <tr>
                               <td colspan="2"></td>
                               <td colspan="2">Royalty</td>
-                              <td>{data.royalty}</td>
+                              <td><NumberFormat value={data.royalty} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} /></td>
                           </tr>
                           <tr>
                               <td colspan="2"></td>
                               <td colspan="2">GRAND TOTAL</td>
-                              <td>{Number(data.cost) + Number(data.royalty)}</td>
+                              <td><NumberFormat value={Number(data.cost) + Number(data.royalty)} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} /></td>
                           </tr>
                         </div>
                       </tfoot>

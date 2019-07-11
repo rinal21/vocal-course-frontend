@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import axios from 'axios';
 import moment from "moment";
 import DatePicker from "react-datepicker";
+import NumberFormat from 'react-number-format';
 
 export default class classList extends Component {
   constructor(props) {
@@ -128,10 +129,10 @@ export default class classList extends Component {
             date: data.date,
             teacher: data.name,
             count: data.students_count,
-            salary: data.total_salary,
+            salary: <NumberFormat value={data.total_salary} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />,
             vacation: data.total_vacation,
             absent: data.total_absent,
-            total: data.total,
+            total: <NumberFormat value={data.total} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />,
             edit:
               <div>
                 <NavLink
