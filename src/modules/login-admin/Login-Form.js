@@ -99,8 +99,6 @@ export default class loginForm extends Component {
                             })
                             .then(json => {
                                 if (json.data.success) {
-                                    alert("Login Successful!");
-
                                     let userData = {
                                         username: json.data.data.username,
                                         id: json.data.data.id,
