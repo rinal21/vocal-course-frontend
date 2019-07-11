@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { MDBDataTable, MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter } from 'mdbreact';
 import { NavLink } from "react-router-dom";
 import axios from 'axios';
+import NumberFormat from 'react-number-format';
 
 export default class teacherList extends Component {
   constructor(props) {
@@ -82,7 +83,7 @@ export default class teacherList extends Component {
           rowData.push({
             name: data.name,
             student: data.students_count,
-            salary: data.salary,
+            salary: <NumberFormat value={data.salary} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />,
             action:
               <div>
                 <NavLink
