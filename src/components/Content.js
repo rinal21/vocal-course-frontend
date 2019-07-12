@@ -28,6 +28,10 @@ import RoomList from "../modules/room/Room-List";
 import RoomAdd from "../modules/room/Room-Add";
 import RoomEdit from "../modules/room/Room-Edit";
 
+import BranchList from "../modules/branch/Branch-List";
+import BranchAdd from "../modules/branch/Branch-Add";
+import BranchEdit from "../modules/branch/Branch-Edit";
+
 import RoleList from "../modules/role/Role-List";
 import RoleAdd from "../modules/role/Role-Add";
 import RoleEdit from "../modules/role/Role-Edit";
@@ -108,6 +112,9 @@ class Content extends Component {
           <PrivateRoute exact path="/room" component={RoomList} />
           <PrivateRoute exact path="/room/add" component={RoomAdd} />
           <PrivateRoute exact path="/room/edit" component={RoomEdit} />
+          <PrivateRoute exact path="/branch" component={BranchList} />
+          <PrivateRoute exact path="/branch/add" component={BranchAdd} />
+          <PrivateRoute exact path="/branch/edit" component={BranchEdit} />
           <PrivateRoute exact path="/role" component={RoleList} />
           <PrivateRoute exact path="/role/add" component={RoleAdd} />
           <PrivateRoute exact path="/role/edit" component={RoleEdit} />

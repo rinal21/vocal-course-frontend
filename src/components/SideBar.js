@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 export default class SideBar extends Component {
     render(){
       const username = JSON.parse(localStorage["appState"]).user.username
+      const role = JSON.parse(localStorage["appState"]).user.roleId
         return (
           <aside className="main-sidebar">
             <section className="sidebar">
@@ -61,21 +62,31 @@ export default class SideBar extends Component {
                     <i className="fa fa-home" /> <span>Room</span>
                   </Link>
                 </li>
-                <li>
-                  <Link to="/user">
-                    <i className="fa fa-user" /> <span>User</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/employee">
-                    <i className="fa fa-user" /> <span>Employee</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/role">
-                    <i className="fa fa-user" /> <span>Role</span>
-                  </Link>
-                </li>
+                {role == 1 && (
+                  <>
+                    <li>
+                      <Link to="/branch">
+                        <i className="fa fa-home" /> <span>Branch</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/user">
+                        <i className="fa fa-user" /> <span>User</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/employee">
+                        <i className="fa fa-user" /> <span>Employee</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/role">
+                        <i className="fa fa-user" /> <span>Role</span>
+                      </Link>
+                    </li>
+                  </>
+                )}
+                
                 <li className="treeview">
                   <a href="">
                     <i className="fa fa-child" />
@@ -117,21 +128,11 @@ export default class SideBar extends Component {
                     <i className="fa fa-check-square-o" /> <span>Attendance</span>
                   </Link>
                 </li>
-                {/* <li>
-                  <Link to="/student-attendance">
-                    <i className="fa fa-check-square-o" /> <span>Student Attendance</span>
-                  </Link>
-                </li> */}
                 <li>
                   <Link to="/teacher">
                     <i className="fa fa-graduation-cap" /> <span>Teacher</span>
                   </Link>
                 </li>
-                {/* <li>
-                  <Link to="/teacher-attendance">
-                    <i className="fa fa-check-square-o" /> <span>Teacher Attendance</span>
-                  </Link>
-                </li> */}
                 <li>
                   <Link to="/transaction">
                     <i className="fa fa-exchange" /> <span>Transaction</span>
@@ -147,6 +148,17 @@ export default class SideBar extends Component {
                     <i className="fa fa-print" /> <span>Payroll</span>
                   </Link>
                 </li>
+
+                {/* <li>
+                  <Link to="/student-attendance">
+                    <i className="fa fa-check-square-o" /> <span>Student Attendance</span>
+                  </Link>
+                </li> */}
+                {/* <li>
+                  <Link to="/teacher-attendance">
+                    <i className="fa fa-check-square-o" /> <span>Teacher Attendance</span>
+                  </Link>
+                </li> */}
                   {/* <li className="treeview">
                     <a href="">
                       <i className="fa fa-pie-chart" />
