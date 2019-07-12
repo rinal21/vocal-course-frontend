@@ -328,11 +328,11 @@ export default class studentListUnpaid extends Component {
           field: 'address',
           width: 10
         },
-        {
-          label: 'Cell Phone',
-          field: 'cellPhone',
-          width: 10
-        },
+        // {
+        //   label: 'Cell Phone',
+        //   field: 'cellPhone',
+        //   width: 10
+        // },
         {
           label: 'Class',
           field: 'class',
@@ -346,6 +346,11 @@ export default class studentListUnpaid extends Component {
         {
           label: 'Email',
           field: 'email',
+          width: 10
+        },
+        {
+          label: 'Branch',
+          field: 'branch',
           width: 10
         },
         {
@@ -364,10 +369,11 @@ export default class studentListUnpaid extends Component {
             age: data.age,
             sex: data.sex,
             address: data.street_address,
-            cellPhone: data.cell_phone,
+            // cellPhone: data.cell_phone,
             class: data.class_name,
             school: data.school,
             email: data.email,
+            branch: data.branch_name,
             action: 
               <div>
               <button onClick={() => detailStudent(data.id)} className="btn btn-default" >Detail</button>
