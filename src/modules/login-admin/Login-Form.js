@@ -106,6 +106,7 @@ export default class loginForm extends Component {
                                         auth_token: json.data.data.auth_token,
                                         branchId: json.data.data.branch_id,
                                         branchName: json.data.data.branch_name,
+                                        roleId: json.data.data.role_id,
                                         timestamp: new Date().toString()
                                     };
                                     let appState = {
