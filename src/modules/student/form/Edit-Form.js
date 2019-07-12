@@ -289,14 +289,6 @@ export default class studentEdit extends Component {
         .min(3, 'Too Short!')
         .max(30, 'Too Long!')
         .required('Required'),
-      middleName: Yup.string()
-        .min(3, 'Too Short!')
-        .max(30, 'Too Long!')
-        .required('Required'),
-      lastName: Yup.string()
-        .min(3, 'Too Short!')
-        .max(30, 'Too Long!')
-        .required('Required'),
       address: Yup.string()
         .min(5, 'Too Short!')
         .max(50, 'Too Long!')
@@ -441,7 +433,7 @@ export default class studentEdit extends Component {
                         <div class="col-sm">
                           <div className="form-group">
                             <label for="middle" class="mr-sm-2">
-                              Middle <label style={{color: 'red'}}>*</label>
+                              Middle
                       </label>
                             {/* <input
                           type="text"
@@ -459,7 +451,7 @@ export default class studentEdit extends Component {
                         <div class="col-sm">
                           <div className="form-group">
                             <label for="last" class="mr-sm-2">
-                              Last <label style={{color: 'red'}}>*</label>
+                              Last
                         </label>
                             {/* <input
                           type="text"
