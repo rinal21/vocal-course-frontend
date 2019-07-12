@@ -22,6 +22,7 @@ export default class studentListPaid extends Component {
       detailStudent: false,
       detailStudentInfo: [],
       deleteConfirm: false,
+      grouping: 'no',
       layoutPrint: '',
       transactions: [],
       deleteId : ''
@@ -29,12 +30,27 @@ export default class studentListPaid extends Component {
     this.delete = this.delete.bind(this);
     this.onChangeFilterDate = this.onChangeFilterDate.bind(this);
     this.onChangeClass = this.onChangeClass.bind(this);
+    this.onChangeGroupingOption = this.onChangeGroupingOption.bind(this);
   }
 
   componentDidMount = () => {
     // ajax call
     this.fetchData()
     this.fetchClasses()
+  }
+
+  onChangeGroupingOption(e) {
+    this.setState({
+      grouping: e.target.value
+    });
+
+    fetch('http://localhost:8000/api/students/groupingClass?grouping=' + e.target.value + '&status=3')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          students: json
+        })
+      })
   }
 
   onChangeClass = (selectedClass) =>  {
@@ -238,7 +254,8 @@ export default class studentListPaid extends Component {
     }
   }
 
-  createYearPicker = () => {
+  createYearPicker = (index) => {
+    const { grouping } = this.state
     let opt = []
 
     for (var i = 2019; i <= 2025; i++) {
@@ -246,7 +263,7 @@ export default class studentListPaid extends Component {
     }
 
     return (
-      <select class="form-control" style={{ width: 100, position:'absolute', top:107, right: 16, zIndex: 1 }} id="year-picker" onChange={this.onChangeFilterDate}>
+      <select class="form-control" style={{ width: 105, position:'absolute', top: grouping == 'yes' && index < 1 ? 140 : 104, right: 16, zIndex: 1 }} id="year-picker" onChange={this.onChangeFilterDate}>
         {opt}
       </select>
     )
@@ -449,47 +466,137 @@ export default class studentListPaid extends Component {
   };
 
   tableStudentsGroup = (students) => {
+    const { grouping } = this.state
     let table = []
     let i = 0
 
-        table.push(
-          <section className="content-header">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="box">
-                  <div className="content">
-                    <h4>Students - Paid</h4>
-                    {/* <h5>Class : {student[0].class_name ? student[0].class_name : 'None'}</h5> */}
-                    <div class="row">
-                      <div class="col-sm-12 col-md-6">
-                        <NavLink to="/student/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student</NavLink>
+    if(this.state.grouping == 'yes') {
+      students.forEach((student, index) => {
+        Array.isArray(student) &&
+          table.push(
+            <section className="content-header">
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="box">
+                    <div className="content">
+                      {i < 1 && (
+                        <h4>Students - Paid</h4>
+                      )}
+                      <h5>Class : {student[0].class_name ? student[0].class_name : 'None'}</h5>
+                          <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                              <NavLink to="/student/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student</NavLink>
+                            </div>
+                          {/* <div style={{ position: 'absolute', width: 223.2, top: i < 1 ? 116 : 80, left: 278, zIndex: 1 }}>
+                        <label style={{marginBottom: 0}}>Class</label>
+                            <Select
+                              value={this.state.selectedClass}
+                              onChange={this.onChangeClass}
+                              options={this.dataClasses(this.state.classes)}
+                            />
+                          </div> */}
+    
                       </div>
-                      <div class="col-sm-12 col-md-6">
-                        <div style={{ display: 'inline-block', width: 223.2 }}>
-                          <Select
-                            value={this.state.selectedClass}
-                            onChange={this.onChangeClass}
-                            options={this.dataClasses(this.state.classes)}
-                          />
-                        </div>
-
-                      </div>
+                      <select class="form-control" style={{ width: 105, position: 'absolute', top: i < 1 ? 83 : 47, right: 16, zIndex: 1 }} id="group-option" onChange={this.onChangeGroupingOption} value={this.state.grouping}>
+                        <option value='no' >All</option>
+                        <option value='yes' >By Class</option>
+                      </select>
+                      {this.createYearPicker(i)}
+                      <MDBDataTable
+                        striped
+                        bordered
+                        hover
+                        data={this.data(student)}
+                        btn
+                      />
                     </div>
-                    {this.createYearPicker()}
-                    <MDBDataTable
-                      responsive
-                      striped
-                      bordered
-                      hover
-                      data={this.data(students)}
-                      btn
-                    />
                   </div>
                 </div>
               </div>
+            </section>) && i++
+      })
+    }
+    else {
+      table.push(
+        <section className="content-header">
+          <div className="row">
+            <div className="col-md-12">
+              <div className="box">
+                <div className="content">
+                      <h4>Students - Paid</h4>
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                          <NavLink to="/student/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student</NavLink>
+                        </div>
+                      <div style={{ position: 'absolute', width: 223.2, top: 83, left: 278, zIndex: 1 }}>
+                    <label style={{marginBottom: 0}}>Class</label>
+                        <Select
+                          value={this.state.selectedClass}
+                          onChange={this.onChangeClass}
+                          options={this.dataClasses(this.state.classes)}
+                        />
+                      </div>
+
+                  </div>
+                  <select class="form-control" style={{ width: 105, position: 'absolute', top: 50, right: 16, zIndex: 1 }} id="group-option" onChange={this.onChangeGroupingOption} value={this.state.grouping}>
+                      <option value='no' >All</option>
+                      <option value='yes' >By Class</option>
+                  </select>
+                  {this.createYearPicker()}
+                  <MDBDataTable
+                    striped
+                    bordered
+                    hover
+                    data={this.data(students)}
+                    btn
+                  />
+                </div>
+              </div>
             </div>
-          </section>
-        )
+          </div>
+        </section>)
+    }
+
+      
+
+    
+        
+          // <section className="content-header">
+          //   <div className="row">
+          //     <div className="col-md-12">
+          //       <div className="box">
+          //         <div className="content">
+          //           <h4>Students - Paid</h4>
+          //           {/* <h5>Class : {student[0].class_name ? student[0].class_name : 'None'}</h5> */}
+          //           <div class="row">
+          //             <div class="col-sm-12 col-md-6">
+          //               <NavLink to="/student/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student</NavLink>
+          //             </div>
+          //             <div class="col-sm-12 col-md-6">
+          //               <div style={{ display: 'inline-block', width: 223.2 }}>
+          //                 <Select
+          //                   value={this.state.selectedClass}
+          //                   onChange={this.onChangeClass}
+          //                   options={this.dataClasses(this.state.classes)}
+          //                 />
+          //               </div>
+
+          //             </div>
+          //           </div>
+          //           {this.createYearPicker()}
+          //           <MDBDataTable
+          //             responsive
+          //             striped
+          //             bordered
+          //             hover
+          //             data={this.data(students)}
+          //             btn
+          //           />
+          //         </div>
+          //       </div>
+          //     </div>
+          //   </div>
+          // </section>
       
       // : table.push(
       //   <section className="content-header">
@@ -526,18 +633,19 @@ export default class studentListPaid extends Component {
 
   render() {
     const { students } = this.state
-    console.log('coba', students)
+    // console.log('coba', students)
     return (
       <>
-      {/* {students && this.tableStudentsGroup(students)} */}
-      <section className="content-header">
+      {students && this.tableStudentsGroup(students)}
+
+      {/* <section className="content-header">
             <div className="row">
               <div className="col-md-12">
                 <div className="box">
                   <div className="content">
-                        <h4>Students - Paid</h4>
+                        <h4>Students - Paid</h4> */}
                     {/* <h5>Class : {student[0].class_name ? student[0].class_name : 'None'}</h5> */}
-                        <div class="row">
+                        {/* <div class="row">
                           <div class="col-sm-12 col-md-6">
                             <NavLink to="/student/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student</NavLink>
                           </div>
@@ -550,9 +658,9 @@ export default class studentListPaid extends Component {
                           />
                         </div>
 
-                    </div>
-                    {this.createYearPicker()}
-                    <MDBDataTable
+                    </div> */}
+                    {/* {this.createYearPicker()} */}
+                    {/* <MDBDataTable
                       striped
                       bordered
                       hover
@@ -563,7 +671,7 @@ export default class studentListPaid extends Component {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
 
         <MDBContainer>
           <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
