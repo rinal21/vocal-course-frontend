@@ -205,7 +205,7 @@ export default class attendanceEdit extends Component {
         rooms.map((data, index) => {
           rowData.push({
             value: data.id,
-            label: data.room_name,
+            label: data.name,
           })
         })
         return rowData

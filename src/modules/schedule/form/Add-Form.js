@@ -148,6 +148,7 @@ export default class attendanceAdd extends Component {
   }
 
   dataRooms = (rooms) => {
+    console.log('coba' ,rooms)
     return (
       function () {
         let rowData = []
@@ -155,7 +156,7 @@ export default class attendanceAdd extends Component {
         rooms.map((data, index) => {
           rowData.push({
             value: data.id,
-            label: data.room_name,
+            label: data.name,
           })
         })
         return rowData
