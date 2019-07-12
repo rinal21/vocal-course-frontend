@@ -12,11 +12,12 @@ export default class Header extends Component {
     }
     render(){
         const branch = JSON.parse(localStorage["appState"]).user.branchName
+        const role = JSON.parse(localStorage["appState"]).user.roleId
         return (
             <header className="main-header">
                 <a href="#" className="logo">
                     <span className="logo-mini"><b>A</b>LT</span>
-                    <span className="logo-lg"><b>Admin</b> - {branch}</span>
+                    <span className="logo-lg"><b>Admin</b>{role != 1 && (' - '+ branch)}</span>
                 </a>
                 <nav className="navbar navbar-static-top">
                     <a href="#" className="sidebar-toggle" data-toggle="push-menu" role="button">
