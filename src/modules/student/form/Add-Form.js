@@ -142,6 +142,7 @@ export default class studentAdd extends Component {
 
   render() {
     const { redirect, imgPreviewUrl } = this.state;
+    const branchId = JSON.parse(localStorage["appState"]).user.branchId
     let $imagePreview = null;
     if (redirect) {
       return <Redirect to='/student-trial' />;
@@ -304,6 +305,7 @@ export default class studentAdd extends Component {
               result: this.state.result,
               days: values.days,
               hours: values.hours,
+              branchId: branchId
             };
             const formData = new FormData();
             formData.append('signature', this.state.signature);
@@ -319,8 +321,8 @@ export default class studentAdd extends Component {
                 .then(() => {
                   alert("The file is successfully uploaded");
                 }))
-              .then(() => alert("Student's data will be printing"))
               .then(() => this.setState({ redirect: true }));
+              // .then(() => alert("Student's data will be printing"))
           }
         }
         >
