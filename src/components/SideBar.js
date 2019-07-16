@@ -1,12 +1,15 @@
 
 import React, {Component} from 'react';
 import { Link } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
 
-
-export default class SideBar extends Component {
+class SideBar extends Component {
     render(){
+      // console.log('selma', this.props)
       const username = JSON.parse(localStorage["appState"]).user.username
       const role = JSON.parse(localStorage["appState"]).user.roleId
+      const { location } = this.props
+
         return (
           <aside className="main-sidebar">
             <section className="sidebar">
@@ -98,22 +101,26 @@ export default class SideBar extends Component {
                   <ul className="treeview-menu">
                     <li>
                       <Link to="/student-paid">
-                        <i className="fa fa-circle-o" /> <span>Paid(Registered)</span>
+                        <i className={location.pathname == '/student-paid' ? "fa fa-circle" : "fa fa-circle-o"} style={{color: location.pathname == '/student-paid' && '#fff'}}/> 
+                        <span style={{color: location.pathname == '/student-paid' && '#fff'}}>Paid(Registered)</span>
                       </Link>
                     </li>
                     <li>
                       <Link to="/student-unpaid">
-                        <i className="fa fa-circle-o" /> <span>Unpaid</span>
+                        <i className={location.pathname == '/student-unpaid' ? "fa fa-circle" : "fa fa-circle-o"} style={{color: location.pathname == '/student-unpaid' && '#fff'}}/> 
+                        <span style={{color: location.pathname == '/student-unpaid' && '#fff'}}>Unpaid</span>
                       </Link>
                     </li>
                     <li>
                       <Link to="/student-trial">
-                        <i className="fa fa-circle-o" /> <span>Trial</span>
+                        <i className={location.pathname == '/student-trial' ? "fa fa-circle" : "fa fa-circle-o"} style={{color: location.pathname == '/student-trial' && '#fff'}}/> 
+                        <span style={{color: location.pathname == '/student-trial' && '#fff'}}>Trial</span>
                       </Link>
                     </li>
                     <li>
                       <Link to="/student-pending">
-                        <i className="fa fa-circle-o" /> <span>Pending</span>
+                        <i className={location.pathname == '/student-pending' ? "fa fa-circle" : "fa fa-circle-o"} style={{color: location.pathname == '/student-pending' && '#fff'}}/> 
+                        <span style={{color: location.pathname == '/student-pending' && '#fff'}}>Pending</span>
                       </Link>
                     </li>
                   </ul>
@@ -210,3 +217,5 @@ export default class SideBar extends Component {
         );
     }
 }
+
+export default withRouter(SideBar)
