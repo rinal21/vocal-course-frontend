@@ -2,6 +2,28 @@
     overflow-y: auto;
 }
 
+.dataTables_filter {
+    float: right;
+}
+
+.table td {
+    padding-bottom: 0.3rem;
+    padding-top: 0.3rem;
+}
+
+.table tr th i {
+    margin-top: 4px;
+}
+
+.table tbody tr td {
+    button {
+        height: 37px;
+    }
+    a {
+        height: 37px;
+    }
+}
+
 tbody + thead{
     display: none;
   }
