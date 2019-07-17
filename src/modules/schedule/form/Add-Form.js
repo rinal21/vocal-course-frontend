@@ -225,9 +225,10 @@ export default class attendanceAdd extends Component {
       branch: JSON.parse(localStorage["appState"]).user.branchId
     };
     axios.post('http://localhost:8000/api/schedule', obj)
-      .then(res => console.log(res.data))
+      .then(res => console.log(res.data.message))
       .then(() => this.setState({ redirect: true }))
       .catch(error => {
+        alert('Duplicate Schedule')
         console.log(error.message);
       })
   }
