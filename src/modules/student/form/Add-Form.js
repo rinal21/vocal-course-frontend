@@ -450,7 +450,11 @@ export default class studentAdd extends Component {
                         showYearDropdown
                         dropdownMode="select"
                         className="form-control"
+                        customInput={
+                          <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{width: 120}} />
+                        }
                       />
+                      <i className="fa fa-calendar" style={{position: 'absolute', marginLeft: -28, zIndex: 1, bottom: 35}}/>
                       {/* <input type="text" class="form-control mb-2 mr-sm-2" id="birthdate" /> */}
                     </div>
                       </div>
