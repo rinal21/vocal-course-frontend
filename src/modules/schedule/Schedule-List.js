@@ -40,7 +40,7 @@ export default class schedulesList extends Component {
   }
 
   delete(id) {
-    axios.delete('http://localhost:8000/api/teacher_attendance/' + id)
+    axios.delete('http://localhost:8000/api/schedule/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -104,19 +104,19 @@ export default class schedulesList extends Component {
           width: 270
         },
         {
-          label: 'Student\'s Name',
+          label: 'Student Name',
           field: 'student',
           sort: 'asc',
           width: 200
         },
         {
-          label: 'Teacher\'s Name',
+          label: 'Teacher Name',
           field: 'teacher',
           sort: 'asc',
           width: 100
         },
         {
-          label: 'Class\'s Name',
+          label: 'Class Name',
           field: 'class',
           sort: 'asc',
           width: 150
@@ -177,7 +177,7 @@ export default class schedulesList extends Component {
                       dropdownMode="select"
                       className="form-control"
                     /> */}
-                    <select class="form-control" style={{ position: 'absolute', top: 75, right: 0, width: 140, zIndex: 1 }} id="day-picker" onChange={this.onChangeDay}>
+                    <select class="form-control" style={{ position: 'absolute', top: 75, right: 190, width: 140, zIndex: 1 }} id="day-picker" onChange={this.onChangeDay}>
                       <option value={'Monday'}>Monday</option>
                       <option value={'Tuesday'}>Tuesday</option>
                       <option value={'Wednesday'}>Wednesday</option>

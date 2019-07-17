@@ -125,13 +125,13 @@ export default class teacherList extends Component {
           width: 500
         },
         {
-          label: 'Student\'s Name',
+          label: 'Student Name',
           field: 'student',
           sort: 'desc',
           width: 500
         },
         {
-          label: 'Teacher\'s Name',
+          label: 'Teacher Name',
           field: 'teacher',
           sort: 'desc',
           width: 500
@@ -172,7 +172,7 @@ export default class teacherList extends Component {
 
         transactions.map((data, index) => {
           rowData.push({
-            date: data.date,
+            date: moment(data.date).format("DD MMMM YYYY HH:mm:ss"),
             student: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
             teacher: data.teacher_name,
             payment: data.payment_date,
@@ -209,7 +209,7 @@ export default class teacherList extends Component {
             <div className="box">
               <div className="content">
                 <b><h4>Transaction</h4></b>
-                <div class="box-header">
+                <div class="box-header" style={{paddingRight: 0}}>
                   <NavLink to="/transaction/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Transaction</NavLink>
                   <div class="float-right">
                     <DatePicker
@@ -218,8 +218,12 @@ export default class teacherList extends Component {
                       dateFormat="MMMM/yyyy"
                       showMonthYearPicker
                       className="form-control"
+                      customInput={
+                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{width: 130}} />
+                      }
                     />
                   </div>
+                  <i className="fa fa-calendar" style={{position: 'absolute', marginLeft: -33, zIndex: 1, right: 5, top: 20}}/>
                 </div>
                 <MDBDataTable
                   striped
@@ -270,7 +274,7 @@ export default class teacherList extends Component {
                   </MDBModal>
                 </MDBContainer>
 
-                <p>Total transaction this month: {this.state.totalAll}</p>
+                <p>Total transaction this month: {<NumberFormat value={this.state.totalAll} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />}</p>
                 
                 <div className="d-none">
                   {this.state.printConfirm && <ComponentToPrint

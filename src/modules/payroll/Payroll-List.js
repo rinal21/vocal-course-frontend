@@ -79,7 +79,7 @@ export default class classList extends Component {
           width: 500
         },
         {
-          label: 'Teacher\'s Name',
+          label: 'Teacher Name',
           field: 'teacher',
           sort: 'desc',
           width: 500
@@ -114,12 +114,12 @@ export default class classList extends Component {
           sort: 'desc',
           width: 500
         },
-        {
-          label: 'Action',
-          field: 'action',
-          sort: 'disabled',
-          width: 10
-        },
+        // {
+        //   label: 'Action',
+        //   field: 'action',
+        //   sort: 'disabled',
+        //   width: 10
+        // },
       ],
       rows: (function () {
         let rowData = []
@@ -132,19 +132,19 @@ export default class classList extends Component {
             salary: <NumberFormat value={data.total_salary} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />,
             vacation: data.total_vacation,
             absent: data.total_absent,
-            total: <NumberFormat value={data.total} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />,
-            edit:
-              <div>
-                <NavLink
-                  to={{
-                    pathname: 'payroll/edit',
-                    state: {
-                      payrollId: data.id
-                    }
-                  }}
-                  className="btn btn-primary">Edit</NavLink>
-                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
-              </div>
+            total: <NumberFormat value={data.total} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />
+            // edit:
+            //   <div>
+            //     <NavLink
+            //       to={{
+            //         pathname: 'payroll/edit',
+            //         state: {
+            //           payrollId: data.id
+            //         }
+            //       }}
+            //       className="btn btn-primary">Edit</NavLink>
+            //     <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+            //   </div>
           })
         })
 
@@ -175,7 +175,8 @@ export default class classList extends Component {
                         dropdownMode="select"
                         className="form-control"
                       />
-                      <label style={{ marginLeft: 10, marginRight: 10 }}>-</label>
+                      <i className="fa fa-calendar" style={{marginLeft: -33, zIndex: 1}}/>
+                      <label style={{ marginLeft: 30, marginRight: 10 }}>-</label>
                       <DatePicker
                         selected={this.state.toDate}
                         onChange={this.onChangeToDate}
@@ -187,8 +188,9 @@ export default class classList extends Component {
                         dropdownMode="select"
                         className="form-control"
                       />
+                      <i className="fa fa-calendar" style={{marginLeft: -33, zIndex: 1}}/>
 
-                      <button type="button" class="btn btn-info" color="#fff" style={{ marginLeft: 10 }} onClick={() => this.filterData(this.state.fromDate, this.state.toDate)} ><i class="fa fa-print"></i>
+                      <button type="button" class="btn btn-info" color="#fff" style={{ marginLeft: 30 }} onClick={() => this.filterData(this.state.fromDate, this.state.toDate)} ><i class="fa fa-print"></i>
                         Generate
                       </button>
                     </div>
@@ -204,7 +206,9 @@ export default class classList extends Component {
                     data={this.data(this.state.payrolls)}
                   />
 
-                  <p>Total : {this.state.totalAll}</p>
+                  <p style={{position: 'absolute', right: 65, marginTop: -66}}>
+                    Total : {<NumberFormat value={this.state.totalAll} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />}
+                  </p>
                 </div>
               </div>
             </div>

@@ -407,7 +407,7 @@ export default class attendancesList extends Component {
           width: 200
         },
         {
-          label: 'Student\'s Name',
+          label: 'Student Name',
           field: 'student',
           sort: 'asc',
           width: 200
@@ -419,7 +419,7 @@ export default class attendancesList extends Component {
           width: 150
         },
         {
-          label: 'Teacher\'s Name',
+          label: 'Teacher Name',
           field: 'teacher',
           sort: 'asc',
           width: 100
@@ -515,7 +515,7 @@ export default class attendancesList extends Component {
               <div className="content">
                   <b><h4>Attendance</h4></b>
                   {/* <h5>Class : {attendances.class_name}</h5> */}
-                    <div style={{position: 'absolute', top: 70, right: 16, zIndex: 1}}>
+                    <div style={{position: 'absolute', top: 70, right: 216, zIndex: 1}}>
                           <DatePicker
                             selected={this.state.filterDate}
                             onChange={this.onChangeFilterDate}
@@ -523,7 +523,12 @@ export default class attendancesList extends Component {
                             peekNextMonth
                             dropdownMode="select"
                             className="form-control"
+                            customInput={
+                              <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{width: 135}} />
+                            }
                           />
+                          
+                  <i className="fa fa-calendar" style={{position: 'absolute', zIndex: 1, right: 13, top: 11}}/>
                   </div>
                   <div style={{ position: 'absolute', width: 223.2, top: 46, left: 278, zIndex: 1 }}>
                       <label style={{marginBottom: 0}}>Class</label>

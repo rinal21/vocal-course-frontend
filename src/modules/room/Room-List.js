@@ -51,7 +51,7 @@ export default class roomList extends Component {
     return ({
       columns: [
         {
-          label: 'Room\'s Name',
+          label: 'Room Name',
           field: 'no',
           width: 150
         },

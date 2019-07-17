@@ -51,7 +51,7 @@ export default class roleList extends Component {
     return ({
       columns: [
         {
-          label: 'Role\'s Name',
+          label: 'Role Name',
           field: 'no',
           width: 150
         },
