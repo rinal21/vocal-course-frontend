@@ -72,10 +72,51 @@ class SideBar extends Component {
                         <i className="fa fa-home" /> <span>Branch</span>
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link to="/user">
                         <i className="fa fa-user" /> <span>User</span>
                       </Link>
+                    </li> */}
+                    <li className="treeview">
+                  <a href="">
+                    <i className="fa fa-child" />
+                    <span>User</span>
+                    <span className="pull-right-container">
+                      <i className="fa fa-angle-left pull-right" />
+                    </span>
+                  </a>
+                      <ul className="treeview-menu">
+                        <li>
+                          <Link to="/user">
+                            <i className={location.pathname == '/user' ? "fa fa-circle" : "fa fa-circle-o"} style={{ color: location.pathname == '/user' && '#fff' }} />
+                            <span style={{ color: location.pathname == '/user' && '#fff' }}>Users</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/user-teacher">
+                            <i className={location.pathname == '/user-teacher' ? "fa fa-circle" : "fa fa-circle-o"} style={{ color: location.pathname == '/user-teacher' && '#fff' }} />
+                            <span style={{ color: location.pathname == '/user-teacher' && '#fff' }}>Teacher</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/user-employee">
+                            <i className={location.pathname == '/user-employee' ? "fa fa-circle" : "fa fa-circle-o"} style={{ color: location.pathname == '/user-employee' && '#fff' }} />
+                            <span style={{ color: location.pathname == '/user-employee' && '#fff' }}>Employee</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/user-admin">
+                            <i className={location.pathname == '/user-admin' ? "fa fa-circle" : "fa fa-circle-o"} style={{ color: location.pathname == '/user-admin' && '#fff' }} />
+                            <span style={{ color: location.pathname == '/user-admin' && '#fff' }}>Admin</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/user-branch">
+                            <i className={location.pathname == '/user-branch' ? "fa fa-circle" : "fa fa-circle-o"} style={{ color: location.pathname == '/user-branch' && '#fff' }} />
+                            <span style={{ color: location.pathname == '/user-branch' && '#fff' }}>Branch Admin</span>
+                          </Link>
+                        </li>
+                      </ul>
                     </li>
                     <li>
                       <Link to="/employee">
@@ -102,7 +143,7 @@ class SideBar extends Component {
                     <li>
                       <Link to="/student-paid">
                         <i className={location.pathname == '/student-paid' ? "fa fa-circle" : "fa fa-circle-o"} style={{color: location.pathname == '/student-paid' && '#fff'}}/> 
-                        <span style={{color: location.pathname == '/student-paid' && '#fff'}}>Paid(Registered)</span>
+                        <span style={{color: location.pathname == '/student-paid' && '#fff'}}>Paid</span>
                       </Link>
                     </li>
                     <li>

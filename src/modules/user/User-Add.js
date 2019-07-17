@@ -3,6 +3,7 @@ import UserAddForm from "./form/Add-Form"
 
 export default class userAdd extends Component {
     render() {
+        const { group } = this.props.location.state
         return(
             <div>
                 <div className="box-header with-border">
@@ -11,7 +12,8 @@ export default class userAdd extends Component {
                       </h3>
                 </div>
                 <div className="box-body">
-                    <UserAddForm />
+                    <UserAddForm
+                        group={group} />
                 </div>
             </div>
         )

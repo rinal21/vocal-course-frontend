@@ -45,6 +45,7 @@ export default class userAdd extends Component {
               username: values.username,
               email: values.email,
               password: values.password,
+              group: this.props.group
             };
             axios.post('http://localhost:8000/api/user', obj)
               .then(res => console.log(res.data))

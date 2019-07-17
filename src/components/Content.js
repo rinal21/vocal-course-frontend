@@ -13,6 +13,10 @@ import StudentAdd from "../modules/student/Student-Add";
 import StudentEdit from "../modules/student/Student-Edit";
 
 import UserList from "../modules/user/User-List";
+import UserListAdmin from "../modules/user/User-List-Admin";
+import UserListBranch from "../modules/user/User-List-BranchAdmin";
+import UserListEmployee from "../modules/user/User-List-Employee";
+import UserListTeacher from "../modules/user/User-List-Teacher";
 import UserAdd from "../modules/user/User-Add";
 import UserEdit from "../modules/user/User-Edit";
 
@@ -101,6 +105,10 @@ class Content extends Component {
           <PrivateRoute exact path="/student/add" component={StudentAdd} />
           <PrivateRoute exact path="/student/edit" component={StudentEdit} />
           <PrivateRoute exact path="/user" component={UserList} />
+          <PrivateRoute exact path="/user-admin" component={UserListAdmin} />
+          <PrivateRoute exact path="/user-branch" component={UserListBranch} />
+          <PrivateRoute exact path="/user-employee" component={UserListEmployee} />
+          <PrivateRoute exact path="/user-teacher" component={UserListTeacher} />
           <PrivateRoute exact path="/user/add" component={UserAdd} />
           <PrivateRoute exact path="/user/edit" component={UserEdit} />
           <PrivateRoute exact path="/employee" component={EmployeeList} />
