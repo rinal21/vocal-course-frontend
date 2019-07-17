@@ -14,6 +14,9 @@ export default class studentListTrial extends Component {
     this.state = {
       students: [],
       filterDate: new Date(),
+      branches: [],
+      branchId: '',
+      selectedBranch: null,
       classes: [],
       classId: '',
       selectedClass: null,
@@ -27,6 +30,7 @@ export default class studentListTrial extends Component {
     this.cancel = this.cancel.bind(this);
     this.onChangeFilterDate = this.onChangeFilterDate.bind(this);
     this.onChangeClass = this.onChangeClass.bind(this);
+    this.onChangeBranch = this.onChangeBranch.bind(this);
     this.onChangeGroupingOption = this.onChangeGroupingOption.bind(this);
   }
 
@@ -34,6 +38,7 @@ export default class studentListTrial extends Component {
     // ajax call
     this.fetchData()
     this.fetchClasses()
+    this.fetchBranches()
   }
 
   onChangeGroupingOption(e) {
@@ -48,6 +53,14 @@ export default class studentListTrial extends Component {
           students: json
         })
       })
+  }
+
+  onChangeBranch = (selectedBranch) =>  {
+    this.setState({ selectedBranch });
+    this.setState({ 
+      branchId: selectedBranch.value
+    })
+    this.fetchStudentsByBranch(selectedBranch.value)
   }
 
   onChangeClass = (selectedClass) =>  {
@@ -84,6 +97,48 @@ export default class studentListTrial extends Component {
         let rowData = []
 
         classes.map((data, index) => {
+          if (index == 0) {
+            rowData.push({
+              value: 0,
+              label: 'All',
+            })
+          }
+          rowData.push({
+            value: data.id,
+            label: data.name,
+          })
+        })
+        return rowData
+      }()
+    )
+  };
+
+  fetchStudentsByBranch = (id) => {
+    fetch('http://localhost:8000/api/students/filterBranch?status=1&branchId=' + id)
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          students: json
+        })
+      })
+  }
+
+  fetchBranches = () => {
+    fetch('http://localhost:8000/api/branches')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          branches: json.data
+        })
+      })
+  }
+
+  dataBranches = (branches) => {
+    return (
+      function () {
+        let rowData = []
+
+        branches.map((data, index) => {
           if (index == 0) {
             rowData.push({
               value: 0,
@@ -247,7 +302,7 @@ export default class studentListTrial extends Component {
     }
 
     return (
-      <select class="form-control" style={{ width: 105, position:'absolute', top: grouping == 'yes' && index < 1 ? 140 : 104, right: 16, zIndex: 1 }} id="year-picker" onChange={this.onChangeFilterDate}>
+      <select class="form-control" style={{ width: 105, position:'absolute', top: grouping == 'yes' ? index < 1 ? 140 : 104 : 107, right: grouping == 'yes' ? 225 : 285, zIndex: 1 }} id="year-picker" onChange={this.onChangeFilterDate}>
         {opt}
       </select>
     )
@@ -408,7 +463,7 @@ export default class studentListTrial extends Component {
                           </div> */}
     
                       </div>
-                      <select class="form-control" style={{ width: 105, position: 'absolute', top: i < 1 ? 83 : 47, right: 16, zIndex: 1 }} id="group-option" onChange={this.onChangeGroupingOption} value={this.state.grouping}>
+                      <select class="form-control" style={{ width: 105, position: 'absolute', top: i < 1 ? 140 : 104, right: 340, zIndex: 1 }} id="group-option" onChange={this.onChangeGroupingOption} value={this.state.grouping}>
                         <option value='no' >All</option>
                         <option value='yes' >By Class</option>
                       </select>
@@ -439,7 +494,7 @@ export default class studentListTrial extends Component {
                         <div class="col-sm-12 col-md-6">
                           <NavLink to="/student/add" class="btn btn-success"><i class="fa fa-plus"></i> Add Student</NavLink>
                         </div>
-                      <div style={{ position: 'absolute', width: 223.2, top: 83, left: 278, zIndex: 1 }}>
+                        <div style={{ position: 'absolute', width: 223.2, top: 83, left: 460, zIndex: 1 }}>
                     <label style={{marginBottom: 0}}>Class</label>
                         <Select
                           value={this.state.selectedClass}
@@ -448,8 +503,17 @@ export default class studentListTrial extends Component {
                         />
                       </div>
 
+                      <div style={{ position: 'absolute', width: 223.2, top: 83, left: 200, zIndex: 1 }}>
+                    <label style={{marginBottom: 0}}>Branch</label>
+                        <Select
+                          value={this.state.selectedBranch}
+                          onChange={this.onChangeBranch}
+                          options={this.dataClasses(this.state.branches)}
+                        />
+                      </div>
+
                   </div>
-                  <select class="form-control" style={{ width: 105, position: 'absolute', top: 50, right: 16, zIndex: 1 }} id="group-option" onChange={this.onChangeGroupingOption} value={this.state.grouping}>
+                  <select class="form-control" style={{ width: 105, position: 'absolute', top: 107, right: 430, zIndex: 1 }} id="group-option" onChange={this.onChangeGroupingOption} value={this.state.grouping}>
                       <option value='no' >All</option>
                       <option value='yes' >By Class</option>
                   </select>
@@ -550,7 +614,7 @@ export default class studentListTrial extends Component {
     }
     return (
       <>
-      {students[0] && this.tableStudentsGroup(students)}
+      {students && this.tableStudentsGroup(students)}
       
       {/* <section className="content-header">
             <div className="row">
