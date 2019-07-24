@@ -73,7 +73,7 @@ export default class loginForm extends Component {
         const { isLoggedIn } = this.state;
         if (isLoggedIn) {
             // return <Redirect to='/class' />;
-            window.location.replace('/class')
+            window.location.replace('/')
         }
 
         return (
