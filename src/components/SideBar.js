@@ -89,19 +89,19 @@ class SideBar extends Component {
                         <li>
                           <Link to="/user">
                             <i className={location.pathname == '/user' ? "fa fa-circle" : "fa fa-circle-o"} style={{ color: location.pathname == '/user' && '#fff' }} />
-                            <span style={{ color: location.pathname == '/user' && '#fff' }}>Users</span>
+                            <span style={{ color: location.pathname == '/user' && '#fff' }}>All</span>
                           </Link>
                         </li>
                         <li>
-                          <Link to="/user-teacher">
-                            <i className={location.pathname == '/user-teacher' ? "fa fa-circle" : "fa fa-circle-o"} style={{ color: location.pathname == '/user-teacher' && '#fff' }} />
-                            <span style={{ color: location.pathname == '/user-teacher' && '#fff' }}>Teacher</span>
+                          <Link to="/teacher">
+                            <i className={location.pathname == '/teacher' ? "fa fa-circle" : "fa fa-circle-o"} style={{ color: location.pathname == '/teacher' && '#fff' }} />
+                            <span style={{ color: location.pathname == '/teacher' && '#fff' }}>Teacher</span>
                           </Link>
                         </li>
                         <li>
-                          <Link to="/user-employee">
-                            <i className={location.pathname == '/user-employee' ? "fa fa-circle" : "fa fa-circle-o"} style={{ color: location.pathname == '/user-employee' && '#fff' }} />
-                            <span style={{ color: location.pathname == '/user-employee' && '#fff' }}>Employee</span>
+                          <Link to="/employee">
+                            <i className={location.pathname == '/employee' ? "fa fa-circle" : "fa fa-circle-o"} style={{ color: location.pathname == '/employee' && '#fff' }} />
+                            <span style={{ color: location.pathname == '/employee' && '#fff' }}>Employee</span>
                           </Link>
                         </li>
                         <li>
@@ -118,11 +118,11 @@ class SideBar extends Component {
                         </li>
                       </ul>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link to="/employee">
                         <i className="fa fa-user" /> <span>Employee</span>
                       </Link>
-                    </li>
+                    </li> */}
                     <li>
                       <Link to="/role">
                         <i className="fa fa-user" /> <span>Role</span>
@@ -176,11 +176,11 @@ class SideBar extends Component {
                     <i className="fa fa-check-square-o" /> <span>Attendance</span>
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/teacher">
                     <i className="fa fa-graduation-cap" /> <span>Teacher</span>
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to="/transaction">
                     <i className="fa fa-exchange" /> <span>Transaction</span>
