@@ -105,7 +105,7 @@ export default class userList extends Component {
           <div className="col-md-12">
             <div className="box">
               <div className="content">
-                <b><h4>User</h4></b>
+                <b><h4>User Employee</h4></b>
                 <div class="box-header">
                   <NavLink to={{
                     pathname: 'user/add',
