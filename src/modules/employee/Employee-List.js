@@ -55,11 +55,11 @@ export default class employeeList extends Component {
           field: 'name',
           width: 150
         },
-        {
-          label: 'Email',
-          field: 'email',
-          width: 150
-        },
+        // {
+        //   label: 'Email',
+        //   field: 'email',
+        //   width: 150
+        // },
         {
           label: 'No HP',
           field: 'noHp',
@@ -93,7 +93,7 @@ export default class employeeList extends Component {
         employees.map((data, index) => {
           rowData.push({
             name: data.name,
-            email: data.email,
+            // email: data.email,
             noHp: data.no_hp,
             address: data.address,
             gender: data.gender,
