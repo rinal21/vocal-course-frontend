@@ -11,7 +11,11 @@ export default class teacherList extends Component {
     this.state = {
       teachers: [],
       deleteConfirm: false,
-      deleteId : ''
+      deleteId : '',
+      resignConfirm: false,
+      resignId: '',
+      activeConfirm: false,
+      activeId: ''
     }
     this.delete = this.delete.bind(this);
   }
@@ -24,10 +28,40 @@ export default class teacherList extends Component {
       .catch(err => console.log(err))
   }
 
+  resign(id) {
+    axios.patch('http://localhost:8000/api/user_resign/' + id)
+      .then(res => console.log(res.data))
+      .then(() => this.setState({ resignConfirm: !this.state.resignConfirm }))
+      .then(() => this.fetchData())
+      .catch(err => console.log(err))
+  }
+
+  active(id) {
+    axios.patch('http://localhost:8000/api/user_resign/' + id)
+      .then(res => console.log(res.data))
+      .then(() => this.setState({ activeConfirm: !this.state.activeConfirm }))
+      .then(() => this.fetchData())
+      .catch(err => console.log(err))
+  }
+
   toggleDeleteConfirmation = (id) => {
     this.setState({
       deleteConfirm: !this.state.deleteConfirm,
       deleteId: id
+    });
+  }
+
+  toggleResignConfirmation = (id) => {
+    this.setState({
+      resignConfirm: !this.state.resignConfirm,
+      resignId: id
+    });
+  }
+  
+  toggleActiveConfirmation = (id) => {
+    this.setState({
+      activeConfirm: !this.state.activeConfirm,
+      activeId: id
     });
   }
 
@@ -48,6 +82,8 @@ export default class teacherList extends Component {
 
   data = (teachers) => {
     const deleteConfirm = this.toggleDeleteConfirmation
+    const resignConfirm = this.toggleResignConfirmation
+    const activeConfirm = this.toggleActiveConfirmation
 
     return ({
       columns: [
@@ -70,6 +106,12 @@ export default class teacherList extends Component {
           width: 500
         },
         {
+          label: 'Status',
+          field: 'status',
+          sort: 'asc',
+          width: 500
+        },
+        {
           label: 'Action',
           field: 'action',
           sort: 'disabled',
@@ -80,10 +122,24 @@ export default class teacherList extends Component {
         let rowData = []
 
         teachers.map((data, index) => {
+          if(data.status == 0) {
+            data.status = 'Inactive'
+          }
+          else if(data.status == 1) {
+            data.status = 'Active'
+          }
+          else if(data.status == 2) {
+            data.status = 'Graduated'
+          }
+          else if(data.status == 3) {
+            data.status = 'Resigned'
+          }
+
           rowData.push({
             name: data.name,
             student: data.students_count,
             salary: <NumberFormat value={data.salary} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />,
+            status: data.status,
             action:
               <div>
                 <NavLink
@@ -96,7 +152,9 @@ export default class teacherList extends Component {
                     }
                   }}
                   className="btn btn-primary">Edit</NavLink>
-                <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+                <button onClick={() => deleteConfirm(data.user_id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
+                {data.status != 'Resigned' ? <button onClick={() => resignConfirm(data.user_id)} className="btn btn-warning" style={{ position: "relative", left: 50 }}>Resign</button> :
+                  <button onClick={() => activeConfirm(data.user_id)} className="btn btn-success" style={{ position: "relative", left: 50 }}>Active</button>}
               </div>
           })
         })
@@ -133,6 +191,32 @@ export default class teacherList extends Component {
                     <MDBModalFooter>
                       <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
                       <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
+                    </MDBModalFooter>
+                  </MDBModal>
+                </MDBContainer>
+
+                <MDBContainer>
+                  <MDBModal isOpen={this.state.resignConfirm} toggle={this.toggleResignConfirmation} size="sm" centered>
+                    <MDBModalHeader toggle={this.toggleResignConfirmation}>Resign</MDBModalHeader>
+                    <MDBModalBody>
+                      Are you sure this employee want to resign ?
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                      <MDBBtn color="secondary" onClick={this.toggleResignConfirmation}>No</MDBBtn>
+                      <MDBBtn color="danger" onClick={() => this.resign(this.state.resignId)}>Yes</MDBBtn>
+                    </MDBModalFooter>
+                  </MDBModal>
+                </MDBContainer>
+
+                <MDBContainer>
+                  <MDBModal isOpen={this.state.activeConfirm} toggle={this.toggleActiveConfirmation} size="sm" centered>
+                    <MDBModalHeader toggle={this.toggleActiveConfirmation}>Active</MDBModalHeader>
+                    <MDBModalBody>
+                      Are you sure this employee want to active ?
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                      <MDBBtn color="secondary" onClick={this.toggleActiveConfirmation}>No</MDBBtn>
+                      <MDBBtn color="success" onClick={() => this.active(this.state.activeId)}>Yes</MDBBtn>
                     </MDBModalFooter>
                   </MDBModal>
                 </MDBContainer>
