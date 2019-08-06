@@ -18,6 +18,10 @@ export default class attendancesList extends Component {
       attendances: [],
       filterDate: new Date(),
       deleteConfirm: false,
+      startAt: [],
+      endAt: [],
+      rooms: [],
+      roomSelected: [],
       classId: '',
       selectedClass: null, //Filter by Class
       classes: [],
@@ -36,8 +40,11 @@ export default class attendancesList extends Component {
       deleteId : ''
     }
     this.delete = this.delete.bind(this);
+    this.onChangeRoom = this.onChangeRoom.bind(this);
     this.onChangeStudentStatus = this.onChangeStudentStatus.bind(this);
     this.onChangeTeacherStatus = this.onChangeTeacherStatus.bind(this);
+    this.onChangeEndAt = this.onChangeEndAt.bind(this);
+    this.onChangeStartAt = this.onChangeStartAt.bind(this);
     this.onChangeStudent = this.onChangeStudent.bind(this);
     this.onChangeTeacher = this.onChangeTeacher.bind(this);
     this.onChangeClass = this.onChangeClass.bind(this);
@@ -68,6 +75,48 @@ export default class attendancesList extends Component {
             resolve()
         });
     });
+}
+
+async onChangeStartAt(e, id) {
+  this.setState({
+    startAt: e.target.value
+  });
+
+  const obj = {
+    start_at: e.target.value
+  };
+  console.log(obj, id)
+  axios.patch('http://localhost:8000/api/attendance/' + id, obj)
+    .then(res => console.log(res.data))
+    .catch(error => {
+      console.log(error.message);
+    })
+    await this.promisedSetState({
+      startAt: update(this.state.startAt, { [id]: { $set: e.target.value } })
+    });
+
+  this.tableAttendancesGroup()
+}
+
+async onChangeEndAt(e, id) {
+  this.setState({
+    endAt: e.target.value
+  });
+
+  const obj = {
+    end_at: e.target.value
+  };
+  console.log(obj, id)
+  axios.patch('http://localhost:8000/api/attendance/' + id, obj)
+    .then(res => console.log(res.data))
+    .catch(error => {
+      console.log(error.message);
+    })
+  await this.promisedSetState({
+    endAt: update(this.state.endAt, { [id]: { $set: e.target.value } })
+  });
+
+  this.tableAttendancesGroup()
 }
 
   async onChangeTeacherStatus(e, id) {
@@ -105,6 +154,27 @@ export default class attendancesList extends Component {
       })
   }
 
+  onChangeRoom = async (e, id) => {
+    this.setState({
+      roomSelected: e.target.value
+    });
+
+    const obj = {
+      room_id: e.target.value
+    };
+    console.log(obj, id)
+    axios.patch('http://localhost:8000/api/attendance/' + id, obj)
+      .then(res => console.log(res.data))
+      .catch(error => {
+        console.log(error.message);
+      })
+    await this.promisedSetState({
+      roomSelected: update(this.state.roomSelected, { [id]: { $set: e.target.value } })
+    });
+
+    this.tableAttendancesGroup()
+  }
+
   onChangeClass = async (e, id) => {
     const obj = {
       class_id: e.target.value
@@ -123,26 +193,25 @@ export default class attendancesList extends Component {
     this.tableAttendancesGroup()
   }
 
-  async onChangeStudent(e, id) {
+  async onChangeStudent(studentSelected, id) {
     const obj = {
-      student_id: e.target.value
+      student_id: studentSelected.value
     };
-    console.log(obj, id)
     axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
       })
     await this.promisedSetState({
-      studentSelected: update(this.state.studentSelected, { [id]: { $set: e.target.value } })
+      studentSelected: update(this.state.studentSelected, { [id]: { $set: studentSelected } })
     });
 
     this.tableAttendancesGroup()
   }
 
-  async onChangeTeacher(e, id) {
+  async onChangeTeacher(teacherSelected, id) {
     const obj = {
-      teacher_id: e.target.value
+      teacher_id: teacherSelected.value
     };
     axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
@@ -150,7 +219,7 @@ export default class attendancesList extends Component {
         console.log(error.message);
       })
     await this.promisedSetState({
-      teacherSelected: update(this.state.teacherSelected, { [id]: { $set: e.target.value } })
+      teacherSelected: update(this.state.teacherSelected, { [id]: { $set: teacherSelected } })
     });
 
     this.tableAttendancesGroup()
@@ -200,6 +269,21 @@ export default class attendancesList extends Component {
     )
   }
 
+  dataStudents = (students) => {
+    return (
+      function () {
+        let rowData = []
+        students[0].map((student) => {
+            rowData.push({
+              value: student.id,
+              label: student.first_name + ' ' + student.middle_name + ' ' + student.last_name,
+            })
+        })
+        return rowData
+      }()
+    )
+  }
+
   createTeacherPicker = (teachers) => {
     let opt = []
 
@@ -218,6 +302,21 @@ export default class attendancesList extends Component {
     )
   }
 
+  dataTeachers = (teachers) => {
+    return (
+      function () {
+        let rowData = []
+        teachers.map((teacher) => {
+            rowData.push({
+              value: teacher.id,
+              label: teacher.name,
+            })
+        })
+        return rowData
+      }()
+    )
+  }
+
   createClassPicker = (classes) => {
     let opt = []
 
@@ -230,21 +329,43 @@ export default class attendancesList extends Component {
     )
   }
 
+  createRoomPicker = (rooms) => {
+    let opt = []
+
+    rooms[0].map((data, index) => {
+      if(index == 0){
+        opt.push(<option key='' value=''></option>)
+        opt.push(<option value={data.id}>{data.name}</option>)
+      }
+      else{
+        opt.push(<option value={data.id}>{data.name}</option>)
+      }
+    })
+
+    return (
+        opt
+    )
+  }
+
   fetchData = () => {
     return new Promise(async(resolve, reject) => {
       await fetch('http://localhost:8000/api/attendances')
       .then(response => response.json())
       .then( (json) => {
+        console.log('cobaRoom', json)
          this.setState({
           attendances: json,
         })
         json.map((data) => {
           this.promisedSetState({
+            roomSelected: update(this.state.roomSelected, { [data.attendances_id]: { $set: data.room_id ? data.room_id : '' } }),
+            startAt: update(this.state.startAt, { [data.attendances_id]: { $set: data.start_at ? data.start_at : '' } }),
+            endAt: update(this.state.endAt, { [data.attendances_id]: { $set: data.end_at ? data.end_at : '' } }),
             classSelected: update(this.state.classSelected, { [data.attendances_id]: { $set: data.class_id } }),
             studentStatus: update(this.state.studentStatus, { [data.attendances_id]: { $set: data.student_status } }),
             teacherStatus: update(this.state.teacherStatus, { [data.attendances_id]: { $set: data.teacher_status } }),
-            studentSelected: update(this.state.studentSelected, { [data.attendances_id]: { $set: data.student_id } }),
-            teacherSelected: update(this.state.teacherSelected, { [data.attendances_id]: { $set: data.teacher_id } })
+            studentSelected: update(this.state.studentSelected, { [data.attendances_id]: { $set: {value:data.student_id, label:data.first_name + ' ' + data.middle_name + ' ' + data.last_name} } }),
+            teacherSelected: update(this.state.teacherSelected, { [data.attendances_id]: { $set: {value:data.teacher_id, label:data.teacher_name} } })
           })
         })
 
@@ -304,6 +425,20 @@ export default class attendancesList extends Component {
     })
   }
 
+  fetchRooms = () => {
+    return new Promise((resolve, reject) => {
+    fetch('http://localhost:8000/api/rooms')
+      .then(response => response.json())
+      .then((json) => {
+        console.log('roomx', json.data)
+        this.setState(prevState => ({
+          rooms: [...prevState.rooms, json.data]
+        }))
+        resolve()
+      })
+    })
+  }
+
   fetchClasses = () => {
     return new Promise((resolve, reject) => {
     fetch('http://localhost:8000/api/classes')
@@ -350,11 +485,14 @@ export default class attendancesList extends Component {
         })
         json.map((data) => {
             this.setState({
+              roomSelected: update(this.state.roomSelected, { [data.attendances_id]: { $set: data.room_id ? data.room_id : '' } }),
+              startAt: update(this.state.startAt, { [data.attendances_id]: { $set: data.start_at ? data.start_at : '' } }),
+              endAt: update(this.state.endAt, { [data.attendances_id]: { $set: data.end_at ? data.end_at : '' } }),
               classSelected: update(this.state.classSelected, {[data.attendances_id]: {$set: data.class_id}}),
               studentStatus: update(this.state.studentStatus, {[data.attendances_id]: {$set: data.student_status}}),
               teacherStatus: update(this.state.teacherStatus, {[data.attendances_id]: {$set: data.teacher_status}}),
-              studentSelected: update(this.state.studentSelected, {[data.attendances_id]: {$set: data.student_id}}),
-              teacherSelected: update(this.state.teacherSelected, {[data.attendances_id]: {$set: data.teacher_id}}),
+              studentSelected: update(this.state.studentSelected, { [data.attendances_id]: { $set: {value:data.student_id, label:data.first_name + ' ' + data.middle_name + ' ' + data.last_name} } }),
+              teacherSelected: update(this.state.teacherSelected, { [data.attendances_id]: { $set: {value:data.teacher_id, label:data.teacher_name} } }),
               isLoaded: false,
               isFilterDate: true,
               isChangeClass: false
@@ -369,69 +507,126 @@ export default class attendancesList extends Component {
 
   }
 
-  data = (attendances, i) => {
-    const {studentStatus, teachers, teacherStatus, teacherSelected, students, studentSelected, classes, classSelected} = this.state
-    const onChangeStudentStatus = this.onChangeStudentStatus
-    const onChangeTeacherStatus = this.onChangeTeacherStatus
-    const onChangeStudent = this.onChangeStudent
-    const onChangeTeacher = this.onChangeTeacher
-    const onChangeClass = this.onChangeClass
-    const createStudentPicker = this.createStudentPicker
-    const createTeacherPicker = this.createTeacherPicker
-    const createClassPicker = this.createClassPicker
-
+  dataHeader = () => {
     return ({
       columns: [
         {
-          label: 'Day',
-          field: 'day',
-          sort: 'asc',
-          width: 150
-        },
-        {
           label: 'Room',
           field: 'room',
-          sort: 'asc',
+          sort: 'disabled',
           width: 150
         },
         {
-          label: 'Time',
-          field: 'time',
-          sort: 'asc',
+          label: 'Start',
+          field: 'start',
+          sort: 'disabled',
+          width: 270
+        },
+        {
+          label: 'End',
+          field: 'end',
+          sort: 'disabled',
           width: 270
         },
         {
           label: 'Class',
           field: 'class',
-          sort: 'asc',
+          sort: 'disabled',
           width: 200
         },
         {
           label: 'Student Name',
           field: 'student',
-          sort: 'asc',
+          sort: 'disabled',
           width: 200
         },
         {
           label: 'Status Student',
           field: 'status_student',
-          sort: 'asc',
+          sort: 'disabled',
           width: 150
         },
         {
           label: 'Teacher Name',
           field: 'teacher',
-          sort: 'asc',
+          sort: 'disabled',
           width: 100
         },
         {
           label: 'Status Teacher',
           field: 'status_teacher',
-          sort: 'asc',
+          sort: 'disabled',
           width: 150
         },
       ],
-      rows: ( function () {
+    })
+  }
+
+  data = (attendances, i) => {
+    const {rooms, roomSelected, studentStatus, teachers, teacherStatus, teacherSelected, students, studentSelected, classes, classSelected, startAt, endAt} = this.state
+    const onChangeStartAt = this.onChangeStartAt
+    const onChangeEndAt = this.onChangeEndAt
+    const onChangeStudentStatus = this.onChangeStudentStatus
+    const onChangeTeacherStatus = this.onChangeTeacherStatus
+    const onChangeRoom = this.onChangeRoom
+    const onChangeStudent = this.onChangeStudent
+    const onChangeTeacher = this.onChangeTeacher
+    const onChangeClass = this.onChangeClass
+    const createClassPicker = this.createClassPicker
+    const createRoomPicker = this.createRoomPicker
+
+    return ({
+      columns: [
+        {
+          label: 'Room',
+          field: 'room',
+          sort: 'disabled',
+          width: 150
+        },
+        {
+          label: 'Start',
+          field: 'start',
+          sort: 'disabled',
+          width: 270
+        },
+        {
+          label: 'End',
+          field: 'end',
+          sort: 'disabled',
+          width: 270
+        },
+        {
+          label: 'Class',
+          field: 'class',
+          sort: 'disabled',
+          width: 200
+        },
+        {
+          label: 'Student Name',
+          field: 'student',
+          sort: 'disabled',
+          width: 200
+        },
+        {
+          label: 'Status Student',
+          field: 'status_student',
+          sort: 'disabled',
+          width: 150
+        },
+        {
+          label: 'Teacher Name',
+          field: 'teacher',
+          sort: 'disabled',
+          width: 100
+        },
+        {
+          label: 'Status Teacher',
+          field: 'status_teacher',
+          sort: 'disabled',
+          width: 150
+        },
+      ],
+      rows: ( () => {
         let rowData = []
         // console.log('bang', students)
           
@@ -441,24 +636,111 @@ export default class attendancesList extends Component {
           console.log('bang', students)
           // console.log('coba1 studentID:',data.student_id,'isi:', studentSelected[data.student_id], 'class', data.class_name)
           rowData.push({
-            day: data.day,
-            room: data.room_name,
-            time: data.time,
+            room: <select class="form-control" onChange={(e) => onChangeRoom(e, data.attendances_id)} value={roomSelected[data.attendances_id]}>
+            {createRoomPicker(rooms)}
+          </select>,
+            start: <select class="form-control" style={{ width: 85 }} id="year-picker" onChange={(e) => onChangeStartAt(e, data.attendances_id)} value={startAt[data.attendances_id]}>              
+            <option value={''}></option>
+            <option value={'08:20'}>08:20</option>
+            <option value={'08:40'}>08:40</option>
+            <option value={'09:00'}>09:00</option>
+            <option value={'09:20'}>09:20</option>
+            <option value={'09:40'}>09:40</option>
+            <option value={'10:00'}>10:00</option>
+            <option value={'10:20'}>10:20</option>
+            <option value={'10:40'}>10:40</option>
+            <option value={'11:00'}>11:00</option>
+            <option value={'11:20'}>11:20</option>
+            <option value={'11:40'}>11:40</option>
+            <option value={'12:00'}>12:00</option>
+            <option value={'12:20'}>12:20</option>
+            <option value={'12:40'}>12:40</option>
+            <option value={'13:00'}>13:00</option>
+            <option value={'13:20'}>13:20</option>
+            <option value={'13:40'}>13:40</option>
+            <option value={'14:00'}>14:00</option>
+            <option value={'14:20'}>14:20</option>
+            <option value={'14:40'}>14:40</option>
+            <option value={'15:00'}>15:00</option>
+            <option value={'15:20'}>15:20</option>
+            <option value={'15:40'}>15:40</option>
+            <option value={'16:00'}>16:00</option>
+            <option value={'16:20'}>16:20</option>
+            <option value={'16:40'}>16:40</option>
+            <option value={'17:00'}>17:00</option>
+            <option value={'17:20'}>17:20</option>
+            <option value={'17:40'}>17:40</option>
+            <option value={'18:00'}>18:00</option>
+            <option value={'18:20'}>18:20</option>
+            <option value={'18:40'}>18:40</option>
+            <option value={'19:00'}>19:00</option>
+            <option value={'19:20'}>19:20</option>
+            <option value={'19:40'}>19:40</option>
+            <option value={'20:00'}>20:00</option>
+
+          </select>,
+            end: <select class="form-control" style={{ width: 85 }} id="year-picker" onChange={(e) => onChangeEndAt(e, data.attendances_id)} value={endAt[data.attendances_id]}>
+            <option value={''}></option>
+            <option value={'08:20'}>08:20</option>
+            <option value={'08:40'}>08:40</option>
+            <option value={'09:00'}>09:00</option>
+            <option value={'09:20'}>09:20</option>
+            <option value={'09:40'}>09:40</option>
+            <option value={'10:00'}>10:00</option>
+            <option value={'10:20'}>10:20</option>
+            <option value={'10:40'}>10:40</option>
+            <option value={'11:00'}>11:00</option>
+            <option value={'11:20'}>11:20</option>
+            <option value={'11:40'}>11:40</option>
+            <option value={'12:00'}>12:00</option>
+            <option value={'12:20'}>12:20</option>
+            <option value={'12:40'}>12:40</option>
+            <option value={'13:00'}>13:00</option>
+            <option value={'13:20'}>13:20</option>
+            <option value={'13:40'}>13:40</option>
+            <option value={'14:00'}>14:00</option>
+            <option value={'14:20'}>14:20</option>
+            <option value={'14:40'}>14:40</option>
+            <option value={'15:00'}>15:00</option>
+            <option value={'15:20'}>15:20</option>
+            <option value={'15:40'}>15:40</option>
+            <option value={'16:00'}>16:00</option>
+            <option value={'16:20'}>16:20</option>
+            <option value={'16:40'}>16:40</option>
+            <option value={'17:00'}>17:00</option>
+            <option value={'17:20'}>17:20</option>
+            <option value={'17:40'}>17:40</option>
+            <option value={'18:00'}>18:00</option>
+            <option value={'18:20'}>18:20</option>
+            <option value={'18:40'}>18:40</option>
+            <option value={'19:00'}>19:00</option>
+            <option value={'19:20'}>19:20</option>
+            <option value={'19:40'}>19:40</option>
+            <option value={'20:00'}>20:00</option>
+          </select>,
             class: <select class="form-control" onChange={(e) => onChangeClass(e, data.attendances_id)} value={classSelected[data.attendances_id]}>
               { createClassPicker(classes)}
             </select>,
-            student: <select class="form-control" onChange={(e) => onChangeStudent(e, data.attendances_id)} value={studentSelected[data.attendances_id]}>
-              { createStudentPicker(students)}
-            </select>,
+            student: <Select
+            value={studentSelected[data.attendances_id]}
+            onChange={(e) => onChangeStudent(e, data.attendances_id)}
+            options={this.dataStudents(students)}
+          />
+          // <select class="form-control" onChange={(e) => onChangeStudent(e, data.attendances_id)} value={studentSelected[data.attendances_id]}>
+          //     { createStudentPicker(students)}
+          //   </select>
+            ,
             status_student: <select class="form-control" onChange={(e) => onChangeStudentStatus(e, data.attendances_id)} value={studentStatus[data.attendances_id]}>
               <option value="0"></option>
               <option value="1">Absent</option>
               <option value="2">With Permission</option>  
               <option value="3">Attend</option>
             </select>,
-            teacher: <select class="form-control" onChange={(e) => onChangeTeacher(e, data.attendances_id)} value={teacherSelected[data.attendances_id]}>
-            {createTeacherPicker(teachers)}
-          </select>,
+            teacher: <Select
+            value={teacherSelected[data.attendances_id]}
+            onChange={(e) => onChangeTeacher(e, data.attendances_id)}
+            options={this.dataTeachers(teachers)}
+          />,
             teacher_student: <select class="form-control" onChange={(e) => onChangeTeacherStatus(e, data.attendances_id)} value={teacherStatus[data.attendances_id]}>
               <option value="0"></option>
               <option value="1">Absent</option>
@@ -467,9 +749,9 @@ export default class attendancesList extends Component {
             </select>
           })
         })
-        // console.log('ajg',rowData)
+        this.setState({loading: true})
         return rowData
-      }())
+      })()
     })
     
   };
@@ -492,6 +774,7 @@ export default class attendancesList extends Component {
         }
       }
       
+      await this.fetchRooms()
       await this.fetchClasses()
       await this.fetchTeachers()
 
@@ -507,84 +790,83 @@ export default class attendancesList extends Component {
     const { attendances } = this.state
     let table = []
     var i = 0
-      table.push(
-        <section className="content-header">
-        <div className="row">
-          <div className="col-md-12">
-            <div className="box">
-              <div className="content">
-                  <b><h4>Attendance</h4></b>
-                  {/* <h5>Class : {attendances.class_name}</h5> */}
-                    <div style={{position: 'absolute', top: 70, right: 216, zIndex: 1}}>
-                          <DatePicker
-                            selected={this.state.filterDate}
-                            onChange={this.onChangeFilterDate}
-                            dateFormat="d MMMM yyyy"
-                            peekNextMonth
-                            dropdownMode="select"
-                            className="form-control"
-                            customInput={
-                              <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{width: 135}} />
-                            }
-                          />
-                          
-                  <i className="fa fa-calendar" style={{position: 'absolute', zIndex: 1, right: 13, top: 11}}/>
-                  </div>
-                  <div style={{ position: 'absolute', width: 223.2, top: 46, left: 278, zIndex: 1 }}>
-                      <label style={{marginBottom: 0}}>Class</label>
-                          <Select
-                            value={this.state.selectedClass}
-                            onChange={this.onChangeFilterClass}
-                            options={this.dataClasses(this.state.classes)}
-                          />
-                        </div>
-                <MDBDataTable
-                  striped
-                  bordered
-                  hover
-                  data={await this.data(attendances)}
-                  btn
-                />
-                <MDBContainer>
-                  <MDBModal isOpen={this.state.deleteConfirm} toggle={this.toggleDeleteConfirmation} size="sm" centered>
-                    <MDBModalHeader toggle={this.toggleDeleteConfirmation}>Delete</MDBModalHeader>
-                    <MDBModalBody>
-                      Are you sure you want to delete it ?
-                    </MDBModalBody>
-                    <MDBModalFooter>
-                      <MDBBtn color="secondary" onClick={this.toggleDeleteConfirmation}>Cancel</MDBBtn>
-                      <MDBBtn color="danger" onClick={() => this.delete(this.state.deleteId)}>Delete</MDBBtn>
-                    </MDBModalFooter>
-                  </MDBModal>
-                </MDBContainer>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      )
+    table.push(
+      <MDBDataTable
+        striped
+        bordered
+        hover
+        paging={false}
+        data={await this.data(attendances)}
+        btn
+      />
+
+    )
     console.log('table', table)
     this.setState({
-      tables: table,
-      loading: true
+      tables: table
     })
   }
 
   render() {
     // console.log('coba3',this.state.studentSelected[6])
-    const { loading, tables } = this.state
+    const { loading, tables, studentSelected } = this.state
     // console.log('studentOK', attendances)
-    // console.log('status', classSelected)
+    console.log('studentslect', studentSelected)
     // console.log('loaded', isLoaded)
     return (
       
       <>
-      {loading ? tables : <center><Loader
-         type="Oval"
-         color="#00BFFF"
-         height="500"	
-         width="100"
-      /></center> }
+        <section className="content-header">
+          <div className="row">
+            <div className="col-md-12">
+              <div className="box">
+                <div className="content">
+                  <b><h4>Attendance</h4></b>
+                  {/* <h5>Class : {attendances.class_name}</h5> */}
+                  <div style={{ position: 'absolute', top: 70, right: 216, zIndex: 1 }}>
+                    <DatePicker
+                      selected={this.state.filterDate}
+                      onChange={this.onChangeFilterDate}
+                      dateFormat="EEEE, dd MMMM YYYY"
+                      peekNextMonth
+                      dropdownMode="select"
+                      className="form-control"
+                      customInput={
+                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{ width: 220 }} />
+                      }
+                    />
+
+                    <i className="fa fa-calendar" style={{ position: 'absolute', zIndex: 1, right: 13, top: 11 }} />
+                  </div>
+                  <div style={{ position: 'absolute', width: 223.2, top: 46, left: 278, zIndex: 1 }}>
+                    <label style={{ marginBottom: 0 }}>Class</label>
+                    <Select
+                      value={this.state.selectedClass}
+                      onChange={this.onChangeFilterClass}
+                      options={this.dataClasses(this.state.classes)}
+                    />
+                  </div>
+                  {loading ? tables : (<><MDBDataTable
+                    striped
+                    bordered
+                    hover
+                    paging={false}
+                    data={this.dataHeader()}
+                    btn
+
+                  />
+                    <center><Loader
+                      type="Oval"
+                      color="#00BFFF"
+                      height="100"
+                      width="100"
+                    /></center></>)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
       </>
     )
   }
