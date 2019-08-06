@@ -172,9 +172,9 @@ export default class schedulesList extends Component {
     this.tableAttendancesGroup()
   }
 
-  async onChangeStudent(e, id) {
+  async onChangeStudent(studentSelected, id) {
     const obj = {
-      student_id: e.target.value
+      student_id: studentSelected.value
     };
     axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
@@ -182,15 +182,15 @@ export default class schedulesList extends Component {
         console.log(error.message);
       })
     await this.promisedSetState({
-      studentSelected: update(this.state.studentSelected, { [id]: { $set: e.target.value } })
+      studentSelected: update(this.state.studentSelected, { [id]: { $set: studentSelected } })
     });
 
     this.tableAttendancesGroup()
   }
 
-  async onChangeTeacher(e, id) {
+  async onChangeTeacher(teacherSelected, id) {
     const obj = {
-      teacher_id: e.target.value
+      teacher_id: teacherSelected.value
     };
     axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
@@ -198,7 +198,7 @@ export default class schedulesList extends Component {
         console.log(error.message);
       })
     await this.promisedSetState({
-      teacherSelected: update(this.state.teacherSelected, { [id]: { $set: e.target.value } })
+      teacherSelected: update(this.state.teacherSelected, { [id]: { $set: teacherSelected } })
     });
 
     this.tableAttendancesGroup()
@@ -362,6 +362,7 @@ export default class schedulesList extends Component {
       await fetch('http://localhost:8000/api/schedules?branch=' + JSON.parse(localStorage["appState"]).user.branchId)
       .then(response => response.json())
       .then( (json) => {
+        console.log('hiya', json)
          this.setState({
           schedules: json,
         })
@@ -371,8 +372,8 @@ export default class schedulesList extends Component {
             startAt: update(this.state.startAt, { [data.schedule_id]: { $set: data.start_at ? data.start_at : '' } }),
             endAt: update(this.state.endAt, { [data.schedule_id]: { $set: data.end_at ? data.end_at : '' } }),
             classSelected: update(this.state.classSelected, { [data.schedule_id]: { $set: data.class_id ? data.class_id : 0 } }),
-            studentSelected: update(this.state.studentSelected, { [data.schedule_id]: { $set: data.student_id ? data.student_id : 0 } }),
-            teacherSelected: update(this.state.teacherSelected, { [data.schedule_id]: { $set: data.teacher_id ? data.teacher_id : 0 } })
+            studentSelected: update(this.state.studentSelected, { [data.schedule_id]: { $set: {value:data.student_id ? data.student_id : 0, label:data.student_id ? data.first_name + ' ' + data.middle_name + ' ' + data.last_name : ''} } }),
+            teacherSelected: update(this.state.teacherSelected, { [data.schedule_id]: { $set: {value:data.teacher_id ? data.teacher_id : 0, label:data.teacher_id ? data.teacher_name : ''} } })
           })
         })
 
@@ -420,6 +421,21 @@ export default class schedulesList extends Component {
     })
   }
 
+  dataStudents = (students) => {
+    return (
+      function () {
+        let rowData = []
+        students[0].map((student) => {
+            rowData.push({
+              value: student.id,
+              label: student.first_name + ' ' + student.middle_name + ' ' + student.last_name,
+            })
+        })
+        return rowData
+      }()
+    )
+  }
+
   fetchStudentsByClass = (name) => {
     return new Promise((resolve, reject) => {
     fetch('http://localhost:8000/api/students/filterClass?class=' + name)
@@ -444,6 +460,21 @@ export default class schedulesList extends Component {
         resolve()
       })
     })
+  }
+
+  dataTeachers = (teachers) => {
+    return (
+      function () {
+        let rowData = []
+        teachers.map((teacher) => {
+            rowData.push({
+              value: teacher.id,
+              label: teacher.name,
+            })
+        })
+        return rowData
+      }()
+    )
   }
 
   fetchClasses = () => {
@@ -500,8 +531,8 @@ export default class schedulesList extends Component {
               startAt: update(this.state.startAt, { [data.schedule_id]: { $set: data.start_at ? data.start_at : '' } }),
               endAt: update(this.state.endAt, { [data.schedule_id]: { $set: data.end_at ? data.end_at : '' } }),
               classSelected: update(this.state.classSelected, { [data.schedule_id]: { $set: data.class_id ? data.class_id : 0 } }),
-              studentSelected: update(this.state.studentSelected, { [data.schedule_id]: { $set: data.student_id ? data.student_id : 0 } }),
-              teacherSelected: update(this.state.teacherSelected, { [data.schedule_id]: { $set: data.teacher_id ? data.teacher_id : 0 } }),
+              studentSelected: update(this.state.studentSelected, { [data.schedule_id]: { $set: {value:data.student_id, label:data.first_name + ' ' + data.middle_name + ' ' + data.last_name} } }),
+              teacherSelected: update(this.state.teacherSelected, { [data.schedule_id]: { $set: {value:data.teacher_id, label:data.teacher_name} } }),
               isLoaded: false,
               isFilterDate: true,
               isChangeClass: false
@@ -573,12 +604,9 @@ export default class schedulesList extends Component {
     const onChangeTeacher = this.onChangeTeacher
     const onChangeClass = this.onChangeClass
     const onChangeRoom = this.onChangeRoom
-    const createStudentPicker = this.createStudentPicker
-    const createTeacherPicker = this.createTeacherPicker
     const createClassPicker = this.createClassPicker
     const createRoomPicker = this.createRoomPicker
     const toggleDeleteConfirmation = this.toggleDeleteConfirmation
-    const setState = this.promisedSetState
 
     return ({
       columns: [
@@ -720,12 +748,16 @@ export default class schedulesList extends Component {
             class: <select class="form-control" onChange={(e) => onChangeClass(e, data.schedule_id)} value={classSelected[data.schedule_id]}>
               {createClassPicker(classes)}
             </select>,
-            student: <select class="form-control" onChange={(e) => onChangeStudent(e, data.schedule_id)} value={studentSelected[data.schedule_id]}>
-              {createStudentPicker(students)}
-            </select>,
-            teacher: <select class="form-control" onChange={(e) => onChangeTeacher(e, data.schedule_id)} value={teacherSelected[data.schedule_id]}>
-              {createTeacherPicker(teachers)}
-            </select>,
+            student: <Select
+              value={studentSelected[data.schedule_id]}
+              onChange={(e) => onChangeStudent(e, data.schedule_id)}
+              options={this.dataStudents(students)}
+            />,
+            teacher: <Select
+            value={teacherSelected[data.schedule_id]}
+            onChange={(e) => onChangeTeacher(e, data.schedule_id)}
+            options={this.dataTeachers(teachers)}
+          />,
             action:
             <div>
               <button onClick={() => toggleDeleteConfirmation(data.schedule_id)} className="btn btn-danger" style={{ position: "relative", left: 8 }}>Delete</button>
@@ -773,16 +805,16 @@ export default class schedulesList extends Component {
     const { schedules } = this.state
     let table = []
     var i = 0
-      table.push(
-                  <MDBDataTable
-                    striped
-                    bordered
-                    hover
-                    paging={false}
-                    data={await this.data(schedules)}
-                    btn
-                  />
-      )
+    table.push(
+      <MDBDataTable
+        striped
+        bordered
+        hover
+        paging={false}
+        data={await this.data(schedules)}
+        btn
+      />
+    )
     console.log('table', table)
     this.setState({
       tables: table,
@@ -808,7 +840,8 @@ export default class schedulesList extends Component {
   }
 
   render() {
-    const { loading, tables } = this.state
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const { loading, tables, filterDate } = this.state
     // console.log('rooms', this.state.rooms)
     // console.log('class', this.state.classes)
     // console.log('status', classSelected)
@@ -823,22 +856,22 @@ export default class schedulesList extends Component {
                 <div className="content">
                   <b><h4>Schedules</h4></b>
                   {/* <h5>Class : {attendances.class_name}</h5> */}
-                  <div style={{ position: 'absolute', width: 223.2, top: 70, right: 280, zIndex: 1 }}>
+                  <div style={{ position: 'absolute', width: 223.2, top: 70, right: 380, zIndex: 1 }}>
                     <button type="submit" class="btn btn-default" onClick={() => this.toggleCopyConfirmation()}>
                       Copy Schedule
                     </button>
                   </div>
                   <div style={{ position: 'absolute', top: 70, right: 216, zIndex: 1 }}>
                     <DatePicker
-                      selected={this.state.filterDate}
+                      selected={filterDate}
                       onChange={this.onChangeFilterDate}
-                      dateFormat="dd MMM YYYY"
+                      dateFormat="EEEE, dd MMMM YYYY"
                       useWeekdaysShort={true} 
                       peekNextMonth
                       dropdownMode="select"
                       className="form-control"
                       customInput={
-                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{ width: 135 }} />
+                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{ width: 220 }} />
                       }
                     />
 
