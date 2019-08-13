@@ -54,6 +54,7 @@ export default class attendancesList extends Component {
 
   async onChangeStudentStatus(e, id){
     const obj = {
+      studentId: this.state.studentSelected[id].value,
       student_status: e.target.value
     };
     console.log('ler', e.target.value)
@@ -62,6 +63,26 @@ export default class attendancesList extends Component {
       .catch(error => {
         console.log(error.message);
       })
+
+      if(e.target.value == '3') {
+        axios.patch('http://localhost:8000/api/user_decbalance/' + this.state.studentSelected[id].value)
+          .then(res => console.log(res.data))
+          .catch(error => {
+            console.log(error.message);
+          })
+      }
+
+      const objTransaction = {
+        teacher: this.state.teacherSelected[id].value,
+        student: this.state.studentSelected[id].value,
+        payment_date: moment(this.state.paymentDate).format("YYYY-MM-DD hh:mm:ss"),
+        transaction_type: 3,
+        status: 1,  
+      };
+      console.log(objTransaction)
+      axios.post('http://localhost:8000/api/transaction', objTransaction)
+          .then(res => console.log(res.data))
+          .then(() => this.setState({ redirect: true }));
 
       await this.promisedSetState({
         studentStatus: update(this.state.studentStatus, {[id]: {$set: e.target.value}})
