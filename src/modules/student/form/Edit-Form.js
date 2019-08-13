@@ -17,6 +17,7 @@ export default class studentEdit extends Component {
       teachers: [],
       classId: '',
       teacherId: '',
+      userId: '',
       firstName: '',
       middleName: '',
       lastName: '',
@@ -38,7 +39,9 @@ export default class studentEdit extends Component {
       selectedTeacher: null,
       redirect: false,
       imgPreviewUrl: '',
-      isLoaded: false
+      isLoaded: false,
+      balance: 0,
+      editBalance: false
     };
     this.onChangeClass = this.onChangeClass.bind(this);
     this.onChangeTeacher = this.onChangeTeacher.bind(this);
@@ -60,8 +63,14 @@ export default class studentEdit extends Component {
     this.onChangeHours = this.onChangeHours.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onChangeSignature = this.onChangeSignature.bind(this);
+    this.onChangeBalance = this.onChangeBalance.bind(this);
   }
 
+  onChangeBalance(e) {
+    this.setState({
+      balance: e.target.value
+    });
+  }
   onChangeSignature(e) {
     let reader = new FileReader()
 
@@ -135,7 +144,20 @@ export default class studentEdit extends Component {
       birthDate: formatBirthDate,
       selectedBirthDate: selectedBirthDate
     });
-    
+  }
+
+  _handleKeyDownBalance = (e, id) => {
+    if (e.key === 'Enter') {
+      const obj = {
+        balance: e.target.value,
+      };
+      console.log(obj)
+      axios.patch('http://localhost:8000/api/user_balance/'+id, obj)
+          .then(res => console.log(res.data))
+      this.setState({
+        editBalance: false
+      })
+    }
   }
 
   componentDidMount = () => {
@@ -162,6 +184,7 @@ export default class studentEdit extends Component {
             }],
             classId: data.class_id,
             teacherId: data.teacher_id,
+            userId: data.user_id,
             firstName: data.first_name,
             middleName: data.middle_name,
             lastName: data.last_name,
@@ -179,6 +202,7 @@ export default class studentEdit extends Component {
             result: data.audition_results,
             days: data.result_days,
             hours: data.result_hours,
+            balance: data.balance,
             imgPreviewUrl: 'http://localhost:8000/signature/'+data.signature_img_url
           })
         })
@@ -269,7 +293,7 @@ export default class studentEdit extends Component {
 
   render() {
     const { status } = this.props;
-    const { redirect, isLoaded, imgPreviewUrl } = this.state;
+    const { redirect, isLoaded, imgPreviewUrl, balance, editBalance, userId } = this.state;
     let $imagePreview = null;
     if (redirect) {
       if (status == 2)
@@ -407,7 +431,11 @@ export default class studentEdit extends Component {
           values,
         }) => (
                 <div>
-                  <h5>Student Information</h5>
+                  <h5>
+                    Student Information
+                    {editBalance ? (<p class="float-right" style={{marginRight: 150}}>Balance : <input type="number" name="balance" step="0" style={{ width: 50 }} onChange={this.onChangeBalance} value={balance} onKeyDown={(e) => this._handleKeyDownBalance(e, userId)} /></p>) :
+                      (<p class="float-right" style={{marginRight: 150}}>Balance : {balance} <i className="fa fa-pencil" onClick={() => this.setState({editBalance: true})}/></p>)}
+                  </h5>
                   <hr />
                   <Form>
                     <div class="container" style={{ marginLeft: 0, paddingLeft: 0 }}>
@@ -415,7 +443,7 @@ export default class studentEdit extends Component {
                         <div class="col-sm">
                           <div className="form-group">
                             <label for="first" class="mr-sm-2">
-                              First Name <label style={{color: 'red'}}>*</label>
+                              First Name <label style={{color: 'red', marginBottom: 0}}>*</label>
                         </label>
                             {/* <input
                           type="text"
@@ -528,14 +556,14 @@ export default class studentEdit extends Component {
                                 <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{width: 120}} />
                               }
                             />
-                            <i className="fa fa-calendar" style={{position: 'absolute', marginLeft: -28, zIndex: 1, bottom: 35}}/>
+                            <i className="fa fa-calendar" style={{position: 'absolute', marginLeft: -28, zIndex: 1, bottom: 28}}/>
                             {/* <input type="text" class="form-control mb-2 mr-sm-2" id="birthdate" /> */}
                           </div>
                         </div>
                         <div class="col-sm">
                           <div className="form-group">
                             <label for="age" class="mr-sm-2 text-left d-block">
-                              Age <label style={{color: 'red'}}>*</label>
+                              Age <label style={{color: 'red', marginBottom: 0}}>*</label>
                     </label>
                             {/* <input type="text" class="form-control mt-2 mb-2 mr-sm-2" id="age" 
                           value={this.state.age}
