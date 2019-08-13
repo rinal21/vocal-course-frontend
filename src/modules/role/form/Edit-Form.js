@@ -34,7 +34,7 @@ export default class roleEdit extends Component {
                         const obj = {
                             name: values.name,
                         };
-                        axios.patch('http://localhost:8000/api/role/' + roleId, obj)
+                        axios.patch('http://103.30.247.147:8000/api/role/' + roleId, obj)
                             .then(res => console.log(res.data))
                             .then(() => this.setState({ redirect: true }));
 

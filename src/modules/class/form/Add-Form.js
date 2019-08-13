@@ -34,7 +34,7 @@ export default class classAdd extends Component {
                         const obj = {
                             name: values.NameClass,
                         };
-                        axios.post('http://localhost:8000/api/class', obj)
+                        axios.post('http://103.30.247.147:8000/api/class', obj)
                             .then(res => console.log(res.data))
                             .then(() => this.setState({ redirect: true }));
 

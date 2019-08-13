@@ -34,7 +34,7 @@ export default class classEdit extends Component {
                         const obj = {
                             name: values.NameClass,
                         };
-                        axios.patch('http://localhost:8000/api/class/' + classId, obj)
+                        axios.patch('http://103.30.247.147:8000/api/class/' + classId, obj)
                             .then(res => console.log(res.data))
                             .then(() => this.setState({ redirect: true }));
 

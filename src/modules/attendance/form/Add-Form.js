@@ -60,7 +60,7 @@ export default class studentAttendances extends Component {
   }
 
   fetchStudents = () => {
-    fetch('http://localhost:8000/api/students')
+    fetch('http://103.30.247.147:8000/api/students')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -95,7 +95,7 @@ export default class studentAttendances extends Component {
       // permission: this.state.permission,
       // attend: this.state.attend,
     };
-    axios.post('http://localhost:8000/api/student_attendance', obj)
+    axios.post('http://103.30.247.147:8000/api/student_attendance', obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }))
         .catch(error => {

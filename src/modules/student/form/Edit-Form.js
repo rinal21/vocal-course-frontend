@@ -152,7 +152,7 @@ export default class studentEdit extends Component {
         balance: e.target.value,
       };
       console.log(obj)
-      axios.patch('http://localhost:8000/api/user_balance/'+id, obj)
+      axios.patch('http://103.30.247.147:8000/api/user_balance/'+id, obj)
           .then(res => console.log(res.data))
       this.setState({
         editBalance: false
@@ -169,7 +169,7 @@ export default class studentEdit extends Component {
 
   fetchDatas = () => {
     const { studentId } = this.props
-    fetch('http://localhost:8000/api/student/' + studentId)
+    fetch('http://103.30.247.147:8000/api/student/' + studentId)
       .then(response => response.json())
       .then((json) => {
         json.map((data, index) => {
@@ -203,7 +203,7 @@ export default class studentEdit extends Component {
             days: data.result_days,
             hours: data.result_hours,
             balance: data.balance,
-            imgPreviewUrl: 'http://localhost:8000/signature/'+data.signature_img_url
+            imgPreviewUrl: 'http://103.30.247.147:8000/signature/'+data.signature_img_url
           })
         })
         this.setState({isLoaded: true})
@@ -211,7 +211,7 @@ export default class studentEdit extends Component {
   }
 
   fetchClasses = () => {
-    fetch('http://localhost:8000/api/classes')
+    fetch('http://103.30.247.147:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -221,7 +221,7 @@ export default class studentEdit extends Component {
   }
 
   fetchTeachers = () => {
-    fetch('http://localhost:8000/api/teachers')
+    fetch('http://103.30.247.147:8000/api/teachers')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -286,7 +286,7 @@ export default class studentEdit extends Component {
       // selectedTeacher: null,
     };
     console.log(obj)
-    axios.patch('http://localhost:8000/api/student/'+this.props.studentId, obj)
+    axios.patch('http://103.30.247.147:8000/api/student/'+this.props.studentId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));
   }
@@ -406,9 +406,9 @@ export default class studentEdit extends Component {
                   }
                 };
                 console.log(obj)
-                axios.patch('http://localhost:8000/api/student/' + this.props.studentId, obj)
+                axios.patch('http://103.30.247.147:8000/api/student/' + this.props.studentId, obj)
                   .then(res => console.log(res.data))
-                  .then(axios.post("http://localhost:8000/api/student/upload", formData, config)
+                  .then(axios.post("http://103.30.247.147:8000/api/student/upload", formData, config)
                     .then(() => {
                       alert("The file is successfully uploaded");
                     }))
@@ -418,7 +418,7 @@ export default class studentEdit extends Component {
                   status: this.props.status,
                 };
                 console.log(obj)
-                axios.patch('http://localhost:8000/api/student_status/' + this.props.studentId, obj)
+                axios.patch('http://103.30.247.147:8000/api/student_status/' + this.props.studentId, obj)
                   .then(res => console.log(res.data))
                   .then(() => this.setState({ redirect: true }));
               }

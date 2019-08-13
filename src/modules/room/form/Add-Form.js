@@ -34,7 +34,7 @@ export default class roomAdd extends Component {
                         const obj = {
                             name: values.name,
                         };
-                        axios.post('http://localhost:8000/api/room', obj)
+                        axios.post('http://103.30.247.147:8000/api/room', obj)
                             .then(res => console.log(res.data))
                             .then(() => this.setState({ redirect: true }));
 

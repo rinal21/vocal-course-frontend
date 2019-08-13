@@ -91,7 +91,7 @@ export default class studentAdd extends Component {
   }
 
   fetchClasses = () => {
-    fetch('http://localhost:8000/api/classes')
+    fetch('http://103.30.247.147:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -101,7 +101,7 @@ export default class studentAdd extends Component {
   }
 
   fetchTeachers = () => {
-    fetch('http://localhost:8000/api/teachers')
+    fetch('http://103.30.247.147:8000/api/teachers')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -315,9 +315,9 @@ export default class studentAdd extends Component {
                 'content-type': 'multipart/form-data'
               }
             };
-            axios.post('http://localhost:8000/api/student', obj)
+            axios.post('http://103.30.247.147:8000/api/student', obj)
               .then(res => console.log(res.data))
-              .then(axios.post("http://localhost:8000/api/student/upload", formData, config)
+              .then(axios.post("http://103.30.247.147:8000/api/student/upload", formData, config)
                 .then(() => {
                   alert("The file is successfully uploaded");
                 }))

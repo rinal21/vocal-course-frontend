@@ -17,7 +17,7 @@ export default class userList extends Component {
   }
 
   delete(id) {
-    axios.delete('http://localhost:8000/api/user/' + id)
+    axios.delete('http://103.30.247.147:8000/api/user/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -37,7 +37,7 @@ export default class userList extends Component {
   }
 
   fetchData = () => {
-    fetch(`http://localhost:8000/api/users/filterGroup?group=4&token=${this.state.token}`)
+    fetch(`http://103.30.247.147:8000/api/users/filterGroup?group=4&token=${this.state.token}`)
     .then(response => response.json())
     .then((json) => {
       this.setState({

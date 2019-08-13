@@ -61,7 +61,7 @@ export default class studentAttendances extends Component {
   }
 
   fetchStudents = () => {
-    fetch('http://localhost:8000/api/students')
+    fetch('http://103.30.247.147:8000/api/students')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -72,7 +72,7 @@ export default class studentAttendances extends Component {
 
   fetchDatas = () => {
     const { studentId } = this.props
-    fetch('http://localhost:8000/api/student_attendance/' + studentId)
+    fetch('http://103.30.247.147:8000/api/student_attendance/' + studentId)
       .then(response => response.json())
       .then((json) => {
         json.map((data, index) => {
@@ -117,7 +117,7 @@ export default class studentAttendances extends Component {
       // permission: this.state.permission,
       // attend: this.state.attend,
     };
-    axios.patch('http://localhost:8000/api/student_attendance/'+this.props.studentId, obj)
+    axios.patch('http://103.30.247.147:8000/api/student_attendance/'+this.props.studentId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }))
         .catch(error => {

@@ -22,7 +22,7 @@ export default class employeeList extends Component {
   }
 
   delete(id) {
-    axios.delete('http://localhost:8000/api/employee/' + id)
+    axios.delete('http://103.30.247.147:8000/api/employee/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -30,7 +30,7 @@ export default class employeeList extends Component {
   }
 
   resign(id) {
-    axios.patch('http://localhost:8000/api/user_resign/' + id)
+    axios.patch('http://103.30.247.147:8000/api/user_resign/' + id)
       .then(res => console.log(res.data))
       .then(() => this.setState({ resignConfirm: !this.state.resignConfirm }))
       .then(() => this.fetchData())
@@ -38,7 +38,7 @@ export default class employeeList extends Component {
   }
 
   active(id) {
-    axios.patch('http://localhost:8000/api/user_resign/' + id)
+    axios.patch('http://103.30.247.147:8000/api/user_resign/' + id)
       .then(res => console.log(res.data))
       .then(() => this.setState({ activeConfirm: !this.state.activeConfirm }))
       .then(() => this.fetchData())
@@ -51,7 +51,7 @@ export default class employeeList extends Component {
   }
 
   fetchData = () => {
-    fetch('http://localhost:8000/api/employees')
+    fetch('http://103.30.247.147:8000/api/employees')
     .then(response => response.json())
     .then((json) => {
       this.setState({

@@ -36,7 +36,7 @@ export default class teacherList extends Component {
   }
 
   filterData = (filterDate) => {
-    fetch('http://localhost:8000/api/transactions/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
+    fetch('http://103.30.247.147:8000/api/transactions/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -46,7 +46,7 @@ export default class teacherList extends Component {
   }
 
   delete(id) {
-    axios.delete('http://localhost:8000/api/transaction/' + id)
+    axios.delete('http://103.30.247.147:8000/api/transaction/' + id)
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
       .catch(err => console.log(err))
@@ -60,7 +60,7 @@ export default class teacherList extends Component {
   }
 
   paid(id) {
-    axios.patch('http://localhost:8000/api/transaction_paid/' + id)
+    axios.patch('http://103.30.247.147:8000/api/transaction_paid/' + id)
       .then(() => this.setState({paidConfirm: !this.state.paidConfirm}))
       .then(() => this.fetchData())
       .catch(err => console.log(err))
@@ -75,7 +75,7 @@ export default class teacherList extends Component {
 
   togglePrintConfirmation = (id) => {
     if (id) {
-      fetch('http://localhost:8000/api/transaction/' + id)
+      fetch('http://103.30.247.147:8000/api/transaction/' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -98,7 +98,7 @@ export default class teacherList extends Component {
 
   fetchData = () => {
     var total = 0
-    fetch('http://localhost:8000/api/transactions')
+    fetch('http://103.30.247.147:8000/api/transactions')
     .then(response => response.json())
     .then((json) => {
       json.map((data) => {
