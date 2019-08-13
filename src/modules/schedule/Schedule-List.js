@@ -173,33 +173,45 @@ export default class schedulesList extends Component {
   }
 
   async onChangeStudent(studentSelected, id) {
+    let isError = false
     const obj = {
-      student_id: studentSelected.value
+      student_id: studentSelected.value,
+      date: moment(this.state.filterDate).format("YYYY-MM-DD")
     };
-    axios.patch('http://localhost:8000/api/schedule/' + id, obj)
+    console.log(obj)
+    await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
-        console.log(error.message);
+        isError = true
+        alert(error.response.data.message);
       })
-    await this.promisedSetState({
-      studentSelected: update(this.state.studentSelected, { [id]: { $set: studentSelected } })
-    });
+
+      if(!isError){
+        await this.promisedSetState({
+          studentSelected: update(this.state.studentSelected, { [id]: { $set: studentSelected } })
+        });
+      }
 
     this.tableAttendancesGroup()
   }
 
   async onChangeTeacher(teacherSelected, id) {
+    let isError = false
     const obj = {
       teacher_id: teacherSelected.value
     };
-    axios.patch('http://localhost:8000/api/schedule/' + id, obj)
+    await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
-        console.log(error.message);
+        isError = true
+        alert(error.response.data.message);
       })
-    await this.promisedSetState({
-      teacherSelected: update(this.state.teacherSelected, { [id]: { $set: teacherSelected } })
-    });
+
+      if(!isError){
+        await this.promisedSetState({
+          teacherSelected: update(this.state.teacherSelected, { [id]: { $set: teacherSelected } })
+        });
+      }
 
     this.tableAttendancesGroup()
   }
