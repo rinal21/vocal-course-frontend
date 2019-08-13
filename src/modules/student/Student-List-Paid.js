@@ -28,12 +28,15 @@ export default class studentListPaid extends Component {
       grouping: 'no',
       layoutPrint: '',
       transactions: [],
-      deleteId : ''
+      deleteId : '',
+      balance: 0,
+      editBalance: false
     }
     this.delete = this.delete.bind(this);
     this.onChangeFilterDate = this.onChangeFilterDate.bind(this);
     this.onChangeClass = this.onChangeClass.bind(this);
     this.onChangeBranch = this.onChangeBranch.bind(this);
+    this.onChangeBalance = this.onChangeBalance.bind(this);
     this.onChangeGroupingOption = this.onChangeGroupingOption.bind(this);
   }
 
@@ -42,6 +45,12 @@ export default class studentListPaid extends Component {
     this.fetchData()
     this.fetchClasses()
     this.fetchBranches()
+  }
+
+  onChangeBalance(e) {
+    this.setState({
+      balance: e.target.value
+    });
   }
 
   onChangeGroupingOption(e) {
@@ -185,8 +194,10 @@ export default class studentListPaid extends Component {
       fetch('http://localhost:8000/api/student/' + id)
       .then(response => response.json())
       .then((json) => {
+        console.log(json)
         this.setState({
           detailStudentInfo: json,
+          balance: json[0] && json[0].balance,
           detailStudent: !this.state.detailStudent
         })
       })
@@ -206,104 +217,128 @@ export default class studentListPaid extends Component {
     }
   }
 
+  _handleKeyDownBalance = (e, id) => {
+    if (e.key === 'Enter') {
+      const obj = {
+        balance: e.target.value,
+      };
+      console.log(obj)
+      axios.patch('http://localhost:8000/api/user_balance/'+id, obj)
+          .then(res => console.log(res.data))
+          .then(() => this.setState({ redirect: true }));
+      this.setState({
+        editBalance: false
+      })
+    }
+  }
+
   showDetailStudent = () => {
-    const { detailStudentInfo } = this.state
+    const { detailStudentInfo, balance, editBalance } = this.state
     let data = detailStudentInfo[0]
 
     if (data) {
       return (
         <>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Name
+          <div class="row">
+            <div class="col-sm">
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Name
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.first_name + ' ' + data.middle_name + ' ' + data.last_name}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Birth Date
+                <label>: &nbsp;</label>
+                <label>{data.first_name + ' ' + data.middle_name + ' ' + data.last_name}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Birth Date
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.birth_date}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Age
+                <label>: &nbsp;</label>
+                <label>{data.birth_date}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Age
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.age}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Sex
+                <label>: &nbsp;</label>
+                <label>{data.age}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Sex
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.sex}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Address
+                <label>: &nbsp;</label>
+                <label>{data.sex}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Address
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.street_address}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Cellphone No
+                <label>: &nbsp;</label>
+                <label>{data.street_address}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Cellphone No
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.cell_phone}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Homephone No
+                <label>: &nbsp;</label>
+                <label>{data.cell_phone}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Homephone No
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.home_phone_no}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Email
+                <label>: &nbsp;</label>
+                <label>{data.home_phone_no}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Email
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.email}</label>
-          </div>
-          <div className="form-inline mb-2">
-          <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              School
+                <label>: &nbsp;</label>
+                <label>{data.email}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  School
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.school}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Person Responsible for Bill
+                <label>: &nbsp;</label>
+                <label>{data.school}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Person Responsible for Bill
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.person_responsible_for_bill}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Class
+                <label>: &nbsp;</label>
+                <label>{data.person_responsible_for_bill}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Class
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.class_name}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Teacher's Name
+                <label>: &nbsp;</label>
+                <label>{data.class_name}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Teacher's Name
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.teacher_name}</label>
-          </div>
-          <div className="form-inline mb-2">
-            <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
-              Registration Date
+                <label>: &nbsp;</label>
+                <label>{data.teacher_name}</label>
+              </div>
+              <div className="form-inline mb-2">
+                <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 190 }}>
+                  Registration Date
             </label>
-            <label>: &nbsp;</label>
-            <label>{data.date}</label>
+                <label>: &nbsp;</label>
+                <label>{data.date}</label>
+              </div>
+            </div>
+            <div class="col-sm" style={{marginRight: 25}}>
+              {editBalance ? (<p class="float-right">Balance : <input type="number" name="balance" step="0" style={{width: 50}} onChange={this.onChangeBalance} value={balance} onKeyDown={(e) => this._handleKeyDownBalance(e, data.user_id)}/></p>) :
+              (<p class="float-right">Balance : {balance} <i className="fa fa-pencil" onClick={() => this.setState({editBalance: true})}/></p>)}
+            </div>
           </div>
+          
         </>
       )
     }
