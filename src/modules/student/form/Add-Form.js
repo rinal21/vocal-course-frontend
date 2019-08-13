@@ -341,7 +341,7 @@ export default class studentAdd extends Component {
                       <div class="col-sm">
                         <div className="form-group">
                           <label for="first" class="mr-sm-2">
-                            First Name <label style={{color: 'red'}}>*</label>
+                            First Name <label style={{color: 'red', marginBottom: 0}}>*</label>
                           </label>
                           {/* <input
                             type="text"
@@ -454,14 +454,14 @@ export default class studentAdd extends Component {
                           <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{width: 120}} />
                         }
                       />
-                      <i className="fa fa-calendar" style={{position: 'absolute', marginLeft: -28, zIndex: 1, bottom: 35}}/>
+                      <i className="fa fa-calendar" style={{position: 'absolute', marginLeft: -28, zIndex: 1, bottom: 28}}/>
                       {/* <input type="text" class="form-control mb-2 mr-sm-2" id="birthdate" /> */}
                     </div>
                       </div>
                       <div class="col-sm">
                       <div className="form-group">
                       <label for="age" class="mr-sm-2 text-left d-block">
-                        Age <label style={{color: 'red'}}>*</label>
+                        Age <label style={{color: 'red', marginBottom: 0}}>*</label>
                       </label>
                       {/* <input type="text" class="form-control mt-2 mb-2 mr-sm-2" id="age" 
                             value={this.state.age}
