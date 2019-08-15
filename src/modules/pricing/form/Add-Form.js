@@ -53,7 +53,7 @@ export default class pricingAdd extends Component {
   }
 
   fetchData = () => {
-    fetch('localhost:8000/api/classes')
+    fetch('http://localhost:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -127,7 +127,7 @@ export default class pricingAdd extends Component {
               teacher: this.state.teacher,
               participant: this.state.participant
             };
-            axios.post('localhost:8000/api/pricing', obj)
+            axios.post('http://localhost:8000/api/pricing', obj)
                 .then(res => console.log(res.data))
                 .then(() => this.setState({ redirect: true }));
 

@@ -39,7 +39,7 @@ export default class classList extends Component {
     const from = moment(fromDate).format("YYYY-MM-DD")
     const to = moment(toDate).format("YYYY-MM-DD")
     var total = 0
-    fetch('localhost:8000/api/payrolls?from_date=' + from + '&to_date=' + to)
+    fetch('http://localhost:8000/api/payrolls?from_date=' + from + '&to_date=' + to)
       .then(response => response.json())
       .then((json) => {
         json.map((data) => {
@@ -53,7 +53,7 @@ export default class classList extends Component {
   }
 
   delete(id) {
-    axios.delete('localhost:8000/api/payroll/' + id)
+    axios.delete('http://localhost:8000/api/payroll/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())

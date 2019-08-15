@@ -58,14 +58,14 @@ export default class attendancesList extends Component {
       student_status: e.target.value
     };
     console.log('ler', e.target.value)
-    axios.patch('localhost:8000/api/attendance/' + id, obj)
+    axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
       })
 
       if(e.target.value == '3') {
-        axios.patch('localhost:8000/api/user_decbalance/' + this.state.studentSelected[id].value)
+        axios.patch('http://localhost:8000/api/user_decbalance/' + this.state.studentSelected[id].value)
           .then(res => console.log(res.data))
           .catch(error => {
             console.log(error.message);
@@ -80,7 +80,7 @@ export default class attendancesList extends Component {
         status: 1,  
       };
       console.log(objTransaction)
-      axios.post('localhost:8000/api/transaction', objTransaction)
+      axios.post('http://localhost:8000/api/transaction', objTransaction)
           .then(res => console.log(res.data))
           .then(() => this.setState({ redirect: true }));
 
@@ -107,7 +107,7 @@ async onChangeStartAt(e, id) {
     start_at: e.target.value
   };
   console.log(obj, id)
-  axios.patch('localhost:8000/api/attendance/' + id, obj)
+  axios.patch('http://localhost:8000/api/attendance/' + id, obj)
     .then(res => console.log(res.data))
     .catch(error => {
       console.log(error.message);
@@ -128,7 +128,7 @@ async onChangeEndAt(e, id) {
     end_at: e.target.value
   };
   console.log(obj, id)
-  axios.patch('localhost:8000/api/attendance/' + id, obj)
+  axios.patch('http://localhost:8000/api/attendance/' + id, obj)
     .then(res => console.log(res.data))
     .catch(error => {
       console.log(error.message);
@@ -144,7 +144,7 @@ async onChangeEndAt(e, id) {
     const obj = {
       teacher_status: e.target.value
     };
-    axios.patch('localhost:8000/api/attendance/' + id, obj)
+    axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
@@ -166,7 +166,7 @@ async onChangeEndAt(e, id) {
   }
 
   fetchStudentsByClass = (id) => {
-    fetch('localhost:8000/api/students/filterClass?status=3&classId=' + id)
+    fetch('http://localhost:8000/api/students/filterClass?status=3&classId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -184,7 +184,7 @@ async onChangeEndAt(e, id) {
       room_id: e.target.value
     };
     console.log(obj, id)
-    axios.patch('localhost:8000/api/attendance/' + id, obj)
+    axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
@@ -201,7 +201,7 @@ async onChangeEndAt(e, id) {
       class_id: e.target.value
     };
     console.log(obj, id)
-    await axios.patch('localhost:8000/api/attendance/' + id, obj)
+    await axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
@@ -218,7 +218,7 @@ async onChangeEndAt(e, id) {
     const obj = {
       student_id: studentSelected.value
     };
-    axios.patch('localhost:8000/api/attendance/' + id, obj)
+    axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
@@ -234,7 +234,7 @@ async onChangeEndAt(e, id) {
     const obj = {
       teacher_id: teacherSelected.value
     };
-    axios.patch('localhost:8000/api/attendance/' + id, obj)
+    axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
@@ -254,7 +254,7 @@ async onChangeEndAt(e, id) {
   }
 
   delete(id) {
-    axios.delete('localhost:8000/api/teacher_attendance/' + id)
+    axios.delete('http://localhost:8000/api/teacher_attendance/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -370,7 +370,7 @@ async onChangeEndAt(e, id) {
 
   fetchData = () => {
     return new Promise(async(resolve, reject) => {
-      await fetch('localhost:8000/api/attendances')
+      await fetch('http://localhost:8000/api/attendances')
       .then(response => response.json())
       .then( (json) => {
         console.log('cobaRoom', json)
@@ -409,7 +409,7 @@ async onChangeEndAt(e, id) {
 
   fetchStudents = () => {
     return new Promise((resolve, reject) => {
-    fetch('localhost:8000/api/students?status=3')
+    fetch('http://localhost:8000/api/students?status=3')
       .then(response => response.json())
       .then((json) => {
         this.setState(prevState => ({
@@ -422,7 +422,7 @@ async onChangeEndAt(e, id) {
 
   fetchStudentsByClass = (name) => {
     return new Promise((resolve, reject) => {
-    fetch('localhost:8000/api/students/filterClass?class=' + name)
+    fetch('http://localhost:8000/api/students/filterClass?class=' + name)
       .then(response => response.json())
       .then((json) => {
         this.setState(prevState => ({
@@ -435,7 +435,7 @@ async onChangeEndAt(e, id) {
 
   fetchTeachers = () => {
     return new Promise((resolve, reject) => {
-    fetch('localhost:8000/api/teachers')
+    fetch('http://localhost:8000/api/teachers')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -448,7 +448,7 @@ async onChangeEndAt(e, id) {
 
   fetchRooms = () => {
     return new Promise((resolve, reject) => {
-    fetch('localhost:8000/api/rooms')
+    fetch('http://localhost:8000/api/rooms')
       .then(response => response.json())
       .then((json) => {
         console.log('roomx', json.data)
@@ -462,7 +462,7 @@ async onChangeEndAt(e, id) {
 
   fetchClasses = () => {
     return new Promise((resolve, reject) => {
-    fetch('localhost:8000/api/classes')
+    fetch('http://localhost:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -496,7 +496,7 @@ async onChangeEndAt(e, id) {
   };
 
   filterData = (filterDate, isChangeClass, classId) => {
-    let url = classId ? 'localhost:8000/api/attendances/filter?classId='+ classId +'&date='+moment(filterDate).format("YYYY-MM-DD") : 'localhost:8000/api/attendances/filter?date='+moment(filterDate).format("YYYY-MM-DD")
+    let url = classId ? 'http://localhost:8000/api/attendances/filter?classId='+ classId +'&date='+moment(filterDate).format("YYYY-MM-DD") : 'http://localhost:8000/api/attendances/filter?date='+moment(filterDate).format("YYYY-MM-DD")
     return new Promise((resolve, reject) => {
     fetch(url)
       .then(response => response.json())

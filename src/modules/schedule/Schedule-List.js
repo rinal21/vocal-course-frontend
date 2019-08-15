@@ -75,7 +75,7 @@ export default class schedulesList extends Component {
       start_at: e.target.value
     };
     console.log(obj, id)
-    axios.patch('localhost:8000/api/schedule/' + id, obj)
+    axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
@@ -96,7 +96,7 @@ export default class schedulesList extends Component {
       end_at: e.target.value
     };
     console.log(obj, id)
-    axios.patch('localhost:8000/api/schedule/' + id, obj)
+    axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
@@ -117,7 +117,7 @@ export default class schedulesList extends Component {
       room_id: e.target.value
     };
     console.log(obj, id)
-    axios.patch('localhost:8000/api/schedule/' + id, obj)
+    axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
@@ -147,7 +147,7 @@ export default class schedulesList extends Component {
   }
 
   fetchStudentsByClass = (id) => {
-    fetch('localhost:8000/api/students/filterClass?status=3&classId=' + id)
+    fetch('http://localhost:8000/api/students/filterClass?status=3&classId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -160,7 +160,7 @@ export default class schedulesList extends Component {
     const obj = {
       class_id: e.target.value
     };
-    axios.patch('localhost:8000/api/schedule/' + id, obj)
+    axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
@@ -179,7 +179,7 @@ export default class schedulesList extends Component {
       date: moment(this.state.filterDate).format("YYYY-MM-DD")
     };
     console.log(obj)
-    await axios.patch('localhost:8000/api/schedule/' + id, obj)
+    await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         isError = true
@@ -200,7 +200,7 @@ export default class schedulesList extends Component {
     const obj = {
       teacher_id: teacherSelected.value
     };
-    await axios.patch('localhost:8000/api/schedule/' + id, obj)
+    await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         isError = true
@@ -232,7 +232,7 @@ export default class schedulesList extends Component {
   async delete(id) {
     return new Promise((resolve, reject) => {
       const { filterDate } = this.state
-      axios.delete('localhost:8000/api/schedule/' + id)
+      axios.delete('http://localhost:8000/api/schedule/' + id)
         .then(console.log('Deleted'))
         .then(async () => {
           this.promisedSetState({
@@ -258,7 +258,7 @@ export default class schedulesList extends Component {
       const obj = {
         branch: JSON.parse(localStorage["appState"]).user.branchId
       };
-      axios.post('localhost:8000/api/schedule', obj)
+      axios.post('http://localhost:8000/api/schedule', obj)
         .then(async () => {
           await this.promisedSetState({
             isLoaded: false
@@ -277,7 +277,7 @@ export default class schedulesList extends Component {
         dateTo: moment(this.state.copyToDate).format("YYYY-MM-DD")
       };
       console.log('copy', obj)
-      axios.post('localhost:8000/api/schedules/copy', obj)
+      axios.post('http://localhost:8000/api/schedules/copy', obj)
         .then(async () => {
           await this.promisedSetState({
             copyConfirm: false
@@ -371,7 +371,7 @@ export default class schedulesList extends Component {
 
   fetchData = () => {
     return new Promise(async(resolve, reject) => {
-      await fetch('localhost:8000/api/schedules?branch=' + JSON.parse(localStorage["appState"]).user.branchId)
+      await fetch('http://localhost:8000/api/schedules?branch=' + JSON.parse(localStorage["appState"]).user.branchId)
       .then(response => response.json())
       .then( (json) => {
         console.log('hiya', json)
@@ -408,7 +408,7 @@ export default class schedulesList extends Component {
 
   fetchRooms = () => {
     return new Promise((resolve, reject) => {
-    fetch('localhost:8000/api/rooms')
+    fetch('http://localhost:8000/api/rooms')
       .then(response => response.json())
       .then((json) => {
         console.log('roomx', json.data)
@@ -422,7 +422,7 @@ export default class schedulesList extends Component {
 
   fetchStudents = () => {
     return new Promise((resolve, reject) => {
-    fetch('localhost:8000/api/students?status=3')
+    fetch('http://localhost:8000/api/students?status=3')
       .then(response => response.json())
       .then((json) => {
         this.setState(prevState => ({
@@ -450,7 +450,7 @@ export default class schedulesList extends Component {
 
   fetchStudentsByClass = (name) => {
     return new Promise((resolve, reject) => {
-    fetch('localhost:8000/api/students/filterClass?class=' + name)
+    fetch('http://localhost:8000/api/students/filterClass?class=' + name)
       .then(response => response.json())
       .then((json) => {
         this.setState(prevState => ({
@@ -463,7 +463,7 @@ export default class schedulesList extends Component {
 
   fetchTeachers = () => {
     return new Promise((resolve, reject) => {
-    fetch('localhost:8000/api/teachers')
+    fetch('http://localhost:8000/api/teachers')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -491,7 +491,7 @@ export default class schedulesList extends Component {
 
   fetchClasses = () => {
     return new Promise((resolve, reject) => {
-    fetch('localhost:8000/api/classes')
+    fetch('http://localhost:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -528,7 +528,7 @@ export default class schedulesList extends Component {
     const obj = classId ? 'branch='+JSON.parse(localStorage["appState"]).user.branchId+'&classId='+classId +'&date='+moment(filterDate).format("YYYY-MM-DD")
     : 'branch='+JSON.parse(localStorage["appState"]).user.branchId+'&date='+moment(filterDate).format("YYYY-MM-DD")
     
-    let url = 'localhost:8000/api/schedules/filter?'+obj
+    let url = 'http://localhost:8000/api/schedules/filter?'+obj
     return new Promise((resolve, reject) => {
     fetch(url)
       .then(response => response.json())
@@ -840,7 +840,7 @@ export default class schedulesList extends Component {
         branch: JSON.parse(localStorage["appState"]).user.branchId,
         date: moment(this.state.filterDate).format("YYYY-MM-DD")
       };
-      axios.post('localhost:8000/api/schedule', obj)
+      axios.post('http://localhost:8000/api/schedule', obj)
         .then(async () => {
           await this.promisedSetState({
             isLoaded: false

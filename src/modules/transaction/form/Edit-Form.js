@@ -69,7 +69,7 @@ export default class transactionEdit extends Component {
     this.setState({ selectedStudent });
     this.setState({ studentId: selectedStudent.value})
 
-    fetch('localhost:8000/api/student/' + selectedStudent.value)
+    fetch('http://localhost:8000/api/student/' + selectedStudent.value)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -109,7 +109,7 @@ export default class transactionEdit extends Component {
   }
 
   fetchTransactionsType = () => {
-    fetch('localhost:8000/api/transactions_type')
+    fetch('http://localhost:8000/api/transactions_type')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -119,7 +119,7 @@ export default class transactionEdit extends Component {
   }
 
   fetchTeachers = () => {
-    fetch('localhost:8000/api/teachers')
+    fetch('http://localhost:8000/api/teachers')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -129,7 +129,7 @@ export default class transactionEdit extends Component {
   }
   
   fetchStudents = () => {
-    fetch('localhost:8000/api/students?status=3')
+    fetch('http://localhost:8000/api/students?status=3')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -139,7 +139,7 @@ export default class transactionEdit extends Component {
   }
 
   fetchAccounts = () => {
-    fetch('localhost:8000/api/accounts')
+    fetch('http://localhost:8000/api/accounts')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -149,7 +149,7 @@ export default class transactionEdit extends Component {
   }
 
   fetchPricings = () => {
-    fetch('localhost:8000/api/pricings/list')
+    fetch('http://localhost:8000/api/pricings/list')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -159,7 +159,7 @@ export default class transactionEdit extends Component {
   }
 
   fetchPrice = (id) => {
-    fetch('localhost:8000/api/pricing/price/' + id)
+    fetch('http://localhost:8000/api/pricing/price/' + id)
       .then(response => response.json())
       .then((json) => {
         json.map((data) => {
@@ -173,7 +173,7 @@ export default class transactionEdit extends Component {
 
   fetchDatas = () => {
     const { transactionId } = this.props
-    fetch('localhost:8000/api/transaction/' + transactionId)
+    fetch('http://localhost:8000/api/transaction/' + transactionId)
       .then(response => response.json())
       .then((json) => {
         json.map((data, index) => {
@@ -345,7 +345,7 @@ export default class transactionEdit extends Component {
       status: this.state.selectedPaymentMethod,  
     };
     console.log(obj)
-      axios.patch('localhost:8000/api/transaction/' + this.props.transactionId, obj)
+      axios.patch('http://localhost:8000/api/transaction/' + this.props.transactionId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));
   }

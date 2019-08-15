@@ -111,7 +111,7 @@ export default class attendanceEdit extends Component {
 
   fetchDatas = () => {
     const { scheduleId } = this.props
-    fetch('localhost:8000/api/schedule/' + scheduleId)
+    fetch('http://localhost:8000/api/schedule/' + scheduleId)
       .then(response => response.json())
       .then((json) => {
         json.map((data, index) => {
@@ -148,7 +148,7 @@ export default class attendanceEdit extends Component {
   }
 
   fetchRooms = () => {
-    fetch('localhost:8000/api/rooms')
+    fetch('http://localhost:8000/api/rooms')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -158,7 +158,7 @@ export default class attendanceEdit extends Component {
   }
 
   fetchTeachersByStudent = (student) => {
-    fetch('localhost:8000/api/teachers/filterStudent?student=' + student)
+    fetch('http://localhost:8000/api/teachers/filterStudent?student=' + student)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -168,7 +168,7 @@ export default class attendanceEdit extends Component {
   }
 
   fetchStudentsByClass = (id) => {
-    fetch('localhost:8000/api/students/filterClass?status=3&classId=' + id)
+    fetch('http://localhost:8000/api/students/filterClass?status=3&classId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -178,7 +178,7 @@ export default class attendanceEdit extends Component {
   }
 
   // fetchTeachers = () => {
-  //   fetch('localhost:8000/api/teachers')
+  //   fetch('http://localhost:8000/api/teachers')
   //     .then(response => response.json())
   //     .then((json) => {
   //       this.setState({
@@ -188,7 +188,7 @@ export default class attendanceEdit extends Component {
   // }
 
   // fetchStudents = () => {
-  //   fetch('localhost:8000/api/students?status=3')
+  //   fetch('http://localhost:8000/api/students?status=3')
   //     .then(response => response.json())
   //     .then((json) => {
   //       this.setState({
@@ -214,7 +214,7 @@ export default class attendanceEdit extends Component {
   };
 
   fetchClasses = () => {
-    fetch('localhost:8000/api/classes')
+    fetch('http://localhost:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -280,7 +280,7 @@ export default class attendanceEdit extends Component {
       room: this.state.roomId,
       class: this.state.classId,
     };
-    axios.patch('localhost:8000/api/schedule/'+this.props.scheduleId, obj)
+    axios.patch('http://localhost:8000/api/schedule/'+this.props.scheduleId, obj)
       .then(res => console.log(res.data))
       .then(() => this.setState({ redirect: true }))
       .catch(error => {

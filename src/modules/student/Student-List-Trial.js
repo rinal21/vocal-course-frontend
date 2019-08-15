@@ -46,7 +46,7 @@ export default class studentListTrial extends Component {
       grouping: e.target.value
     });
 
-    fetch('localhost:8000/api/students/groupingClass?grouping=' + e.target.value + '&status=1')
+    fetch('http://localhost:8000/api/students/groupingClass?grouping=' + e.target.value + '&status=1')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -72,7 +72,7 @@ export default class studentListTrial extends Component {
   }
 
   fetchStudentsByClass = (id) => {
-    fetch('localhost:8000/api/students/filterClass?status=1&classId=' + id)
+    fetch('http://localhost:8000/api/students/filterClass?status=1&classId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -82,7 +82,7 @@ export default class studentListTrial extends Component {
   }
 
   fetchClasses = () => {
-    fetch('localhost:8000/api/classes')
+    fetch('http://localhost:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -114,7 +114,7 @@ export default class studentListTrial extends Component {
   };
 
   fetchStudentsByBranch = (id) => {
-    fetch('localhost:8000/api/students/filterBranch?status=1&branchId=' + id)
+    fetch('http://localhost:8000/api/students/filterBranch?status=1&branchId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -124,7 +124,7 @@ export default class studentListTrial extends Component {
   }
 
   fetchBranches = () => {
-    fetch('localhost:8000/api/branches')
+    fetch('http://localhost:8000/api/branches')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -159,7 +159,7 @@ export default class studentListTrial extends Component {
     const obj = {
       status : 0,
     }
-    axios.patch('localhost:8000/api/student_status/' + id, obj)
+    axios.patch('http://localhost:8000/api/student_status/' + id, obj)
       .then(console.log('canceled'))
       .then(() => this.setState({redirect: true}))
       .catch(err => console.log(err))
@@ -174,7 +174,7 @@ export default class studentListTrial extends Component {
 
   toggleDetailStudent = (id) => {
     if (id) {
-      fetch('localhost:8000/api/student/' + id)
+      fetch('http://localhost:8000/api/student/' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -317,7 +317,7 @@ export default class studentListTrial extends Component {
   }
 
   filterData = (filterDate) => {
-    fetch('localhost:8000/api/students/filterYear?status=1&date=' + filterDate)
+    fetch('http://localhost:8000/api/students/filterYear?status=1&date=' + filterDate)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -327,7 +327,7 @@ export default class studentListTrial extends Component {
   }
 
   fetchData = () => {
-    fetch('localhost:8000/api/students?status=1')
+    fetch('http://localhost:8000/api/students?status=1')
       .then(response => response.json())
       .then((json) => {
         this.setState({

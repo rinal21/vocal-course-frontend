@@ -33,7 +33,7 @@ export default class loginForm extends Component {
     }
 
     fetchBranches = () => {
-        fetch('localhost:8000/api/branches')
+        fetch('http://localhost:8000/api/branches')
           .then(response => response.json())
           .then((json) => {
             this.setState({
@@ -89,10 +89,10 @@ export default class loginForm extends Component {
                             username: values.username,
                             password: values.password
                         };
-                        // axios.post('localhost:8000/api/class', obj)
+                        // axios.post('http://localhost:8000/api/class', obj)
                         //     .then(res => console.log(res.data))
                         //     .then(() => this.setState({ redirect: true }));
-                        axios.post("localhost:8000/api/user/login", obj)
+                        axios.post("http://localhost:8000/api/user/login", obj)
                             .then(response => {
                                 console.log(response);
                                 return response;

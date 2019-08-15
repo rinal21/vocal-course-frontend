@@ -16,7 +16,7 @@ export default class branchList extends Component {
   }
 
   delete(id) {
-    axios.delete('localhost:8000/api/branch/' + id)
+    axios.delete('http://localhost:8000/api/branch/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -29,7 +29,7 @@ export default class branchList extends Component {
   }
 
   fetchData = () => {
-    fetch('localhost:8000/api/branches')
+    fetch('http://localhost:8000/api/branches')
     .then(response => response.json())
     .then((json) => {
       this.setState({

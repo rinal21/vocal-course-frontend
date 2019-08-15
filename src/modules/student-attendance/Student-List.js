@@ -28,7 +28,7 @@ export default class studentList extends Component {
   }
 
   delete(id) {
-    axios.delete('localhost:8000/api/student_attendance/' + id)
+    axios.delete('http://localhost:8000/api/student_attendance/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -53,7 +53,7 @@ export default class studentList extends Component {
   }
 
   fetchData = () => {
-    fetch('localhost:8000/api/student_attendances')
+    fetch('http://localhost:8000/api/student_attendances')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -63,7 +63,7 @@ export default class studentList extends Component {
   }
 
   filterData = (filterDate) => {
-    fetch('localhost:8000/api/student_attendances/filterDate?date=' + moment(filterDate).format("YYYY-MM-DD"))
+    fetch('http://localhost:8000/api/student_attendances/filterDate?date=' + moment(filterDate).format("YYYY-MM-DD"))
       .then(response => response.json())
       .then((json) => {
         this.setState({

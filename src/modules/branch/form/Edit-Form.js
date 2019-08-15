@@ -25,7 +25,7 @@ export default class classEdit extends Component {
 
     fetchDatas = () => {
         const { branchId } = this.props
-        fetch('localhost:8000/api/branch/' + branchId)
+        fetch('http://localhost:8000/api/branch/' + branchId)
           .then(response => response.json())
           .then((data) => {
               this.setState({
@@ -81,7 +81,7 @@ export default class classEdit extends Component {
                                 address: values.address
                             };
 
-                            axios.patch('localhost:8000/api/branch/' + branchId, obj)
+                            axios.patch('http://localhost:8000/api/branch/' + branchId, obj)
                                 .then(res => console.log(res.data))
                                 .then(() => this.setState({ redirect: true }));
 

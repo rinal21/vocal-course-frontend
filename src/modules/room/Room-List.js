@@ -16,7 +16,7 @@ export default class roomList extends Component {
   }
 
   delete(id) {
-    axios.delete('localhost:8000/api/room/' + id)
+    axios.delete('http://localhost:8000/api/room/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -29,7 +29,7 @@ export default class roomList extends Component {
   }
 
   fetchData = () => {
-    fetch('localhost:8000/api/rooms')
+    fetch('http://localhost:8000/api/rooms')
     .then(response => response.json())
     .then((json) => {
       this.setState({

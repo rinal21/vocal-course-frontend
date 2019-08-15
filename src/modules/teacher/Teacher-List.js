@@ -21,7 +21,7 @@ export default class teacherList extends Component {
   }
 
   delete(id) {
-    axios.delete('localhost:8000/api/teacher/' + id)
+    axios.delete('http://localhost:8000/api/teacher/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -29,7 +29,7 @@ export default class teacherList extends Component {
   }
 
   resign(id) {
-    axios.patch('localhost:8000/api/user_resign/' + id)
+    axios.patch('http://localhost:8000/api/user_resign/' + id)
       .then(res => console.log(res.data))
       .then(() => this.setState({ resignConfirm: !this.state.resignConfirm }))
       .then(() => this.fetchData())
@@ -37,7 +37,7 @@ export default class teacherList extends Component {
   }
 
   active(id) {
-    axios.patch('localhost:8000/api/user_resign/' + id)
+    axios.patch('http://localhost:8000/api/user_resign/' + id)
       .then(res => console.log(res.data))
       .then(() => this.setState({ activeConfirm: !this.state.activeConfirm }))
       .then(() => this.fetchData())
@@ -71,7 +71,7 @@ export default class teacherList extends Component {
   }
 
   fetchData = () => {
-    fetch('localhost:8000/api/teachers')
+    fetch('http://localhost:8000/api/teachers')
     .then(response => response.json())
     .then((json) => {
       this.setState({

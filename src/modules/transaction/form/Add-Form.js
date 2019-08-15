@@ -57,7 +57,7 @@ export default class transactionAdd extends Component {
     this.setState({ selectedStudent });
     this.setState({ studentId: selectedStudent.value})
 
-    fetch('localhost:8000/api/student/' + selectedStudent.value)
+    fetch('http://localhost:8000/api/student/' + selectedStudent.value)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -117,7 +117,7 @@ export default class transactionAdd extends Component {
   }
 
   fetchTeachers = () => {
-    fetch('localhost:8000/api/teachers')
+    fetch('http://localhost:8000/api/teachers')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -127,7 +127,7 @@ export default class transactionAdd extends Component {
   }
   
   fetchStudents = () => {
-    fetch('localhost:8000/api/students?status=3')
+    fetch('http://localhost:8000/api/students?status=3')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -137,7 +137,7 @@ export default class transactionAdd extends Component {
   }
 
   fetchTransactionsType = () => {
-    fetch('localhost:8000/api/transactions_type')
+    fetch('http://localhost:8000/api/transactions_type')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -147,7 +147,7 @@ export default class transactionAdd extends Component {
   }
 
   fetchPricings = () => {
-    fetch('localhost:8000/api/pricings/list')
+    fetch('http://localhost:8000/api/pricings/list')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -157,7 +157,7 @@ export default class transactionAdd extends Component {
   }
 
   fetchPrice = (id) => {
-    fetch('localhost:8000/api/pricing/price/' + id)
+    fetch('http://localhost:8000/api/pricing/price/' + id)
       .then(response => response.json())
       .then((json) => {
         json.map((data) => {
@@ -265,7 +265,7 @@ export default class transactionAdd extends Component {
       status: this.state.selectedPaymentMethod,  
     };
     console.log(obj)
-    axios.post('localhost:8000/api/transaction', obj)
+    axios.post('http://localhost:8000/api/transaction', obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));
   }

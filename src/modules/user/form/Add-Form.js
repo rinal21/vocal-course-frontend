@@ -36,7 +36,7 @@ export default class userAdd extends Component {
   }
 
   fetchBranches = () => {
-    fetch('localhost:8000/api/branches')
+    fetch('http://localhost:8000/api/branches')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -98,7 +98,7 @@ export default class userAdd extends Component {
               branch: selectedBranch,
               note: note
             };
-            axios.post('localhost:8000/api/user', obj)
+            axios.post('http://localhost:8000/api/user', obj)
               .then(res => console.log(res.data))
               .then(() => this.setState({ redirect: true }));
           }}>
