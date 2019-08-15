@@ -52,19 +52,27 @@ export default class attendancesList extends Component {
     this.fetchData = this.fetchData.bind(this);
   }
 
-  async onChangeStudentStatus(e, id){
-    const obj = {
-      studentId: this.state.studentSelected[id].value,
-      student_status: e.target.value
-    };
-    console.log('ler', e.target.value)
-    axios.patch('http://localhost:8000/api/attendance/' + id, obj)
-      .then(res => console.log(res.data))
-      .catch(error => {
-        console.log(error.message);
-      })
+  isToday = (someDate) => {
+    const today = new Date()
+    return someDate.getDate() == today.getDate() &&
+      someDate.getMonth() == today.getMonth() &&
+      someDate.getFullYear() == today.getFullYear()
+  }
 
-      if(e.target.value == '3') {
+  async onChangeStudentStatus(e, id){
+    if (this.isToday(this.state.filterDate)) {
+      const obj = {
+        studentId: this.state.studentSelected[id].value,
+        student_status: e.target.value
+      };
+      console.log('ler', e.target.value)
+      axios.patch('http://localhost:8000/api/attendance/' + id, obj)
+        .then(res => console.log(res.data))
+        .catch(error => {
+          console.log(error.message);
+        })
+
+      if (e.target.value == '3') {
         axios.patch('http://localhost:8000/api/user_decbalance/' + this.state.studentSelected[id].value)
           .then(res => console.log(res.data))
           .catch(error => {
@@ -77,17 +85,21 @@ export default class attendancesList extends Component {
         student: this.state.studentSelected[id].value,
         payment_date: moment(this.state.paymentDate).format("YYYY-MM-DD hh:mm:ss"),
         transaction_type: 3,
-        status: 1,  
+        status: 1,
       };
       console.log(objTransaction)
       axios.post('http://localhost:8000/api/transaction', objTransaction)
-          .then(res => console.log(res.data))
-          .then(() => this.setState({ redirect: true }));
+        .then(res => console.log(res.data))
+        .then(() => this.setState({ redirect: true }));
 
       await this.promisedSetState({
-        studentStatus: update(this.state.studentStatus, {[id]: {$set: e.target.value}})
+        studentStatus: update(this.state.studentStatus, { [id]: { $set: e.target.value } })
       });
       this.tableAttendancesGroup()
+    }
+    else {
+      alert('Edit not allowed in this date')
+    }
   }
 
   promisedSetState = (newState) => {
@@ -99,61 +111,76 @@ export default class attendancesList extends Component {
 }
 
 async onChangeStartAt(e, id) {
-  this.setState({
-    startAt: e.target.value
-  });
-
-  const obj = {
-    start_at: e.target.value
-  };
-  console.log(obj, id)
-  axios.patch('http://localhost:8000/api/attendance/' + id, obj)
-    .then(res => console.log(res.data))
-    .catch(error => {
-      console.log(error.message);
-    })
-    await this.promisedSetState({
-      startAt: update(this.state.startAt, { [id]: { $set: e.target.value } })
+  if(this.isToday(this.state.filterDate)){
+    this.setState({
+      startAt: e.target.value
     });
-
-  this.tableAttendancesGroup()
+  
+    const obj = {
+      start_at: e.target.value
+    };
+    console.log(obj, id)
+    axios.patch('http://localhost:8000/api/attendance/' + id, obj)
+      .then(res => console.log(res.data))
+      .catch(error => {
+        console.log(error.message);
+      })
+      await this.promisedSetState({
+        startAt: update(this.state.startAt, { [id]: { $set: e.target.value } })
+      });
+  
+    this.tableAttendancesGroup()
+  }
+  else{
+    alert('Edit not allowed in this date')
+  }
 }
 
 async onChangeEndAt(e, id) {
-  this.setState({
-    endAt: e.target.value
-  });
+  if (this.isToday(this.state.filterDate)) {
+    this.setState({
+      endAt: e.target.value
+    });
 
-  const obj = {
-    end_at: e.target.value
-  };
-  console.log(obj, id)
-  axios.patch('http://localhost:8000/api/attendance/' + id, obj)
-    .then(res => console.log(res.data))
-    .catch(error => {
-      console.log(error.message);
-    })
-  await this.promisedSetState({
-    endAt: update(this.state.endAt, { [id]: { $set: e.target.value } })
-  });
-
-  this.tableAttendancesGroup()
-}
-
-  async onChangeTeacherStatus(e, id) {
     const obj = {
-      teacher_status: e.target.value
+      end_at: e.target.value
     };
+    console.log(obj, id)
     axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
       .catch(error => {
         console.log(error.message);
       })
     await this.promisedSetState({
-      teacherStatus: update(this.state.teacherStatus, { [id]: { $set: e.target.value } })
+      endAt: update(this.state.endAt, { [id]: { $set: e.target.value } })
     });
 
     this.tableAttendancesGroup()
+  }
+  else {
+    alert('Edit not allowed in this date')
+  }
+}
+
+  async onChangeTeacherStatus(e, id) {
+    if (this.isToday(this.state.filterDate)) {
+      const obj = {
+        teacher_status: e.target.value
+      };
+      axios.patch('http://localhost:8000/api/attendance/' + id, obj)
+        .then(res => console.log(res.data))
+        .catch(error => {
+          console.log(error.message);
+        })
+      await this.promisedSetState({
+        teacherStatus: update(this.state.teacherStatus, { [id]: { $set: e.target.value } })
+      });
+
+      this.tableAttendancesGroup()
+    }
+    else {
+      alert('Edit not allowed in this date')
+    }
   }
 
   onChangeFilterClass = (selectedClass) =>  {
@@ -176,74 +203,94 @@ async onChangeEndAt(e, id) {
   }
 
   onChangeRoom = async (e, id) => {
-    this.setState({
-      roomSelected: e.target.value
-    });
+    if (this.isToday(this.state.filterDate)) {
+      this.setState({
+        roomSelected: e.target.value
+      });
 
-    const obj = {
-      room_id: e.target.value
-    };
-    console.log(obj, id)
-    axios.patch('http://localhost:8000/api/attendance/' + id, obj)
-      .then(res => console.log(res.data))
-      .catch(error => {
-        console.log(error.message);
-      })
-    await this.promisedSetState({
-      roomSelected: update(this.state.roomSelected, { [id]: { $set: e.target.value } })
-    });
+      const obj = {
+        room_id: e.target.value
+      };
+      console.log(obj, id)
+      axios.patch('http://localhost:8000/api/attendance/' + id, obj)
+        .then(res => console.log(res.data))
+        .catch(error => {
+          console.log(error.message);
+        })
+      await this.promisedSetState({
+        roomSelected: update(this.state.roomSelected, { [id]: { $set: e.target.value } })
+      });
 
-    this.tableAttendancesGroup()
+      this.tableAttendancesGroup()
+    }
+    else {
+      alert('Edit not allowed in this date')
+    }
   }
 
   onChangeClass = async (e, id) => {
-    const obj = {
-      class_id: e.target.value
-    };
-    console.log(obj, id)
-    await axios.patch('http://localhost:8000/api/attendance/' + id, obj)
-      .then(res => console.log(res.data))
-      .catch(error => {
-        console.log(error.message);
-      })
-    await this.promisedSetState({
-      isChangeClass: true,
-      isLoaded: false
-    });
+    if (this.isToday(this.state.filterDate)) {
+      const obj = {
+        class_id: e.target.value
+      };
+      console.log(obj, id)
+      await axios.patch('http://localhost:8000/api/attendance/' + id, obj)
+        .then(res => console.log(res.data))
+        .catch(error => {
+          console.log(error.message);
+        })
+      await this.promisedSetState({
+        isChangeClass: true,
+        isLoaded: false
+      });
 
-    this.tableAttendancesGroup()
+      this.tableAttendancesGroup()
+    }
+    else {
+      alert('Edit not allowed in this date')
+    }
   }
 
   async onChangeStudent(studentSelected, id) {
-    const obj = {
-      student_id: studentSelected.value
-    };
-    axios.patch('http://localhost:8000/api/attendance/' + id, obj)
-      .then(res => console.log(res.data))
-      .catch(error => {
-        console.log(error.message);
-      })
-    await this.promisedSetState({
-      studentSelected: update(this.state.studentSelected, { [id]: { $set: studentSelected } })
-    });
+    if (this.isToday(this.state.filterDate)) {
+      const obj = {
+        student_id: studentSelected.value
+      };
+      axios.patch('http://localhost:8000/api/attendance/' + id, obj)
+        .then(res => console.log(res.data))
+        .catch(error => {
+          console.log(error.message);
+        })
+      await this.promisedSetState({
+        studentSelected: update(this.state.studentSelected, { [id]: { $set: studentSelected } })
+      });
 
-    this.tableAttendancesGroup()
+      this.tableAttendancesGroup()
+    }
+    else {
+      alert('Edit not allowed in this date')
+    }
   }
 
   async onChangeTeacher(teacherSelected, id) {
-    const obj = {
-      teacher_id: teacherSelected.value
-    };
-    axios.patch('http://localhost:8000/api/attendance/' + id, obj)
-      .then(res => console.log(res.data))
-      .catch(error => {
-        console.log(error.message);
-      })
-    await this.promisedSetState({
-      teacherSelected: update(this.state.teacherSelected, { [id]: { $set: teacherSelected } })
-    });
+    if (this.isToday(this.state.filterDate)) {
+      const obj = {
+        teacher_id: teacherSelected.value
+      };
+      axios.patch('http://localhost:8000/api/attendance/' + id, obj)
+        .then(res => console.log(res.data))
+        .catch(error => {
+          console.log(error.message);
+        })
+      await this.promisedSetState({
+        teacherSelected: update(this.state.teacherSelected, { [id]: { $set: teacherSelected } })
+      });
 
-    this.tableAttendancesGroup()
+      this.tableAttendancesGroup()
+    }
+    else {
+      alert('Edit not allowed in this date')
+    }
   }
 
   onChangeFilterDate = filterDate => {
