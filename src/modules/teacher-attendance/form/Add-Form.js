@@ -58,7 +58,7 @@ export default class teacherAttendanceAdd extends Component {
   }
 
   fetchTeachers = () => {
-    fetch('http://103.30.247.147:8000/api/teachers')
+    fetch('localhost:8000/api/teachers')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -91,7 +91,7 @@ export default class teacherAttendanceAdd extends Component {
       // vacation: this.state.vacation,
       // attend: this.state.attend,
     };
-    axios.post('http://103.30.247.147:8000/api/teacher_attendance', obj)
+    axios.post('localhost:8000/api/teacher_attendance', obj)
       .then(res => console.log(res.data))
       .then(() => this.setState({ redirect: true }))
       .catch(error => {

@@ -35,7 +35,7 @@ export default class userEdit extends Component {
       username: this.state.username,
       username: this.state.username
     };
-    axios.patch('http://103.30.247.147:8000/api/user/'+this.props.userId, obj)
+    axios.patch('localhost:8000/api/user/'+this.props.userId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));
   }
@@ -75,7 +75,7 @@ export default class userEdit extends Component {
               email: values.email,
               password: values.password,
             };
-            axios.patch('http://103.30.247.147:8000/api/user/'+userId, obj)
+            axios.patch('localhost:8000/api/user/'+userId, obj)
               .then(res => console.log(res.data))
               .then(() => this.setState({ redirect: true }));
           }}>

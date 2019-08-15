@@ -48,7 +48,7 @@ export default class studentListUnpaid extends Component {
       grouping: e.target.value
     });
 
-    fetch('http://103.30.247.147:8000/api/students/groupingClass?grouping=' + e.target.value + '&status=2')
+    fetch('localhost:8000/api/students/groupingClass?grouping=' + e.target.value + '&status=2')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -74,7 +74,7 @@ export default class studentListUnpaid extends Component {
   }
 
   fetchStudentsByClass = (id) => {
-    fetch('http://103.30.247.147:8000/api/students/filterClass?status=2&classId=' + id)
+    fetch('localhost:8000/api/students/filterClass?status=2&classId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -84,7 +84,7 @@ export default class studentListUnpaid extends Component {
   }
 
   fetchClasses = () => {
-    fetch('http://103.30.247.147:8000/api/classes')
+    fetch('localhost:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -116,7 +116,7 @@ export default class studentListUnpaid extends Component {
   };
 
   fetchStudentsByBranch = (id) => {
-    fetch('http://103.30.247.147:8000/api/students/filterBranch?status=2&branchId=' + id)
+    fetch('localhost:8000/api/students/filterBranch?status=2&branchId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -126,7 +126,7 @@ export default class studentListUnpaid extends Component {
   }
 
   fetchBranches = () => {
-    fetch('http://103.30.247.147:8000/api/branches')
+    fetch('localhost:8000/api/branches')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -158,7 +158,7 @@ export default class studentListUnpaid extends Component {
   };
 
   delete(id) {
-    axios.delete('http://103.30.247.147:8000/api/student/' + id)
+    axios.delete('localhost:8000/api/student/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -182,7 +182,7 @@ export default class studentListUnpaid extends Component {
 
   toggleDetailStudent = (id) => {
     if (id) {
-      fetch('http://103.30.247.147:8000/api/student/' + id)
+      fetch('localhost:8000/api/student/' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -203,7 +203,7 @@ export default class studentListUnpaid extends Component {
       status: '3',
     };
     console.log(obj)
-    axios.patch('http://103.30.247.147:8000/api/student_status/' + id, obj)
+    axios.patch('localhost:8000/api/student_status/' + id, obj)
       .then(res => console.log(res.data))
       .then(() => this.setState({ redirect: true }));
   }
@@ -335,7 +335,7 @@ export default class studentListUnpaid extends Component {
   }
 
   filterData = (filterDate) => {
-    fetch('http://103.30.247.147:8000/api/students/filterYear?status=2&date=' + filterDate)
+    fetch('localhost:8000/api/students/filterYear?status=2&date=' + filterDate)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -345,7 +345,7 @@ export default class studentListUnpaid extends Component {
   }
 
   fetchData = () => {
-    fetch('http://103.30.247.147:8000/api/students?status=2')
+    fetch('localhost:8000/api/students?status=2')
       .then(response => response.json())
       .then((json) => {
         this.setState({

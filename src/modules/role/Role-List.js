@@ -16,7 +16,7 @@ export default class roleList extends Component {
   }
 
   delete(id) {
-    axios.delete('http://103.30.247.147:8000/api/role/' + id)
+    axios.delete('localhost:8000/api/role/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -29,7 +29,7 @@ export default class roleList extends Component {
   }
 
   fetchData = () => {
-    fetch('http://103.30.247.147:8000/api/roles')
+    fetch('localhost:8000/api/roles')
     .then(response => response.json())
     .then((json) => {
       this.setState({

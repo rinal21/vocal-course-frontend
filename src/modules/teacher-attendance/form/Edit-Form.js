@@ -59,7 +59,7 @@ export default class teacherAttendanceEdit extends Component {
   }
 
   fetchTeachers = () => {
-    fetch('http://103.30.247.147:8000/api/teachers')
+    fetch('localhost:8000/api/teachers')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -70,7 +70,7 @@ export default class teacherAttendanceEdit extends Component {
 
   fetchDatas = () => {
     const { teacherId } = this.props
-    fetch('http://103.30.247.147:8000/api/teacher_attendance/' + teacherId)
+    fetch('localhost:8000/api/teacher_attendance/' + teacherId)
       .then(response => response.json())
       .then((json) => {
         json.map((data, index) => {
@@ -115,7 +115,7 @@ export default class teacherAttendanceEdit extends Component {
       // vacation: this.state.vacation,
       // attend: this.state.attend,
     };
-    axios.patch('http://103.30.247.147:8000/api/teacher_attendance/'+this.props.teacherId, obj)
+    axios.patch('localhost:8000/api/teacher_attendance/'+this.props.teacherId, obj)
       .then(res => console.log(res.data))
       .then(() => this.setState({ redirect: true }))
       .catch(error => {

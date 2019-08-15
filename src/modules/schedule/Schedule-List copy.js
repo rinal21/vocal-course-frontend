@@ -23,7 +23,7 @@ export default class schedulesList extends Component {
 
   onChangeDay(e) {
     const branch = JSON.parse(localStorage["appState"]).user.branchId
-    fetch('http://103.30.247.147:8000/api/schedules/filterDay?branch=' + branch + '&day=' + e.target.value)
+    fetch('localhost:8000/api/schedules/filterDay?branch=' + branch + '&day=' + e.target.value)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -40,7 +40,7 @@ export default class schedulesList extends Component {
   }
 
   delete(id) {
-    axios.delete('http://103.30.247.147:8000/api/schedule/' + id)
+    axios.delete('localhost:8000/api/schedule/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -61,7 +61,7 @@ export default class schedulesList extends Component {
 
   fetchData = () => {
     const branch = JSON.parse(localStorage["appState"]).user.branchId
-    fetch('http://103.30.247.147:8000/api/schedules?branch=' + branch)
+    fetch('localhost:8000/api/schedules?branch=' + branch)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -71,7 +71,7 @@ export default class schedulesList extends Component {
   }
 
   filterData = (filterDate) => {
-    fetch('http://103.30.247.147:8000/api/teacher_attendances/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
+    fetch('localhost:8000/api/teacher_attendances/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
       .then(response => response.json())
       .then((json) => {
         this.setState({

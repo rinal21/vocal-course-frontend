@@ -43,7 +43,7 @@ export default class teacherEdit extends Component {
               name: values.name,
               salary: values.salary
             };
-            axios.patch('http://103.30.247.147:8000/api/teacher/' + teacherId, obj)
+            axios.patch('localhost:8000/api/teacher/' + teacherId, obj)
               .then(res => console.log(res.data))
               .then(() => this.setState({ redirect: true }));
 

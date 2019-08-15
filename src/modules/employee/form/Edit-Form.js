@@ -40,7 +40,7 @@ export default class classEdit extends Component {
 
     fetchDatas = () => {
         const { employeeId } = this.props
-        fetch('http://103.30.247.147:8000/api/employee/' + employeeId)
+        fetch('localhost:8000/api/employee/' + employeeId)
           .then(response => response.json())
           .then((json) => {
             json.map((data, index) => {
@@ -104,7 +104,7 @@ export default class classEdit extends Component {
                                 birthdate: moment(this.state.birthDate).format("YYYY-MM-DD")
                             };
 
-                            axios.patch('http://103.30.247.147:8000/api/employee/' + employeeId, obj)
+                            axios.patch('localhost:8000/api/employee/' + employeeId, obj)
                                 .then(res => console.log(res.data))
                                 .then(() => this.setState({ redirect: true }));
 

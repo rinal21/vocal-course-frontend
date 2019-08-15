@@ -28,7 +28,7 @@ export default class teacherList extends Component {
   }
 
   delete(id) {
-    axios.delete('http://103.30.247.147:8000/api/teacher_attendance/' + id)
+    axios.delete('localhost:8000/api/teacher_attendance/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -48,7 +48,7 @@ export default class teacherList extends Component {
   }
 
   fetchData = () => {
-    fetch('http://103.30.247.147:8000/api/teacher_attendances')
+    fetch('localhost:8000/api/teacher_attendances')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -58,7 +58,7 @@ export default class teacherList extends Component {
   }
 
   filterData = (filterDate) => {
-    fetch('http://103.30.247.147:8000/api/teacher_attendances/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
+    fetch('localhost:8000/api/teacher_attendances/filter?date='+moment(filterDate).format("YYYY-MM-DD"))
       .then(response => response.json())
       .then((json) => {
         this.setState({

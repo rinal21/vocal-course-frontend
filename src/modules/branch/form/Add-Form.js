@@ -59,7 +59,7 @@ export default class classAdd extends Component {
                             address: values.address
                         };
                         
-                        axios.post('http://103.30.247.147:8000/api/branch', obj)
+                        axios.post('localhost:8000/api/branch', obj)
                             .then(res => console.log(res.data))
                             .then(() => this.setState({ redirect: true }));
                     }}

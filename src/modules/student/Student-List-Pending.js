@@ -52,7 +52,7 @@ export default class studentListPending extends Component {
       grouping: e.target.value
     });
 
-    fetch('http://103.30.247.147:8000/api/students/groupingClass?grouping=' + e.target.value + '&status=0')
+    fetch('localhost:8000/api/students/groupingClass?grouping=' + e.target.value + '&status=0')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -70,7 +70,7 @@ export default class studentListPending extends Component {
   }
 
   fetchStudentsByClass = (id) => {
-    fetch('http://103.30.247.147:8000/api/students/filterClass?status=0&classId=' + id)
+    fetch('localhost:8000/api/students/filterClass?status=0&classId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -80,7 +80,7 @@ export default class studentListPending extends Component {
   }
 
   fetchStudentsByBranch = (id) => {
-    fetch('http://103.30.247.147:8000/api/students/filterBranch?status=0&branchId=' + id)
+    fetch('localhost:8000/api/students/filterBranch?status=0&branchId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -90,7 +90,7 @@ export default class studentListPending extends Component {
   }
 
   fetchBranches = () => {
-    fetch('http://103.30.247.147:8000/api/branches')
+    fetch('localhost:8000/api/branches')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -122,7 +122,7 @@ export default class studentListPending extends Component {
   };
 
   fetchClasses = () => {
-    fetch('http://103.30.247.147:8000/api/classes')
+    fetch('localhost:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -154,7 +154,7 @@ export default class studentListPending extends Component {
   };
 
   delete(id) {
-    axios.delete('http://103.30.247.147:8000/api/student/' + id)
+    axios.delete('localhost:8000/api/student/' + id)
       .then(console.log('Deleted'))
       .then(() => this.setState({deleteConfirm: !this.state.deleteConfirm}))
       .then(() => this.fetchData())
@@ -170,7 +170,7 @@ export default class studentListPending extends Component {
 
   toggleDetailStudent = (id) => {
     if (id) {
-      fetch('http://103.30.247.147:8000/api/student/' + id)
+      fetch('localhost:8000/api/student/' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -313,7 +313,7 @@ export default class studentListPending extends Component {
   }
 
   filterData = (filterDate) => {
-    fetch('http://103.30.247.147:8000/api/students/filterYear?status=0&date=' + filterDate)
+    fetch('localhost:8000/api/students/filterYear?status=0&date=' + filterDate)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -323,7 +323,7 @@ export default class studentListPending extends Component {
   }
 
   fetchData = () => {
-    fetch('http://103.30.247.147:8000/api/students?status=0')
+    fetch('localhost:8000/api/students?status=0')
       .then(response => response.json())
       .then((json) => {
         this.setState({

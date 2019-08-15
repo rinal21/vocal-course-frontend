@@ -34,7 +34,7 @@ export default class roomEdit extends Component {
                         const obj = {
                             name: values.name,
                         };
-                        axios.patch('http://103.30.247.147:8000/api/room/' + roomId, obj)
+                        axios.patch('localhost:8000/api/room/' + roomId, obj)
                             .then(res => console.log(res.data))
                             .then(() => this.setState({ redirect: true }));
 

@@ -46,7 +46,7 @@ export default class studentListTrial extends Component {
       grouping: e.target.value
     });
 
-    fetch('http://103.30.247.147:8000/api/students/groupingClass?grouping=' + e.target.value + '&status=1')
+    fetch('localhost:8000/api/students/groupingClass?grouping=' + e.target.value + '&status=1')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -72,7 +72,7 @@ export default class studentListTrial extends Component {
   }
 
   fetchStudentsByClass = (id) => {
-    fetch('http://103.30.247.147:8000/api/students/filterClass?status=1&classId=' + id)
+    fetch('localhost:8000/api/students/filterClass?status=1&classId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -82,7 +82,7 @@ export default class studentListTrial extends Component {
   }
 
   fetchClasses = () => {
-    fetch('http://103.30.247.147:8000/api/classes')
+    fetch('localhost:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -114,7 +114,7 @@ export default class studentListTrial extends Component {
   };
 
   fetchStudentsByBranch = (id) => {
-    fetch('http://103.30.247.147:8000/api/students/filterBranch?status=1&branchId=' + id)
+    fetch('localhost:8000/api/students/filterBranch?status=1&branchId=' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -124,7 +124,7 @@ export default class studentListTrial extends Component {
   }
 
   fetchBranches = () => {
-    fetch('http://103.30.247.147:8000/api/branches')
+    fetch('localhost:8000/api/branches')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -159,7 +159,7 @@ export default class studentListTrial extends Component {
     const obj = {
       status : 0,
     }
-    axios.patch('http://103.30.247.147:8000/api/student_status/' + id, obj)
+    axios.patch('localhost:8000/api/student_status/' + id, obj)
       .then(console.log('canceled'))
       .then(() => this.setState({redirect: true}))
       .catch(err => console.log(err))
@@ -174,7 +174,7 @@ export default class studentListTrial extends Component {
 
   toggleDetailStudent = (id) => {
     if (id) {
-      fetch('http://103.30.247.147:8000/api/student/' + id)
+      fetch('localhost:8000/api/student/' + id)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -317,7 +317,7 @@ export default class studentListTrial extends Component {
   }
 
   filterData = (filterDate) => {
-    fetch('http://103.30.247.147:8000/api/students/filterYear?status=1&date=' + filterDate)
+    fetch('localhost:8000/api/students/filterYear?status=1&date=' + filterDate)
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -327,7 +327,7 @@ export default class studentListTrial extends Component {
   }
 
   fetchData = () => {
-    fetch('http://103.30.247.147:8000/api/students?status=1')
+    fetch('localhost:8000/api/students?status=1')
       .then(response => response.json())
       .then((json) => {
         this.setState({

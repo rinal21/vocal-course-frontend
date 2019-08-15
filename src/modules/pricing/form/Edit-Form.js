@@ -68,7 +68,7 @@ export default class pricingEdit extends Component {
       teacher: this.state.teacher,
       participant: this.state.participant
     };
-    axios.patch('http://103.30.247.147:8000/api/pricing/'+this.props.pricingId, obj)
+    axios.patch('localhost:8000/api/pricing/'+this.props.pricingId, obj)
         .then(res => console.log(res.data))
         .then(() => this.setState({ redirect: true }));
   }
@@ -81,7 +81,7 @@ export default class pricingEdit extends Component {
 
   fetchData = () => {
     const { pricingId } = this.props
-    fetch('http://103.30.247.147:8000/api/pricing/' + pricingId)
+    fetch('localhost:8000/api/pricing/' + pricingId)
       .then(response => response.json())
       .then((json) => {
         json.map((data, index) => {
@@ -109,7 +109,7 @@ export default class pricingEdit extends Component {
   }
 
   fetchClasses = () => {
-    fetch('http://103.30.247.147:8000/api/classes')
+    fetch('localhost:8000/api/classes')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -186,7 +186,7 @@ export default class pricingEdit extends Component {
                 teacher: this.state.teacher,
                 participant: this.state.participant
               };
-              axios.patch('http://103.30.247.147:8000/api/pricing/' + this.props.pricingId, obj)
+              axios.patch('localhost:8000/api/pricing/' + this.props.pricingId, obj)
                 .then(res => console.log(res.data))
                 .then(() => this.setState({ redirect: true }));
 

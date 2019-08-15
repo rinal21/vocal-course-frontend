@@ -37,7 +37,7 @@ export default class teacherAdd extends Component {
   }
 
   fetchBranches = () => {
-    fetch('http://103.30.247.147:8000/api/branches')
+    fetch('localhost:8000/api/branches')
       .then(response => response.json())
       .then((json) => {
         this.setState({
@@ -111,7 +111,7 @@ export default class teacherAdd extends Component {
               note: note,
             };
             console.log('coba', obj)
-            axios.post('http://103.30.247.147:8000/api/teacher', obj)
+            axios.post('localhost:8000/api/teacher', obj)
               .then(res => console.log(res.data))
               .then(() => this.setState({ redirect: true }));
 

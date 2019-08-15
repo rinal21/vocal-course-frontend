@@ -53,7 +53,7 @@ export default class classAdd extends Component {
       }
     
       fetchBranches = () => {
-        fetch('http://103.30.247.147:8000/api/branches')
+        fetch('localhost:8000/api/branches')
           .then(response => response.json())
           .then((json) => {
             this.setState({
@@ -139,7 +139,7 @@ export default class classAdd extends Component {
                             birthdate: moment(this.state.birthDate).format("YYYY-MM-DD")
                         };
                         
-                        axios.post('http://103.30.247.147:8000/api/employee', obj)
+                        axios.post('localhost:8000/api/employee', obj)
                             .then(res => console.log(res.data))
                             .then(() => this.setState({ redirect: true }));
 
