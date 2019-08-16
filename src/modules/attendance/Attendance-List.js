@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import axios from 'axios';
 import Loader from 'react-loader-spinner'
 import Select from 'react-select';
+import TimePicker from '../../components/TimePicker'
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -705,110 +706,43 @@ async onChangeEndAt(e, id) {
           // console.log('coba1 studentID:',data.student_id,'isi:', studentSelected[data.student_id], 'class', data.class_name)
           rowData.push({
             room: <select class="form-control" onChange={(e) => onChangeRoom(e, data.attendances_id)} value={roomSelected[data.attendances_id]}>
-            {createRoomPicker(rooms)}
-          </select>,
-            start: <select class="form-control" style={{ width: 85 }} id="year-picker" onChange={(e) => onChangeStartAt(e, data.attendances_id)} value={startAt[data.attendances_id]}>              
-            <option value={''}></option>
-            <option value={'08:20'}>08:20</option>
-            <option value={'08:40'}>08:40</option>
-            <option value={'09:00'}>09:00</option>
-            <option value={'09:20'}>09:20</option>
-            <option value={'09:40'}>09:40</option>
-            <option value={'10:00'}>10:00</option>
-            <option value={'10:20'}>10:20</option>
-            <option value={'10:40'}>10:40</option>
-            <option value={'11:00'}>11:00</option>
-            <option value={'11:20'}>11:20</option>
-            <option value={'11:40'}>11:40</option>
-            <option value={'12:00'}>12:00</option>
-            <option value={'12:20'}>12:20</option>
-            <option value={'12:40'}>12:40</option>
-            <option value={'13:00'}>13:00</option>
-            <option value={'13:20'}>13:20</option>
-            <option value={'13:40'}>13:40</option>
-            <option value={'14:00'}>14:00</option>
-            <option value={'14:20'}>14:20</option>
-            <option value={'14:40'}>14:40</option>
-            <option value={'15:00'}>15:00</option>
-            <option value={'15:20'}>15:20</option>
-            <option value={'15:40'}>15:40</option>
-            <option value={'16:00'}>16:00</option>
-            <option value={'16:20'}>16:20</option>
-            <option value={'16:40'}>16:40</option>
-            <option value={'17:00'}>17:00</option>
-            <option value={'17:20'}>17:20</option>
-            <option value={'17:40'}>17:40</option>
-            <option value={'18:00'}>18:00</option>
-            <option value={'18:20'}>18:20</option>
-            <option value={'18:40'}>18:40</option>
-            <option value={'19:00'}>19:00</option>
-            <option value={'19:20'}>19:20</option>
-            <option value={'19:40'}>19:40</option>
-            <option value={'20:00'}>20:00</option>
-
-          </select>,
-            end: <select class="form-control" style={{ width: 85 }} id="year-picker" onChange={(e) => onChangeEndAt(e, data.attendances_id)} value={endAt[data.attendances_id]}>
-            <option value={''}></option>
-            <option value={'08:20'}>08:20</option>
-            <option value={'08:40'}>08:40</option>
-            <option value={'09:00'}>09:00</option>
-            <option value={'09:20'}>09:20</option>
-            <option value={'09:40'}>09:40</option>
-            <option value={'10:00'}>10:00</option>
-            <option value={'10:20'}>10:20</option>
-            <option value={'10:40'}>10:40</option>
-            <option value={'11:00'}>11:00</option>
-            <option value={'11:20'}>11:20</option>
-            <option value={'11:40'}>11:40</option>
-            <option value={'12:00'}>12:00</option>
-            <option value={'12:20'}>12:20</option>
-            <option value={'12:40'}>12:40</option>
-            <option value={'13:00'}>13:00</option>
-            <option value={'13:20'}>13:20</option>
-            <option value={'13:40'}>13:40</option>
-            <option value={'14:00'}>14:00</option>
-            <option value={'14:20'}>14:20</option>
-            <option value={'14:40'}>14:40</option>
-            <option value={'15:00'}>15:00</option>
-            <option value={'15:20'}>15:20</option>
-            <option value={'15:40'}>15:40</option>
-            <option value={'16:00'}>16:00</option>
-            <option value={'16:20'}>16:20</option>
-            <option value={'16:40'}>16:40</option>
-            <option value={'17:00'}>17:00</option>
-            <option value={'17:20'}>17:20</option>
-            <option value={'17:40'}>17:40</option>
-            <option value={'18:00'}>18:00</option>
-            <option value={'18:20'}>18:20</option>
-            <option value={'18:40'}>18:40</option>
-            <option value={'19:00'}>19:00</option>
-            <option value={'19:20'}>19:20</option>
-            <option value={'19:40'}>19:40</option>
-            <option value={'20:00'}>20:00</option>
-          </select>,
+              {createRoomPicker(rooms)}
+            </select>,
+            start: <TimePicker
+              className="form-control"
+              onChange={(e) => onChangeStartAt(e, data.attendances_id)}
+              value={startAt[data.attendances_id]}
+              style={{ width: 85 }}
+            />,
+            end: <TimePicker
+              className="form-control"
+              onChange={(e) => onChangeEndAt(e, data.attendances_id)}
+              value={endAt[data.attendances_id]}
+              style={{ width: 85 }}
+            />,
             class: <select class="form-control" onChange={(e) => onChangeClass(e, data.attendances_id)} value={classSelected[data.attendances_id]}>
-              { createClassPicker(classes)}
+              {createClassPicker(classes)}
             </select>,
             student: <Select
-            value={studentSelected[data.attendances_id]}
-            onChange={(e) => onChangeStudent(e, data.attendances_id)}
-            options={this.dataStudents(students)}
-          />
-          // <select class="form-control" onChange={(e) => onChangeStudent(e, data.attendances_id)} value={studentSelected[data.attendances_id]}>
-          //     { createStudentPicker(students)}
-          //   </select>
+              value={studentSelected[data.attendances_id]}
+              onChange={(e) => onChangeStudent(e, data.attendances_id)}
+              options={this.dataStudents(students)}
+            />
+            // <select class="form-control" onChange={(e) => onChangeStudent(e, data.attendances_id)} value={studentSelected[data.attendances_id]}>
+            //     { createStudentPicker(students)}
+            //   </select>
             ,
             status_student: <select class="form-control" onChange={(e) => onChangeStudentStatus(e, data.attendances_id)} value={studentStatus[data.attendances_id]}>
               <option value="0"></option>
               <option value="1">Absent</option>
-              <option value="2">With Permission</option>  
+              <option value="2">With Permission</option>
               <option value="3">Attend</option>
             </select>,
             teacher: <Select
-            value={teacherSelected[data.attendances_id]}
-            onChange={(e) => onChangeTeacher(e, data.attendances_id)}
-            options={this.dataTeachers(teachers)}
-          />,
+              value={teacherSelected[data.attendances_id]}
+              onChange={(e) => onChangeTeacher(e, data.attendances_id)}
+              options={this.dataTeachers(teachers)}
+            />,
             teacher_student: <select class="form-control" onChange={(e) => onChangeTeacherStatus(e, data.attendances_id)} value={teacherStatus[data.attendances_id]}>
               <option value="0"></option>
               <option value="1">Absent</option>
@@ -817,11 +751,11 @@ async onChangeEndAt(e, id) {
             </select>
           })
         })
-        this.setState({loading: true})
+        this.setState({ loading: true })
         return rowData
       })()
     })
-    
+
   };
 
   tableAttendancesGroup = async () => {

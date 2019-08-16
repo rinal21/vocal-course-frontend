@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import axios from 'axios';
 import Loader from 'react-loader-spinner'
 import Select from 'react-select';
+import TimePicker from '../../components/TimePicker'
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -369,6 +370,48 @@ export default class schedulesList extends Component {
     )
   }
 
+  createTimePickerOptions = () => {
+    let opt = (<><option value={''}></option>
+              <option value={'08:20'}>08:20</option>
+              <option value={'08:40'}>08:40</option>
+              <option value={'09:00'}>09:00</option>
+              <option value={'09:20'}>09:20</option>
+              <option value={'09:40'}>09:40</option>
+              <option value={'10:00'}>10:00</option>
+              <option value={'10:20'}>10:20</option>
+              <option value={'10:40'}>10:40</option>
+              <option value={'11:00'}>11:00</option>
+              <option value={'11:20'}>11:20</option>
+              <option value={'11:40'}>11:40</option>
+              <option value={'12:00'}>12:00</option>
+              <option value={'12:20'}>12:20</option>
+              <option value={'12:40'}>12:40</option>
+              <option value={'13:00'}>13:00</option>
+              <option value={'13:20'}>13:20</option>
+              <option value={'13:40'}>13:40</option>
+              <option value={'14:00'}>14:00</option>
+              <option value={'14:20'}>14:20</option>
+              <option value={'14:40'}>14:40</option>
+              <option value={'15:00'}>15:00</option>
+              <option value={'15:20'}>15:20</option>
+              <option value={'15:40'}>15:40</option>
+              <option value={'16:00'}>16:00</option>
+              <option value={'16:20'}>16:20</option>
+              <option value={'16:40'}>16:40</option>
+              <option value={'17:00'}>17:00</option>
+              <option value={'17:20'}>17:20</option>
+              <option value={'17:40'}>17:40</option>
+              <option value={'18:00'}>18:00</option>
+              <option value={'18:20'}>18:20</option>
+              <option value={'18:40'}>18:40</option>
+              <option value={'19:00'}>19:00</option>
+              <option value={'19:20'}>19:20</option>
+              <option value={'19:40'}>19:40</option>
+              <option value={'20:00'}>20:00</option></>)
+
+      return opt
+  }
+
   fetchData = () => {
     return new Promise(async(resolve, reject) => {
       await fetch('http://localhost:8000/api/schedules?branch=' + JSON.parse(localStorage["appState"]).user.branchId)
@@ -676,87 +719,21 @@ export default class schedulesList extends Component {
           // console.log('coba1 studentID:',data.student_id,'isi:', studentSelected[data.student_id], 'class', data.class_name)
           rowData.push({
             room: <select class="form-control" onChange={(e) => onChangeRoom(e, data.schedule_id)} value={roomSelected[data.schedule_id]}>
-            {createRoomPicker(rooms)}
-          </select>,
-            start: <select class="form-control" style={{ width: 100 }} id="year-picker" onChange={(e) => onChangeStartAt(e, data.schedule_id)} value={startAt[data.schedule_id]}>              
-              <option value={''}></option>
-              <option value={'08:20'}>08:20</option>
-              <option value={'08:40'}>08:40</option>
-              <option value={'09:00'}>09:00</option>
-              <option value={'09:20'}>09:20</option>
-              <option value={'09:40'}>09:40</option>
-              <option value={'10:00'}>10:00</option>
-              <option value={'10:20'}>10:20</option>
-              <option value={'10:40'}>10:40</option>
-              <option value={'11:00'}>11:00</option>
-              <option value={'11:20'}>11:20</option>
-              <option value={'11:40'}>11:40</option>
-              <option value={'12:00'}>12:00</option>
-              <option value={'12:20'}>12:20</option>
-              <option value={'12:40'}>12:40</option>
-              <option value={'13:00'}>13:00</option>
-              <option value={'13:20'}>13:20</option>
-              <option value={'13:40'}>13:40</option>
-              <option value={'14:00'}>14:00</option>
-              <option value={'14:20'}>14:20</option>
-              <option value={'14:40'}>14:40</option>
-              <option value={'15:00'}>15:00</option>
-              <option value={'15:20'}>15:20</option>
-              <option value={'15:40'}>15:40</option>
-              <option value={'16:00'}>16:00</option>
-              <option value={'16:20'}>16:20</option>
-              <option value={'16:40'}>16:40</option>
-              <option value={'17:00'}>17:00</option>
-              <option value={'17:20'}>17:20</option>
-              <option value={'17:40'}>17:40</option>
-              <option value={'18:00'}>18:00</option>
-              <option value={'18:20'}>18:20</option>
-              <option value={'18:40'}>18:40</option>
-              <option value={'19:00'}>19:00</option>
-              <option value={'19:20'}>19:20</option>
-              <option value={'19:40'}>19:40</option>
-              <option value={'20:00'}>20:00</option>
-
+              {createRoomPicker(rooms)}
             </select>,
-            end: <select class="form-control" style={{ width: 100 }} id="year-picker" onChange={(e) => onChangeEndAt(e, data.schedule_id)} value={endAt[data.schedule_id]}>
-              <option value={''}></option>
-              <option value={'08:20'}>08:20</option>
-              <option value={'08:40'}>08:40</option>
-              <option value={'09:00'}>09:00</option>
-              <option value={'09:20'}>09:20</option>
-              <option value={'09:40'}>09:40</option>
-              <option value={'10:00'}>10:00</option>
-              <option value={'10:20'}>10:20</option>
-              <option value={'10:40'}>10:40</option>
-              <option value={'11:00'}>11:00</option>
-              <option value={'11:20'}>11:20</option>
-              <option value={'11:40'}>11:40</option>
-              <option value={'12:00'}>12:00</option>
-              <option value={'12:20'}>12:20</option>
-              <option value={'12:40'}>12:40</option>
-              <option value={'13:00'}>13:00</option>
-              <option value={'13:20'}>13:20</option>
-              <option value={'13:40'}>13:40</option>
-              <option value={'14:00'}>14:00</option>
-              <option value={'14:20'}>14:20</option>
-              <option value={'14:40'}>14:40</option>
-              <option value={'15:00'}>15:00</option>
-              <option value={'15:20'}>15:20</option>
-              <option value={'15:40'}>15:40</option>
-              <option value={'16:00'}>16:00</option>
-              <option value={'16:20'}>16:20</option>
-              <option value={'16:40'}>16:40</option>
-              <option value={'17:00'}>17:00</option>
-              <option value={'17:20'}>17:20</option>
-              <option value={'17:40'}>17:40</option>
-              <option value={'18:00'}>18:00</option>
-              <option value={'18:20'}>18:20</option>
-              <option value={'18:40'}>18:40</option>
-              <option value={'19:00'}>19:00</option>
-              <option value={'19:20'}>19:20</option>
-              <option value={'19:40'}>19:40</option>
-              <option value={'20:00'}>20:00</option>
-            </select>,
+            start: <TimePicker
+              className="form-control"
+              onChange={(e) => onChangeStartAt(e, data.schedule_id)}
+              value={startAt[data.schedule_id]}
+              style={{ width: 100 }}
+            />
+            ,
+            end: <TimePicker
+              className="form-control"
+              onChange={(e) => onChangeEndAt(e, data.schedule_id)}
+              value={endAt[data.schedule_id]}
+              style={{ width: 100 }}
+            />,
             class: <select class="form-control" onChange={(e) => onChangeClass(e, data.schedule_id)} value={classSelected[data.schedule_id]}>
               {createClassPicker(classes)}
             </select>,
