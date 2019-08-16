@@ -28,15 +28,12 @@ export default class studentListPaid extends Component {
       grouping: 'no',
       layoutPrint: '',
       transactions: [],
-      deleteId : '',
-      balance: 0,
-      editBalance: false
+      deleteId : ''
     }
     this.delete = this.delete.bind(this);
     this.onChangeFilterDate = this.onChangeFilterDate.bind(this);
     this.onChangeClass = this.onChangeClass.bind(this);
     this.onChangeBranch = this.onChangeBranch.bind(this);
-    this.onChangeBalance = this.onChangeBalance.bind(this);
     this.onChangeGroupingOption = this.onChangeGroupingOption.bind(this);
   }
 
@@ -197,7 +194,6 @@ export default class studentListPaid extends Component {
         console.log(json)
         this.setState({
           detailStudentInfo: json,
-          balance: json[0] && json[0].balance,
           detailStudent: !this.state.detailStudent
         })
       })
@@ -217,23 +213,8 @@ export default class studentListPaid extends Component {
     }
   }
 
-  _handleKeyDownBalance = (e, id) => {
-    if (e.key === 'Enter') {
-      const obj = {
-        balance: e.target.value,
-      };
-      console.log(obj)
-      axios.patch('http://localhost:8000/api/user_balance/'+id, obj)
-          .then(res => console.log(res.data))
-          .then(() => this.setState({ redirect: true }));
-      this.setState({
-        editBalance: false
-      })
-    }
-  }
-
   showDetailStudent = () => {
-    const { detailStudentInfo, balance, editBalance } = this.state
+    const { detailStudentInfo } = this.state
     let data = detailStudentInfo[0]
 
     if (data) {
@@ -332,10 +313,6 @@ export default class studentListPaid extends Component {
                 <label>: &nbsp;</label>
                 <label>{data.date}</label>
               </div>
-            </div>
-            <div class="col-sm" style={{marginRight: 25}}>
-              {editBalance ? (<p class="float-right">Balance : <input type="number" name="balance" step="0" style={{width: 50}} onChange={this.onChangeBalance} value={balance} onKeyDown={(e) => this._handleKeyDownBalance(e, data.user_id)}/></p>) :
-              (<p class="float-right">Balance : {balance} <i className="fa fa-pencil" onClick={() => this.setState({editBalance: true})}/></p>)}
             </div>
           </div>
           
