@@ -9,6 +9,7 @@ import { BrowserRouter, Route, withRouter } from 'react-router-dom';
 class App extends Component {
 
   render() {
+    let path = this.props.location.pathname
 //     let appState = {
 //       isLoggedIn: false,
 //       user: {}
@@ -31,9 +32,9 @@ class App extends Component {
         {/* {this.props.location.pathname != 'login' ? */}
           <div>
             
-            {localStorage["appState"] && JSON.parse(localStorage["appState"]).isLoggedIn && <Header />}
+            {path != '/login' && localStorage["appState"] && JSON.parse(localStorage["appState"]).isLoggedIn && <Header />}
             <Content />
-            {localStorage["appState"] && JSON.parse(localStorage["appState"]).isLoggedIn && <SideBar />}
+            {path != '/login' && localStorage["appState"] && JSON.parse(localStorage["appState"]).isLoggedIn && <SideBar />}
           </div>
           {/* <div>
             <Login />

@@ -90,7 +90,9 @@ class Template extends Component {
 
 class Content extends Component {
   render() {
-    let templateType = localStorage["appState"] ? (JSON.parse(localStorage["appState"]).isLoggedIn ? 'dashboard' : 'login') : 'login'
+    let path = this.props.location.pathname
+
+    let templateType = path != '/login' ? localStorage["appState"] ? (JSON.parse(localStorage["appState"]).isLoggedIn ? 'dashboard' : 'login') : 'login' : 'login'
 
     return (
       <>
