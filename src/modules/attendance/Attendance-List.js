@@ -69,6 +69,7 @@ export default class attendancesList extends Component {
       console.log('ler', e.target.value)
       axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
+        .then(alert('Data berhasil diubah'))
         .catch(error => {
           console.log(error.message);
         })
@@ -123,6 +124,7 @@ async onChangeStartAt(e, id) {
     console.log(obj, id)
     axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
+      .then(alert('Data berhasil diubah'))
       .catch(error => {
         console.log(error.message);
       })
@@ -149,6 +151,7 @@ async onChangeEndAt(e, id) {
     console.log(obj, id)
     axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
+      .then(alert('Data berhasil diubah'))
       .catch(error => {
         console.log(error.message);
       })
@@ -170,6 +173,7 @@ async onChangeEndAt(e, id) {
       };
       axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
+        .then(alert('Data berhasil diubah'))
         .catch(error => {
           console.log(error.message);
         })
@@ -215,6 +219,7 @@ async onChangeEndAt(e, id) {
       console.log(obj, id)
       axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
+        .then(alert('Data berhasil diubah'))
         .catch(error => {
           console.log(error.message);
         })
@@ -237,6 +242,7 @@ async onChangeEndAt(e, id) {
       console.log(obj, id)
       await axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
+        .then(alert('Data berhasil diubah'))
         .catch(error => {
           console.log(error.message);
         })
@@ -259,6 +265,7 @@ async onChangeEndAt(e, id) {
       };
       axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
+        .then(alert('Data berhasil diubah'))
         .catch(error => {
           console.log(error.message);
         })
@@ -280,6 +287,7 @@ async onChangeEndAt(e, id) {
       };
       axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
+        .then(alert('Data berhasil diubah'))
         .catch(error => {
           console.log(error.message);
         })

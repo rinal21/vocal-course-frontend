@@ -78,6 +78,7 @@ export default class schedulesList extends Component {
     console.log(obj, id)
     axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
+      .then(alert('Data berhasil diubah'))
       .catch(error => {
         console.log(error.message);
       })
@@ -99,6 +100,7 @@ export default class schedulesList extends Component {
     console.log(obj, id)
     axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
+      .then(alert('Data berhasil diubah'))
       .catch(error => {
         console.log(error.message);
       })
@@ -120,6 +122,7 @@ export default class schedulesList extends Component {
     console.log(obj, id)
     axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
+      .then(alert('Data berhasil diubah'))
       .catch(error => {
         console.log(error.message);
       })
@@ -163,6 +166,7 @@ export default class schedulesList extends Component {
     };
     axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
+      .then(alert('Data berhasil diubah'))
       .catch(error => {
         console.log(error.message);
       })
@@ -182,6 +186,7 @@ export default class schedulesList extends Component {
     console.log(obj)
     await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
+      .then(alert('Data berhasil diubah'))
       .catch(error => {
         isError = true
         alert(error.response.data.message);
@@ -203,6 +208,7 @@ export default class schedulesList extends Component {
     };
     await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
+      .then(alert('Data berhasil diubah'))
       .catch(error => {
         isError = true
         alert(error.response.data.message);
