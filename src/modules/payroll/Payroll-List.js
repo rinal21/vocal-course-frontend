@@ -94,7 +94,7 @@ export default class classList extends Component {
           label: 'Total Salary',
           field: 'salary',
           sort: 'desc',
-          width: 500
+          width: "500px"
         },
         {
           label: 'Total Vacation',
@@ -129,10 +129,10 @@ export default class classList extends Component {
             date: data.date,
             teacher: data.name,
             count: data.students_count,
-            salary: <NumberFormat value={data.total_salary} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />,
+            salary: <NumberFormat value={data.total_salary} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} style={{float: "right"}}/>,
             vacation: data.total_vacation,
             absent: data.total_absent,
-            total: <NumberFormat value={data.total} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />
+            total: <NumberFormat value={data.total} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} style={{float: "right"}}/>
             // edit:
             //   <div>
             //     <NavLink
@@ -206,7 +206,7 @@ export default class classList extends Component {
                     data={this.data(this.state.payrolls)}
                   />
 
-                  <p style={{position: 'absolute', right: 65, marginTop: -66}}>
+                  <p style={{position: 'absolute', right: 28, marginTop: -66}}>
                     Total : {<NumberFormat value={this.state.totalAll} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />}
                   </p>
                 </div>

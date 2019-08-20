@@ -130,12 +130,12 @@ export default class teacherList extends Component {
           sort: 'desc',
           width: 500
         },
-        {
-          label: 'Teacher Name',
-          field: 'teacher',
-          sort: 'desc',
-          width: 500
-        },
+        // {
+        //   label: 'Teacher Name',
+        //   field: 'teacher',
+        //   sort: 'desc',
+        //   width: 500
+        // },
         {
           label: 'Payment Date',
           field: 'payment',
@@ -145,6 +145,12 @@ export default class teacherList extends Component {
         {
           label: 'Receipt Number',
           field: 'receipt',
+          sort: 'desc',
+          width: 500
+        },
+        {
+          label: 'Type',
+          field: 'type',
           sort: 'desc',
           width: 500
         },
@@ -174,9 +180,10 @@ export default class teacherList extends Component {
           rowData.push({
             date: moment(data.date).format("DD MMMM YYYY HH:mm:ss"),
             student: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
-            teacher: data.teacher_name,
+            // teacher: data.teacher_name,
             payment: data.payment_date,
             receipt: data.receipt_number,
+            type: data.transaction_type,
             cost: <NumberFormat value={data.cost} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />,
             status: data.status == 0 ? 'Pending' : 'paid',
             edit:
@@ -191,7 +198,7 @@ export default class teacherList extends Component {
                   className="btn btn-primary">Edit</NavLink>
                 <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 10 }}>Delete</button>
                 {data.status == 0 ? <button onClick={() => paidConfirm(data.id)} className="btn btn-warning" style={{ position: "relative", left: 20 }}>paid</button> 
-                : <button onClick={() => printConfirm(data.id)} className="btn btn-default" style={{ position: "relative", left: 20 }}><i className="fa fa-print" />Print</button>
+                : data.transaction_type != "Kehadiran" && <button onClick={() => printConfirm(data.id)} className="btn btn-default" style={{ position: "relative", left: 20 }}><i className="fa fa-print" />Print</button>
                 }
               </div>
           })
@@ -219,7 +226,7 @@ export default class teacherList extends Component {
                       showMonthYearPicker
                       className="form-control"
                       customInput={
-                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{width: 130}} />
+                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{width: 176}} />
                       }
                     />
                   </div>
