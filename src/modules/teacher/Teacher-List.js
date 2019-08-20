@@ -152,9 +152,9 @@ export default class teacherList extends Component {
                     }
                   }}
                   className="btn btn-primary">Edit</NavLink>
-                <button onClick={() => deleteConfirm(data.user_id)} className="btn btn-danger" style={{ position: "relative", left: 25 }}>Delete</button>
-                {data.status != 'Resigned' ? <button onClick={() => resignConfirm(data.user_id)} className="btn btn-warning" style={{ position: "relative", left: 50 }}>Resign</button> :
-                  <button onClick={() => activeConfirm(data.user_id)} className="btn btn-success" style={{ position: "relative", left: 50 }}>Active</button>}
+                <button onClick={() => deleteConfirm(data.user_id)} className="btn btn-danger" style={{ position: "relative", left: 10 }}>Delete</button>
+                {data.status != 'Resigned' ? <button onClick={() => resignConfirm(data.user_id)} className="btn btn-warning" style={{ position: "relative", left: 20 }}>Resign</button> :
+                  <button onClick={() => activeConfirm(data.user_id)} className="btn btn-success" style={{ position: "relative", left: 20 }}>Active</button>}
               </div>
           })
         })

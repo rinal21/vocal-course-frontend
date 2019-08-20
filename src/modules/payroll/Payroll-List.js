@@ -94,7 +94,7 @@ export default class classList extends Component {
           label: 'Total Salary',
           field: 'salary',
           sort: 'desc',
-          width: "500px"
+          width: 500
         },
         {
           label: 'Total Vacation',
