@@ -9,6 +9,9 @@ import Loader from 'react-loader-spinner'
 import Select from 'react-select';
 import TimePicker from '../../components/TimePicker'
 
+import { Slide, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import "react-datepicker/dist/react-datepicker.css";
 
 export default class schedulesList extends Component {
@@ -53,6 +56,24 @@ export default class schedulesList extends Component {
     this.addRow = this.addRow.bind(this);
   }
 
+  notify = () => toast.success('Data Berhasil diubah', {
+    position: "top-center",
+    autoClose: 1500,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: false
+    });
+
+   warning = (text) => toast.error(text, {
+     position: "top-center",
+     autoClose: 2000,
+     hideProgressBar: true,
+     closeOnClick: true,
+     pauseOnHover: true,
+     draggable: false
+     });
+
   createTimePicker = () => {
     let opt = []
 
@@ -68,67 +89,76 @@ export default class schedulesList extends Component {
   }
 
   async onChangeStartAt(e, id) {
-    this.setState({
-      startAt: e.target.value
-    });
+    let isError = false
+    let val = e.target.value
 
     const obj = {
       start_at: e.target.value
     };
     console.log(obj, id)
-    axios.patch('http://localhost:8000/api/schedule/' + id, obj)
+    await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
-      .then(alert('Data berhasil diubah'))
       .catch(error => {
-        console.log(error.message);
+        isError = true
+        this.warning(error.response.data.message)
       })
-      await this.promisedSetState({
-        startAt: update(this.state.startAt, { [id]: { $set: e.target.value } })
-      });
+
+      if(!isError){
+        await this.promisedSetState({
+          startAt: update(this.state.startAt, { [id]: { $set: val } })
+        });
+        // alert('Data berhasil diubah')
+        this.notify()
+      }
 
     this.tableAttendancesGroup()
   }
 
   async onChangeEndAt(e, id) {
-    this.setState({
-      endAt: e.target.value
-    });
+    let isError = false
+    let val = e.target.value
 
     const obj = {
       end_at: e.target.value
     };
-    console.log(obj, id)
-    axios.patch('http://localhost:8000/api/schedule/' + id, obj)
+
+    await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
-      .then(alert('Data berhasil diubah'))
       .catch(error => {
-        console.log(error.message);
+        isError = true
+        this.warning(error.response.data.message)
       })
-    await this.promisedSetState({
-      endAt: update(this.state.endAt, { [id]: { $set: e.target.value } })
-    });
+      if(!isError){
+        await this.promisedSetState({
+          endAt: update(this.state.endAt, { [id]: { $set: val } })
+        });
+        this.notify()
+      }
 
     this.tableAttendancesGroup()
   }
 
   onChangeRoom = async (e, id) => {
-    this.setState({
-      roomSelected: e.target.value
-    });
+    let isError = false
+    let val = e.target.value
 
     const obj = {
       room_id: e.target.value
     };
-    console.log(obj, id)
-    axios.patch('http://localhost:8000/api/schedule/' + id, obj)
+    console.log(obj, e.target.value)
+    await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
-      .then(alert('Data berhasil diubah'))
       .catch(error => {
-        console.log(error.message);
+        isError = true
+        this.warning(error.response.data.message)
       })
-    await this.promisedSetState({
-      roomSelected: update(this.state.roomSelected, { [id]: { $set: e.target.value } })
-    });
+
+    if (!isError) {
+      await this.promisedSetState({
+        roomSelected: update(this.state.roomSelected, { [id]: { $set: val } })
+      });
+      this.notify()
+    }
 
     this.tableAttendancesGroup()
   }
@@ -161,18 +191,23 @@ export default class schedulesList extends Component {
   }
 
   onChangeClass = async (e, id) => {
+    let isError = false
+    let val = e.target.value
     const obj = {
       class_id: e.target.value
     };
-    axios.patch('http://localhost:8000/api/schedule/' + id, obj)
+    await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
-      .then(alert('Data berhasil diubah'))
       .catch(error => {
-        console.log(error.message);
+        isError = true
+        this.warning(error.response.data.message)
       })
-    await this.promisedSetState({
-      classSelected: update(this.state.classSelected, { [id]: { $set: e.target.value } })
-    });
+      if(!isError){
+        await this.promisedSetState({
+          classSelected: update(this.state.classSelected, { [id]: { $set: val } })
+        });
+        this.notify()
+      }
 
     this.tableAttendancesGroup()
   }
@@ -186,16 +221,16 @@ export default class schedulesList extends Component {
     console.log(obj)
     await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
-      .then(alert('Data berhasil diubah'))
       .catch(error => {
         isError = true
-        alert(error.response.data.message);
+        this.warning(error.response.data.message)
       })
 
       if(!isError){
         await this.promisedSetState({
           studentSelected: update(this.state.studentSelected, { [id]: { $set: studentSelected } })
         });
+        this.notify()
       }
 
     this.tableAttendancesGroup()
@@ -204,20 +239,21 @@ export default class schedulesList extends Component {
   async onChangeTeacher(teacherSelected, id) {
     let isError = false
     const obj = {
-      teacher_id: teacherSelected.value
+      teacher_id: teacherSelected.value,
     };
+    console.log('changeTeacher', obj)
     await axios.patch('http://localhost:8000/api/schedule/' + id, obj)
       .then(res => console.log(res.data))
-      .then(alert('Data berhasil diubah'))
       .catch(error => {
         isError = true
-        alert(error.response.data.message);
+        this.warning(error.response.data.message);
       })
 
       if(!isError){
         await this.promisedSetState({
           teacherSelected: update(this.state.teacherSelected, { [id]: { $set: teacherSelected } })
         });
+        this.notify()
       }
 
     this.tableAttendancesGroup()
@@ -376,48 +412,6 @@ export default class schedulesList extends Component {
     )
   }
 
-  createTimePickerOptions = () => {
-    let opt = (<><option value={''}></option>
-              <option value={'08:20'}>08:20</option>
-              <option value={'08:40'}>08:40</option>
-              <option value={'09:00'}>09:00</option>
-              <option value={'09:20'}>09:20</option>
-              <option value={'09:40'}>09:40</option>
-              <option value={'10:00'}>10:00</option>
-              <option value={'10:20'}>10:20</option>
-              <option value={'10:40'}>10:40</option>
-              <option value={'11:00'}>11:00</option>
-              <option value={'11:20'}>11:20</option>
-              <option value={'11:40'}>11:40</option>
-              <option value={'12:00'}>12:00</option>
-              <option value={'12:20'}>12:20</option>
-              <option value={'12:40'}>12:40</option>
-              <option value={'13:00'}>13:00</option>
-              <option value={'13:20'}>13:20</option>
-              <option value={'13:40'}>13:40</option>
-              <option value={'14:00'}>14:00</option>
-              <option value={'14:20'}>14:20</option>
-              <option value={'14:40'}>14:40</option>
-              <option value={'15:00'}>15:00</option>
-              <option value={'15:20'}>15:20</option>
-              <option value={'15:40'}>15:40</option>
-              <option value={'16:00'}>16:00</option>
-              <option value={'16:20'}>16:20</option>
-              <option value={'16:40'}>16:40</option>
-              <option value={'17:00'}>17:00</option>
-              <option value={'17:20'}>17:20</option>
-              <option value={'17:40'}>17:40</option>
-              <option value={'18:00'}>18:00</option>
-              <option value={'18:20'}>18:20</option>
-              <option value={'18:40'}>18:40</option>
-              <option value={'19:00'}>19:00</option>
-              <option value={'19:20'}>19:20</option>
-              <option value={'19:40'}>19:40</option>
-              <option value={'20:00'}>20:00</option></>)
-
-      return opt
-  }
-
   fetchData = () => {
     return new Promise(async(resolve, reject) => {
       await fetch('http://localhost:8000/api/schedules?branch=' + JSON.parse(localStorage["appState"]).user.branchId)
@@ -497,18 +491,18 @@ export default class schedulesList extends Component {
     )
   }
 
-  fetchStudentsByClass = (name) => {
-    return new Promise((resolve, reject) => {
-    fetch('http://localhost:8000/api/students/filterClass?class=' + name)
-      .then(response => response.json())
-      .then((json) => {
-        this.setState(prevState => ({
-          students: [...prevState.students, json]
-        }))
-        resolve()
-      })
-    })
-  }
+  // fetchStudentsByClass = (name) => {
+  //   return new Promise((resolve, reject) => {
+  //   fetch('http://localhost:8000/api/students/filterClass?class=' + name)
+  //     .then(response => response.json())
+  //     .then((json) => {
+  //       this.setState(prevState => ({
+  //         students: [...prevState.students, json]
+  //       }))
+  //       resolve()
+  //     })
+  //   })
+  // }
 
   fetchTeachers = () => {
     return new Promise((resolve, reject) => {
@@ -592,8 +586,8 @@ export default class schedulesList extends Component {
               startAt: update(this.state.startAt, { [data.schedule_id]: { $set: data.start_at ? data.start_at : '' } }),
               endAt: update(this.state.endAt, { [data.schedule_id]: { $set: data.end_at ? data.end_at : '' } }),
               classSelected: update(this.state.classSelected, { [data.schedule_id]: { $set: data.class_id ? data.class_id : 0 } }),
-              studentSelected: update(this.state.studentSelected, { [data.schedule_id]: { $set: {value:data.student_id, label:data.first_name + ' ' + data.middle_name + ' ' + data.last_name} } }),
-              teacherSelected: update(this.state.teacherSelected, { [data.schedule_id]: { $set: {value:data.teacher_id, label:data.teacher_name} } }),
+              studentSelected: update(this.state.studentSelected, { [data.schedule_id]: { $set: {value:data.student_id ? data.student_id : 0, label:data.student_id ? data.first_name + ' ' + data.middle_name + ' ' + data.last_name : ''} } }),
+              teacherSelected: update(this.state.teacherSelected, { [data.schedule_id]: { $set: {value:data.teacher_id ? data.teacher_id : 0, label:data.teacher_id ? data.teacher_name : ''} } }),
               isLoaded: false,
               isFilterDate: true,
               isChangeClass: false
@@ -835,7 +829,6 @@ export default class schedulesList extends Component {
   }
 
   render() {
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const { loading, tables, filterDate } = this.state
     // console.log('rooms', this.state.rooms)
     // console.log('class', this.state.classes)
@@ -866,7 +859,7 @@ export default class schedulesList extends Component {
                       dropdownMode="select"
                       className="form-control"
                       customInput={
-                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{ width: 220 }} />
+                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{ width: 227 }} />
                       }
                     />
 
@@ -951,6 +944,18 @@ export default class schedulesList extends Component {
             </MDBModalFooter>
           </MDBModal>
         </MDBContainer>
+
+        <ToastContainer 
+          position="top-center"
+          autoClose={1500}
+          hideProgressBar
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange={false}
+          draggable={false}
+          pauseOnHover
+          transition={Slide}/>
       </>
     )
   }
