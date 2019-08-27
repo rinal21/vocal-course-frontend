@@ -125,7 +125,7 @@ class SideBar extends Component {
                     </li> */}
                     <li>
                       <Link to="/role">
-                        <i className="fa fa-user" /> <span>Role</span>
+                        <i className="fa fa-user" /><span>Role</span>
                       </Link>
                     </li>
                   </>
