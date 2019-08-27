@@ -431,19 +431,6 @@ export default class schedulesList extends Component {
             teacherSelected: update(this.state.teacherSelected, { [data.schedule_id]: { $set: {value:data.teacher_id ? data.teacher_id : 0, label:data.teacher_id ? data.teacher_name : ''} } })
           })
         })
-
-        // json.map((subarray) => {
-        //   subarray.map((data) => {
-        //     this.promisedSetState({
-        //       classSelected: update(this.state.classSelected, {[data.attendances_id]: {$set: data.class_id}}),
-        //       studentStatus: update(this.state.studentStatus, {[data.attendances_id]: {$set: data.student_status}}),
-        //       teacherStatus: update(this.state.teacherStatus, {[data.attendances_id]: {$set: data.teacher_status}}),
-        //       studentSelected: update(this.state.studentSelected, {[data.attendances_id]: {$set: data.student_id}}),
-        //       teacherSelected: update(this.state.teacherSelected, {[data.attendances_id]: {$set: data.teacher_id}})
-        //     })
-        //   })
-        // })
-        
       })
       resolve()
     })
@@ -710,9 +697,6 @@ export default class schedulesList extends Component {
       ],
       rows: ( () => {
         let rowData = []
-        // console.log('bang', students)
-          
-          // let data = schedules
 
         schedules.map((data, index) => {
           console.log('bang', students)
@@ -765,7 +749,7 @@ export default class schedulesList extends Component {
     if(!this.state.isLoaded) {
       console.log('dor', this.state.isLoaded)
       if (!this.state.isFilterDate) {
-        // console.log('bang1')
+        console.log('bang1')
         await this.fetchData()
       }
 
@@ -822,7 +806,8 @@ export default class schedulesList extends Component {
           await this.promisedSetState({
             isLoaded: false
           })
-          moment(filterDate).isSame(new Date(), "day") ? this.tableAttendancesGroup() : this.filterData(filterDate, false, '')
+          // moment(filterDate).isSame(new Date(), "day") ? this.tableAttendancesGroup() : this.filterData(filterDate, false, '')
+          moment(filterDate).isSame(new Date(), "day") ? this.filterData(filterDate, false, '') : this.filterData(filterDate, false, '')
           resolve()
         })
     })
