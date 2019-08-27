@@ -842,7 +842,7 @@ async onChangeEndAt(e, id) {
                       dropdownMode="select"
                       className="form-control"
                       customInput={
-                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{ width: 220 }} />
+                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{ width: 227 }} />
                       }
                     />
 
