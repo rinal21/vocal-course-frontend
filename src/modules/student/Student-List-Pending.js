@@ -384,6 +384,11 @@ export default class studentListPending extends Component {
           label: 'Branch',
           field: 'branch',
           width: 10
+        },,
+        {
+          label: 'Status',
+          field: 'status',
+          width: 10
         },
         {
           label: 'Action',
@@ -396,6 +401,19 @@ export default class studentListPending extends Component {
         let rowData = []
 
         Array.isArray(students) && students.map((data, index) => {
+          if(data.user_status == 0){
+            data.user_status = 'Inactive'
+          }
+          else if(data.user_status == 1){
+            data.user_status = 'Active'
+          }
+          else if(data.user_status == 2){
+            data.user_status = 'Graduated'
+          }
+          else if(data.user_status == 3){
+            data.user_status = 'Resigned'
+          }
+
           rowData.push({
             name: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
             age: data.age,
@@ -406,6 +424,7 @@ export default class studentListPending extends Component {
             school: data.school,
             email: data.email,
             branch: data.branch_name,
+            status: data.user_status,
             action: 
               <div>
               <button onClick={() => detailStudent(data.id)} className="btn btn-default" >Detail</button>
