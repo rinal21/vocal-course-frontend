@@ -179,7 +179,7 @@ export default class teacherList extends Component {
         transactions.map((data, index) => {
           rowData.push({
             date: moment(data.date).format("DD MMMM YYYY HH:mm:ss"),
-            student: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
+            student: data.transaction_type != "Spending" ? data.first_name + ' ' + data.middle_name + ' ' + data.last_name : '-',
             // teacher: data.teacher_name,
             payment: data.payment_date,
             receipt: data.receipt_number,
@@ -198,7 +198,7 @@ export default class teacherList extends Component {
                   className="btn btn-primary">Edit</NavLink>
                 <button onClick={() => deleteConfirm(data.id)} className="btn btn-danger" style={{ position: "relative", left: 10 }}>Delete</button>
                 {data.status == 0 ? <button onClick={() => paidConfirm(data.id)} className="btn btn-warning" style={{ position: "relative", left: 20 }}>paid</button> 
-                : data.transaction_type != "Kehadiran" && <button onClick={() => printConfirm(data.id)} className="btn btn-default" style={{ position: "relative", left: 20 }}><i className="fa fa-print" />Print</button>
+                : data.transaction_type != "Kehadiran" && data.transaction_type != "Spending" && <button onClick={() => printConfirm(data.id)} className="btn btn-default" style={{ position: "relative", left: 20 }}><i className="fa fa-print" />Print</button>
                 }
               </div>
           })
