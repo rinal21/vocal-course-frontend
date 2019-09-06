@@ -2581,6 +2581,7 @@ a:focus {
 .pagination > li > a {
   background: #fafafa;
   color: #666;
+  cursor: pointer;
 }
 .pagination.pagination-flat > li > a {
   border-radius: 0 !important;
