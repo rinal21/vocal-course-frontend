@@ -5,6 +5,7 @@ import About from "../modules/About";
 import { PrivateRoute } from "../components/PrivateRoute"
 import { withRouter } from "react-router-dom"
 
+import StudentListAll from "../modules/student/Student-List-All";
 import StudentListPaid from "../modules/student/Student-List-Paid";
 import StudentListUnpaid from "../modules/student/Student-List-Unpaid";
 import StudentListTrial from "../modules/student/Student-List-Trial";
@@ -100,6 +101,7 @@ class Content extends Component {
           <Route path="/login" component={Login} />
           <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute path="/about" component={About} />
+          <PrivateRoute exact path="/student-all" component={StudentListAll} />
           <PrivateRoute exact path="/student-paid" component={StudentListPaid} />
           <PrivateRoute exact path="/student-unpaid" component={StudentListUnpaid} />
           <PrivateRoute exact path="/student-trial" component={StudentListTrial} />
