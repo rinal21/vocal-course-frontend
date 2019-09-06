@@ -141,6 +141,12 @@ class SideBar extends Component {
                   </a>
                   <ul className="treeview-menu">
                     <li>
+                      <Link to="/student-all">
+                        <i className={location.pathname == '/student-all' ? "fa fa-circle" : "fa fa-circle-o"} style={{color: location.pathname == '/student-all' && '#fff'}}/> 
+                        <span style={{color: location.pathname == '/student-all' && '#fff'}}>All</span>
+                      </Link>
+                    </li>
+                    <li>
                       <Link to="/student-paid">
                         <i className={location.pathname == '/student-paid' ? "fa fa-circle" : "fa fa-circle-o"} style={{color: location.pathname == '/student-paid' && '#fff'}}/> 
                         <span style={{color: location.pathname == '/student-paid' && '#fff'}}>Paid</span>
