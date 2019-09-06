@@ -8,6 +8,8 @@ import axios from 'axios';
 import Loader from 'react-loader-spinner'
 import Select from 'react-select';
 import TimePicker from '../../components/TimePicker'
+import { Slide, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -18,7 +20,6 @@ export default class attendancesList extends Component {
     this.state = {
       attendances: [],
       filterDate: new Date(),
-      deleteConfirm: false,
       startAt: [],
       endAt: [],
       rooms: [],
@@ -38,7 +39,14 @@ export default class attendancesList extends Component {
       isFilterDate: false,
       isChangeClass: false,
       loading: false,
-      deleteId : ''
+      deleteConfirm: false,
+      studentStatusConfirm: false,
+      teacherStatusConfirm: false,
+      deleteId : '',
+      studentStatusId : '',
+      teacherStatusId : '',
+      studentStatusValue : '',
+      teacherStatusValue : ''
     }
     this.delete = this.delete.bind(this);
     this.onChangeRoom = this.onChangeRoom.bind(this);
@@ -53,6 +61,24 @@ export default class attendancesList extends Component {
     this.fetchData = this.fetchData.bind(this);
   }
 
+  notify = () => toast.success('Data Berhasil diubah', {
+    position: "top-center",
+    autoClose: 1500,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: false
+    });
+
+   warning = (text) => toast.error(text, {
+     position: "top-center",
+     autoClose: 2000,
+     hideProgressBar: true,
+     closeOnClick: true,
+     pauseOnHover: true,
+     draggable: false
+     });
+
   isToday = (someDate) => {
     const today = new Date()
     return someDate.getDate() == today.getDate() &&
@@ -60,21 +86,22 @@ export default class attendancesList extends Component {
       someDate.getFullYear() == today.getFullYear()
   }
 
-  async onChangeStudentStatus(e, id){
+  async onChangeStudentStatus(id, value){
     if (this.isToday(this.state.filterDate)) {
       const obj = {
         studentId: this.state.studentSelected[id].value,
-        student_status: e.target.value
+        student_status: value
       };
-      console.log('ler', e.target.value)
+      console.log('ler', value)
       axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
-        .then(alert('Data berhasil diubah'))
+        .then(this.notify())
         .catch(error => {
           console.log(error.message);
         })
 
-      if (e.target.value == '3') {
+        //Jika status attend
+      if (value == '3') {
         axios.patch('http://localhost:8000/api/user_decbalance/' + this.state.studentSelected[id].value)
           .then(res => console.log(res.data))
           .catch(error => {
@@ -95,13 +122,15 @@ export default class attendancesList extends Component {
         .then(() => this.setState({ redirect: true }));
 
       await this.promisedSetState({
-        studentStatus: update(this.state.studentStatus, { [id]: { $set: e.target.value } })
+        studentStatus: update(this.state.studentStatus, { [id]: { $set: value } })
       });
       this.tableAttendancesGroup()
     }
     else {
-      alert('Edit not allowed in this date')
+      this.warning('Edit not allowed in this date')
     }
+
+    this.setState({studentStatusConfirm: !this.state.studentStatusConfirm})
   }
 
   promisedSetState = (newState) => {
@@ -124,7 +153,7 @@ async onChangeStartAt(e, id) {
     console.log(obj, id)
     axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
-      .then(alert('Data berhasil diubah'))
+      .then(this.notify())
       .catch(error => {
         console.log(error.message);
       })
@@ -135,7 +164,7 @@ async onChangeStartAt(e, id) {
     this.tableAttendancesGroup()
   }
   else{
-    alert('Edit not allowed in this date')
+    this.warning('Edit not allowed in this date')
   }
 }
 
@@ -151,7 +180,7 @@ async onChangeEndAt(e, id) {
     console.log(obj, id)
     axios.patch('http://localhost:8000/api/attendance/' + id, obj)
       .then(res => console.log(res.data))
-      .then(alert('Data berhasil diubah'))
+      .then(this.notify())
       .catch(error => {
         console.log(error.message);
       })
@@ -162,30 +191,32 @@ async onChangeEndAt(e, id) {
     this.tableAttendancesGroup()
   }
   else {
-    alert('Edit not allowed in this date')
+    this.warning('Edit not allowed in this date')
   }
 }
 
-  async onChangeTeacherStatus(e, id) {
+  async onChangeTeacherStatus(id, value) {
     if (this.isToday(this.state.filterDate)) {
       const obj = {
-        teacher_status: e.target.value
+        teacher_status: value
       };
       axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
-        .then(alert('Data berhasil diubah'))
+        .then(this.notify())
         .catch(error => {
           console.log(error.message);
         })
       await this.promisedSetState({
-        teacherStatus: update(this.state.teacherStatus, { [id]: { $set: e.target.value } })
+        teacherStatus: update(this.state.teacherStatus, { [id]: { $set: value } })
       });
 
       this.tableAttendancesGroup()
     }
     else {
-      alert('Edit not allowed in this date')
+      this.warning('Edit not allowed in this date')
     }
+
+    this.setState({teacherStatusConfirm: !this.state.teacherStatusConfirm})
   }
 
   onChangeFilterClass = (selectedClass) =>  {
@@ -219,7 +250,7 @@ async onChangeEndAt(e, id) {
       console.log(obj, id)
       axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
-        .then(alert('Data berhasil diubah'))
+        .then(this.notify())
         .catch(error => {
           console.log(error.message);
         })
@@ -230,7 +261,7 @@ async onChangeEndAt(e, id) {
       this.tableAttendancesGroup()
     }
     else {
-      alert('Edit not allowed in this date')
+      this.warning('Edit not allowed in this date')
     }
   }
 
@@ -242,7 +273,7 @@ async onChangeEndAt(e, id) {
       console.log(obj, id)
       await axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
-        .then(alert('Data berhasil diubah'))
+        .then(this.notify())
         .catch(error => {
           console.log(error.message);
         })
@@ -254,7 +285,7 @@ async onChangeEndAt(e, id) {
       this.tableAttendancesGroup()
     }
     else {
-      alert('Edit not allowed in this date')
+      this.warning('Edit not allowed in this date')
     }
   }
 
@@ -265,7 +296,7 @@ async onChangeEndAt(e, id) {
       };
       axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
-        .then(alert('Data berhasil diubah'))
+        .then(this.notify())
         .catch(error => {
           console.log(error.message);
         })
@@ -276,7 +307,7 @@ async onChangeEndAt(e, id) {
       this.tableAttendancesGroup()
     }
     else {
-      alert('Edit not allowed in this date')
+      this.warning('Edit not allowed in this date')
     }
   }
 
@@ -287,7 +318,7 @@ async onChangeEndAt(e, id) {
       };
       axios.patch('http://localhost:8000/api/attendance/' + id, obj)
         .then(res => console.log(res.data))
-        .then(alert('Data berhasil diubah'))
+        .then(this.notify())
         .catch(error => {
           console.log(error.message);
         })
@@ -298,7 +329,7 @@ async onChangeEndAt(e, id) {
       this.tableAttendancesGroup()
     }
     else {
-      alert('Edit not allowed in this date')
+      this.warning('Edit not allowed in this date')
     }
   }
 
@@ -324,9 +355,34 @@ async onChangeEndAt(e, id) {
     });
   }
 
+  toggleStudentStatusConfirmation = (id, value) => {
+    this.setState({
+      studentStatusConfirm: !this.state.studentStatusConfirm,
+      studentStatusId: id,
+      studentStatusValue: value
+    });
+  }
+
+  toggleTeacherStatusConfirmation = (id, value) => {
+    this.setState({
+      teacherStatusConfirm: !this.state.teacherStatusConfirm,
+      teacherStatusId: id,
+      teacherStatusValue: value
+    });
+  }
+
   componentDidMount = () => {
     // ajax call
     this.tableAttendancesGroup()
+  }
+
+  componentDidUpdate = () => {
+    const separator = document.querySelectorAll('td:empty')
+    for (let i = 0; i < separator.length; i++) {
+      separator[i].setAttribute('colspan', 8)
+      separator[i].setAttribute('style', 'height: 15px; background-color: #d0d0d0;')
+      // separator[i].innerHTML = '<h1>separator</h1>'
+    }
   }
 
   createStudentPicker = (students) => {
@@ -445,19 +501,6 @@ async onChangeEndAt(e, id) {
             teacherSelected: update(this.state.teacherSelected, { [data.attendances_id]: { $set: {value:data.teacher_id, label:data.teacher_name} } })
           })
         })
-
-        // json.map((subarray) => {
-        //   subarray.map((data) => {
-        //     this.promisedSetState({
-        //       classSelected: update(this.state.classSelected, {[data.attendances_id]: {$set: data.class_id}}),
-        //       studentStatus: update(this.state.studentStatus, {[data.attendances_id]: {$set: data.student_status}}),
-        //       teacherStatus: update(this.state.teacherStatus, {[data.attendances_id]: {$set: data.teacher_status}}),
-        //       studentSelected: update(this.state.studentSelected, {[data.attendances_id]: {$set: data.student_id}}),
-        //       teacherSelected: update(this.state.teacherSelected, {[data.attendances_id]: {$set: data.teacher_id}})
-        //     })
-        //   })
-        // })
-        
       })
       resolve()
     })
@@ -643,8 +686,8 @@ async onChangeEndAt(e, id) {
     const {rooms, roomSelected, studentStatus, teachers, teacherStatus, teacherSelected, students, studentSelected, classes, classSelected, startAt, endAt} = this.state
     const onChangeStartAt = this.onChangeStartAt
     const onChangeEndAt = this.onChangeEndAt
-    const onChangeStudentStatus = this.onChangeStudentStatus
-    const onChangeTeacherStatus = this.onChangeTeacherStatus
+    const toggleStudentStatusConfirmation = this.toggleStudentStatusConfirmation
+    const toggleTeacherStatusConfirmation = this.toggleTeacherStatusConfirmation
     const onChangeRoom = this.onChangeRoom
     const onChangeStudent = this.onChangeStudent
     const onChangeTeacher = this.onChangeTeacher
@@ -705,13 +748,27 @@ async onChangeEndAt(e, id) {
       ],
       rows: ( () => {
         let rowData = []
+        let startPrev = ''
+        let teacherPrev = ''
         // console.log('bang', students)
           
           // let data = attendances
 
         attendances.map((data, index) => {
-          console.log('bang', students)
+          // console.log('bang', students)
           // console.log('coba1 studentID:',data.student_id,'isi:', studentSelected[data.student_id], 'class', data.class_name)
+
+          if(teacherPrev != teacherSelected[data.attendances_id].value || startPrev != startAt[data.attendances_id]){
+            if(teacherPrev != ''){
+              rowData.push({
+                room: ''
+              })
+            }
+
+            teacherPrev = teacherSelected[data.attendances_id].value
+            startPrev = startAt[data.attendances_id]
+          }
+
           rowData.push({
             room: <select class="form-control" onChange={(e) => onChangeRoom(e, data.attendances_id)} value={roomSelected[data.attendances_id]}>
               {createRoomPicker(rooms)}
@@ -728,7 +785,7 @@ async onChangeEndAt(e, id) {
               value={endAt[data.attendances_id]}
               style={{ width: 85 }}
             />,
-            class: <select class="form-control" onChange={(e) => onChangeClass(e, data.attendances_id)} value={classSelected[data.attendances_id]}>
+            class: <select class="form-control" onChange={(e) => onChangeClass(e, data.attendances_id)} value={classSelected[data.attendances_id]} >
               {createClassPicker(classes)}
             </select>,
             student: <Select
@@ -740,7 +797,7 @@ async onChangeEndAt(e, id) {
             //     { createStudentPicker(students)}
             //   </select>
             ,
-            status_student: <select class="form-control" onChange={(e) => onChangeStudentStatus(e, data.attendances_id)} value={studentStatus[data.attendances_id]}>
+            status_student: <select class="form-control" onChange={(e) => toggleStudentStatusConfirmation(data.attendances_id, e.target.value)} value={studentStatus[data.attendances_id]} disabled={studentStatus[data.attendances_id] && true} >
               <option value="0"></option>
               <option value="1">Absent</option>
               <option value="2">With Permission</option>
@@ -751,7 +808,7 @@ async onChangeEndAt(e, id) {
               onChange={(e) => onChangeTeacher(e, data.attendances_id)}
               options={this.dataTeachers(teachers)}
             />,
-            teacher_student: <select class="form-control" onChange={(e) => onChangeTeacherStatus(e, data.attendances_id)} value={teacherStatus[data.attendances_id]}>
+            status_teacher: <select class="form-control" onChange={(e) => toggleTeacherStatusConfirmation(data.attendances_id, e.target.value)} value={teacherStatus[data.attendances_id]} disabled={teacherStatus[data.attendances_id] && true}>
               <option value="0"></option>
               <option value="1">Absent</option>
               <option value="2">With Permission</option>
@@ -802,7 +859,6 @@ async onChangeEndAt(e, id) {
     var i = 0
     table.push(
       <MDBDataTable
-        striped
         bordered
         hover
         paging={false}
@@ -819,7 +875,7 @@ async onChangeEndAt(e, id) {
 
   render() {
     // console.log('coba3',this.state.studentSelected[6])
-    const { loading, tables, studentSelected } = this.state
+    const { loading, tables, studentSelected, studentStatusId, teacherStatusId, studentStatusValue, teacherStatusValue } = this.state
     // console.log('studentOK', attendances)
     console.log('studentslect', studentSelected)
     // console.log('loaded', isLoaded)
@@ -841,8 +897,9 @@ async onChangeEndAt(e, id) {
                       peekNextMonth
                       dropdownMode="select"
                       className="form-control"
+                      maxDate={new Date()}
                       customInput={
-                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{ width: 227 }} />
+                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{ width: 235 }} />
                       }
                     />
 
@@ -863,7 +920,6 @@ async onChangeEndAt(e, id) {
                     paging={false}
                     data={this.dataHeader()}
                     btn
-
                   />
                     <center><Loader
                       type="Oval"
@@ -877,6 +933,44 @@ async onChangeEndAt(e, id) {
           </div>
         </section>
 
+        {/* Student */}
+        <MDBContainer>
+          <MDBModal isOpen={this.state.studentStatusConfirm} toggle={this.toggleStudentStatusConfirmation} size="sm" centered>
+            <MDBModalHeader toggle={this.toggleStudentStatusConfirmation}>Student Attendance</MDBModalHeader>
+              <MDBModalBody>
+                Are you sure? status cannot be changed later!
+              </MDBModalBody>
+            <MDBModalFooter>
+              <MDBBtn color="secondary" onClick={this.toggleStudentStatusConfirmation}>Cancel</MDBBtn>
+              <MDBBtn color="success" onClick={() => this.onChangeStudentStatus(studentStatusId, studentStatusValue)}>Change</MDBBtn>
+            </MDBModalFooter>
+          </MDBModal>
+        </MDBContainer>
+        {/* Teacher */}
+        <MDBContainer>
+          <MDBModal isOpen={this.state.teacherStatusConfirm} toggle={this.toggleTeacherStatusConfirmation} size="sm" centered>
+            <MDBModalHeader toggle={this.toggleTeacherStatusConfirmation}>Teacher Attendance</MDBModalHeader>
+              <MDBModalBody>
+                Are you sure? status cannot be changed later!
+              </MDBModalBody>
+            <MDBModalFooter>
+              <MDBBtn color="secondary" onClick={this.toggleTeacherStatusConfirmation}>Cancel</MDBBtn>
+              <MDBBtn color="success" onClick={() => this.onChangeTeacherStatus(teacherStatusId, teacherStatusValue)}>Change</MDBBtn>
+            </MDBModalFooter>
+          </MDBModal>
+        </MDBContainer>
+
+        <ToastContainer 
+          position="top-center"
+          autoClose={1500}
+          hideProgressBar
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange={false}
+          draggable={false}
+          pauseOnHover
+          transition={Slide}/>
       </>
     )
   }
