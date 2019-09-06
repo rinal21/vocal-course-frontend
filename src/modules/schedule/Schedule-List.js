@@ -341,6 +341,15 @@ export default class schedulesList extends Component {
     this.tableAttendancesGroup()
   }
 
+  componentDidUpdate = () => {
+    const separator = document.querySelectorAll('td:empty')
+    for (let i = 0; i < separator.length; i++) {
+      separator[i].setAttribute('colspan', 8)
+      separator[i].setAttribute('style', 'height: 15px; background-color: #d0d0d0;')
+      // separator[i].innerHTML = '<h1>separator</h1>'
+    }
+  }
+
   createStudentPicker = (students) => {
     let opt = []
     students[0].map((student, index) => {
@@ -697,10 +706,24 @@ export default class schedulesList extends Component {
       ],
       rows: ( () => {
         let rowData = []
+        let startPrev = ''
+        let teacherPrev = ''
 
         schedules.map((data, index) => {
           console.log('bang', students)
           // console.log('coba1 studentID:',data.student_id,'isi:', studentSelected[data.student_id], 'class', data.class_name)
+
+          if(teacherPrev != teacherSelected[data.schedule_id].value || startPrev != startAt[data.schedule_id]){
+            if(teacherPrev != ''){
+              rowData.push({
+                room: ''
+              })
+            }
+
+            teacherPrev = teacherSelected[data.schedule_id].value
+            startPrev = startAt[data.schedule_id]
+          }
+
           rowData.push({
             room: <select class="form-control" onChange={(e) => onChangeRoom(e, data.schedule_id)} value={roomSelected[data.schedule_id]}>
               {createRoomPicker(rooms)}
@@ -780,7 +803,6 @@ export default class schedulesList extends Component {
     var i = 0
     table.push(
       <MDBDataTable
-        striped
         bordered
         hover
         paging={false}
@@ -844,7 +866,7 @@ export default class schedulesList extends Component {
                       dropdownMode="select"
                       className="form-control"
                       customInput={
-                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{ width: 227 }} />
+                        <input type="text" class="form-control react-datepicker-ignore-onclickoutside" style={{ width: 235 }} />
                       }
                     />
 
