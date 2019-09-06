@@ -250,19 +250,7 @@ export default class studentAdd extends Component {
         .max(50, 'Too Long!')
         .required('Required'),
         optSex: Yup.string()
-        .required("Required"),
-      // instructor: Yup.string()
-      //   .min(3, 'Too Short!')
-      //   .max(50, 'Too Long!')
-      //   .required('Required'),
-      // days: Yup.number()
-      //   .min(2, 'Too Short!')
-      //   .max(360, 'Too Long!')
-      //   .required('Required'),
-      // hours: Yup.number()
-      //   .min(2, 'Too Short!')
-      //   .max(365, 'Too Long!')
-      //   .required('Required'),
+        .required("Required")
     });
     return (
       <div>
@@ -284,7 +272,8 @@ export default class studentAdd extends Component {
             optSex: "",
            }}
           validationSchema={StudentSchema}
-          onSubmit={values => {
+          onSubmit={async values => {
+            let isError = false
             const obj = {
               class: this.state.classId,
               teacher: this.state.teacherId,
@@ -315,13 +304,21 @@ export default class studentAdd extends Component {
                 'content-type': 'multipart/form-data'
               }
             };
-            axios.post('http://localhost:8000/api/student', obj)
+            await axios.post('http://localhost:8000/api/student', obj)
               .then(res => console.log(res.data))
               .then(axios.post("http://localhost:8000/api/student/upload", formData, config)
                 .then(() => {
                   alert("The file is successfully uploaded");
                 }))
-              .then(() => this.setState({ redirect: true }));
+              .then(() => this.setState({ redirect: true }))
+              .catch(error => {
+                isError = true
+                alert(error.response.data.message)
+              })
+
+              if(!isError){
+                this.setState({ redirect: true })
+              }
               // .then(() => alert("Student's data will be printing"))
           }
         }
