@@ -28,7 +28,8 @@ export default class studentListPaid extends Component {
       grouping: 'no',
       layoutPrint: '',
       transactions: [],
-      deleteId : ''
+      deleteId : '',
+      balance: 0
     }
     this.delete = this.delete.bind(this);
     this.onChangeFilterDate = this.onChangeFilterDate.bind(this);
@@ -194,6 +195,7 @@ export default class studentListPaid extends Component {
         console.log(json)
         this.setState({
           detailStudentInfo: json,
+          balance: json[0] && json[0].balance,
           detailStudent: !this.state.detailStudent
         })
       })
@@ -214,7 +216,7 @@ export default class studentListPaid extends Component {
   }
 
   showDetailStudent = () => {
-    const { detailStudentInfo } = this.state
+    const { detailStudentInfo, balance } = this.state
     let data = detailStudentInfo[0]
 
     if (data) {
@@ -313,6 +315,10 @@ export default class studentListPaid extends Component {
                 <label>: &nbsp;</label>
                 <label>{data.date}</label>
               </div>
+            </div>
+
+            <div class="col-sm" style={{marginRight: 25}}>
+              <p class="float-right">Balance : {balance} </p>
             </div>
           </div>
           
@@ -455,12 +461,12 @@ export default class studentListPaid extends Component {
           sort: 'asc',
           width: 500
         },
-        {
-          label: 'Age',
-          field: 'age',
-          sort: 'desc',
-          width: 100
-        },
+        // {
+        //   label: 'Age',
+        //   field: 'age',
+        //   sort: 'desc',
+        //   width: 100
+        // },
         {
           label: 'Sex',
           field: 'sex',
@@ -486,11 +492,11 @@ export default class studentListPaid extends Component {
           field: 'school',
           width: 10
         },
-        {
-          label: 'Email',
-          field: 'email',
-          width: 10
-        },
+        // {
+        //   label: 'Email',
+        //   field: 'email',
+        //   width: 10
+        // },
         {
           label: 'Branch',
           field: 'branch',
@@ -527,13 +533,13 @@ export default class studentListPaid extends Component {
           
           rowData.push({
             name: data.first_name + ' ' + data.middle_name + ' ' + data.last_name,
-            age: data.age,
+            // age: data.age,
             sex: data.sex,
             address: data.street_address,
             // cellPhone: data.cell_phone,
             class: data.class_name,
             school: data.school,
-            email: data.email,
+            // email: data.email,
             branch: data.branch_name,
             status: data.user_status,
             action: 
