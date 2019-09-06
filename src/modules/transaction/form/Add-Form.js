@@ -25,7 +25,7 @@ export default class transactionAdd extends Component {
       pricings: [],
       pricingId: '',
       selectedPricing: '',
-      cost: '',
+      total: '',
       royalty: '',
       receiptNumber: '',
       note: '',
@@ -39,6 +39,7 @@ export default class transactionAdd extends Component {
     this.onChangeTeacher = this.onChangeTeacher.bind(this);
     this.onChangeReceiptNumber = this.onChangeReceiptNumber.bind(this);
     this.onChangePricing = this.onChangePricing.bind(this);
+    this.onChangeTotal = this.onChangeTotal.bind(this);
     this.onChangeNote = this.onChangeNote.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -82,6 +83,9 @@ export default class transactionAdd extends Component {
     this.setState({ pricingId: selectedPricing.value})
 
     this.fetchPrice(selectedPricing.value)
+  }
+  onChangeTotal(e) {
+    this.setState({total: e.target.value})  
   }
   onChangeReceiptNumber(e) {
     this.setState({receiptNumber: e.target.value})  
@@ -162,7 +166,7 @@ export default class transactionAdd extends Component {
       .then((json) => {
         json.map((data) => {
           this.setState({
-            cost: data.price,
+            total: data.price,
             royalty: data.price*0.1
           })
         })
@@ -257,7 +261,7 @@ export default class transactionAdd extends Component {
       student: this.state.studentId,
       payment_date: moment(this.state.paymentDate).format("YYYY-MM-DD hh:mm:ss"),
       // receipt_number: this.state.receiptNumber,
-      cost: this.state.cost,
+      total: this.state.total,
       pricing: this.state.pricingId,
       transaction_type: this.state.transactionTypeId,
       royalty: this.state.royalty,
@@ -271,7 +275,7 @@ export default class transactionAdd extends Component {
   }
 
   render() {
-    const { redirect } = this.state;
+    const { redirect, transactionTypeId } = this.state;
     if (redirect) {
       return <Redirect to='/transaction' />;
     }
@@ -309,148 +313,121 @@ export default class transactionAdd extends Component {
           }) => (
               <div>
                 <form onSubmit={this.onSubmit}>
-                <div className="form-inline mb-2">
-                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Student Name
-                  </label>
-                    <label>: &nbsp;</label>
-                    <div style={{ display: 'inline-block', width: 223.2 }}>
-                      <Select
-                        value={this.state.selectedStudent}
-                        onChange={this.onChangeStudents}
-                        options={this.dataStudents(this.state.students)}
-                      />
+                  <div className="form-inline mb-2">
+                      <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Transaction Type
+                    </label>
+                      <label>: &nbsp;</label>
+                      <div style={{ display: 'inline-block', width: 290 }}>
+                        <Select
+                          value={this.state.selectedTransactionType}
+                          onChange={this.onChangeTransactionType}
+                          options={this.dataTransactionsType(this.state.transactionsType)}
+                        />
+                      </div>
+                  </div>
+                  {transactionTypeId != 4 && (<><div className="form-inline mb-2">
+                      <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Student Name
+                    </label>
+                      <label>: &nbsp;</label>
+                      <div style={{ display: 'inline-block', width: 223.2 }}>
+                        <Select
+                          value={this.state.selectedStudent}
+                          onChange={this.onChangeStudents}
+                          options={this.dataStudents(this.state.students)}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Teacher Name
-                  </label>
-                    <label>: &nbsp;</label>
-                    <div style={{ display: 'inline-block', width: 223.2 }}>
-                      <Select
-                        value={this.state.selectedTeacher}
-                        onChange={this.onChangeTeacher}
-                        options={this.dataTeachers(this.state.teachers)}
-                      />
+                    <div className="form-inline mb-2">
+                      <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Teacher Name
+                    </label>
+                      <label>: &nbsp;</label>
+                      <div style={{ display: 'inline-block', width: 223.2 }}>
+                        <Select
+                          value={this.state.selectedTeacher}
+                          onChange={this.onChangeTeacher}
+                          options={this.dataTeachers(this.state.teachers)}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Class
-                  </label>
-                    <label>: &nbsp;</label>
-                    <div style={{ display: 'inline-block', width: 290 }}>
-                      <Select
-                        value={this.state.selectedPricing}
-                        onChange={this.onChangePricing}
-                        options={this.dataPricings(this.state.pricings)}
-                      />
+                    <div className="form-inline mb-2">
+                      <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Class
+                    </label>
+                      <label>: &nbsp;</label>
+                      <div style={{ display: 'inline-block', width: 290 }}>
+                        <Select
+                          value={this.state.selectedPricing}
+                          onChange={this.onChangePricing}
+                          options={this.dataPricings(this.state.pricings)}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Transaction Type
-                  </label>
-                    <label>: &nbsp;</label>
-                    <div style={{ display: 'inline-block', width: 290 }}>
-                      <Select
-                        value={this.state.selectedTransactionType}
-                        onChange={this.onChangeTransactionType}
-                        options={this.dataTransactionsType(this.state.transactionsType)}
-                      />
+                    <div className="form-inline mb-2">
+                      <label for="royalty" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Royalty
+                      </label>
+                      <label>: &nbsp;</label>
+                      <input type="text" class="form-control mr-sm-2" id="royalty" value={this.state.royalty} disabled />
                     </div>
-                  </div>
-                  
-                  {/* <div className="form-inline mb-2">
-                    <label for="level" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Level
+                    </>
+                    )}
+                    <div className="form-inline mb-2">
+                      <label for="total" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Total
+                      </label>
+                      <label>: &nbsp;</label>
+                      <input type="text" class="form-control mr-sm-2" id="total" onChange={(e) => this.onChangeTotal(e)} value={(/^\d+$/.test(this.state.total) || this.state.total == '') ? this.state.total : ''} disabled={transactionTypeId != 4 && true} />
+                    </div>
+                    <div className="form-inline mb-2">
+                      <label for="date" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Payment Date
+                      </label>
+                      <label>: &nbsp;</label>
+                      <DatePicker
+                          selected={this.state.paymentDate}
+                          onChange={this.onChangePaymentDate}
+                          dateFormat="d-MM-yyyy"
+                          peekNextMonth
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
+                          className="form-control"
+                        />
+                    </div>
+                    <div className="form-inline mb-2">
+                      <label for="note" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Note
+                      </label>
+                      <label>: &nbsp;</label>
+                      <textarea class="form-control mr-sm-2" id="note" 
+                      value={this.state.note}
+                      onChange={this.onChangeNote}/>
+                    </div>
+                    <div className="form-inline mb-2">
+                      <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
+                        Payment Method
                     </label>
-                    <label>: &nbsp;</label>
-                    <select class="form-control" onChange={this.onChangeLevel} style={{width: 223.2}}>
-                      <option value="">Choose One ..</option>
-                      <option value="Basic 1">Basic 1</option>
-                      <option value="Basic 2">Basic 2</option>
-                      <option value="Middle 1">Middle 1</option>
-                      <option value="Middle 2">Middle 2</option>
-                      <option value="Pre Advance">Pre Advance</option>
-                      <option value="Advance 1">Advance 1</option>
-                      <option value="Advance 2">Advance 2</option>
-                      <option value="Executive">Executive</option>
-                      <option value="Group">Group</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div> */}
-                  <div className="form-inline mb-2">
-                    <label for="date" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Payment Date
-                    </label>
-                    <label>: &nbsp;</label>
-                    <DatePicker
-                        selected={this.state.paymentDate}
-                        onChange={this.onChangePaymentDate}
-                        dateFormat="d-MM-yyyy"
-                        peekNextMonth
-                        showMonthDropdown
-                        showYearDropdown
-                        dropdownMode="select"
-                        className="form-control"
-                      />
-                  </div>
-                  {/* <div className="form-inline mb-2">
-                    <label for="receipt" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Receipt Number
-                    </label>
-                    <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="receipt" 
-                    value={this.state.receiptNumber}
-                    onChange={this.onChangeReceiptNumber}/>
-                  </div> */}
-                  <div className="form-inline mb-2">
-                    <label for="cost" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Cost
-                    </label>
-                    <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="cost" value={this.state.cost} disabled />
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="royalty" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Royalty
-                    </label>
-                    <label>: &nbsp;</label>
-                    <input type="text" class="form-control mr-sm-2" id="royalty" value={this.state.royalty} disabled />
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="note" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Note
-                    </label>
-                    <label>: &nbsp;</label>
-                    <textarea class="form-control mr-sm-2" id="note" 
-                    value={this.state.note}
-                    onChange={this.onChangeNote}/>
-                  </div>
-                  <div className="form-inline mb-2">
-                    <label for="name" class="mr-sm-2 text-left d-block" style={{ width: 140 }}>
-                      Payment Method
-                  </label>
-                    <label>: &nbsp;</label>
-                    <label class="radio-inline mr-2">
-                      <input type="radio" name="optPayment" value="0"
-                        checked={this.state.selectedPaymentMethod === "0"}
-                        onChange={this.onChangePaymentMethod} />Pending
-                          </label>
-                    <label style={{ marginRight: 10 }}>/</label>
-                    <label class="radio-inline"><input type="radio" name="optPayment" value="1"
-                      checked={this.state.selectedPaymentMethod === "1"}
-                      onChange={this.onChangePaymentMethod} />Cash
-                          </label>
-                  </div>
+                      <label>: &nbsp;</label>
+                      <label class="radio-inline mr-2">
+                        <input type="radio" name="optPayment" value="0"
+                          checked={this.state.selectedPaymentMethod === "0"}
+                          onChange={this.onChangePaymentMethod} />Pending
+                            </label>
+                      <label style={{ marginRight: 10 }}>/</label>
+                      <label class="radio-inline"><input type="radio" name="optPayment" value="1"
+                        checked={this.state.selectedPaymentMethod === "1"}
+                        onChange={this.onChangePaymentMethod} />Cash
+                            </label>
+                    </div>
 
-                  <div className="form-group">
-                    <button type="submit" class="btn btn-primary mb-2">
-                      Submit
-                    </button>
-                  </div>
+                    <div className="form-group">
+                      <button type="submit" class="btn btn-primary mb-2">
+                        Submit
+                      </button>
+                    </div>
                 </form>
               </div>
             )}
