@@ -52,6 +52,12 @@ export default class userList extends Component {
     return ({
       columns: [
         {
+          label: 'Joined At',
+          field: 'join',
+          sort: 'asc',
+          width: 500
+        },
+        {
           label: 'Email',
           field: 'email',
           sort: 'asc',
@@ -75,6 +81,7 @@ export default class userList extends Component {
 
         users.map((data, index) => {
           rowData.push({
+            join: data.joined_at,
             email: data.email,
             username: data.username,
             edit:

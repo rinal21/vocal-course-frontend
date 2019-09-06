@@ -88,6 +88,12 @@ export default class teacherList extends Component {
     return ({
       columns: [
         {
+          label: 'Joined At',
+          field: 'join',
+          sort: 'asc',
+          width: 500
+        },
+        {
           label: 'Name',
           field: 'name',
           sort: 'asc',
@@ -136,6 +142,7 @@ export default class teacherList extends Component {
           }
 
           rowData.push({
+            join: data.joined_at,
             name: data.name,
             student: data.students_count,
             salary: <NumberFormat value={data.salary} displayType={'text'} thousandSeparator="." decimalSeparator="," prefix={'Rp '} />,

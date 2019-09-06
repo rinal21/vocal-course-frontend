@@ -89,6 +89,11 @@ export default class employeeList extends Component {
     return ({
       columns: [
         {
+          label: 'Joined At',
+          field: 'join',
+          width: 150
+        },
+        {
           label: 'Name',
           field: 'name',
           width: 150
@@ -148,6 +153,7 @@ export default class employeeList extends Component {
           }
 
           rowData.push({
+            join: data.joined_at,
             name: data.name,
             // email: data.email,
             noHp: data.no_hp,
