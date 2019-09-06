@@ -1,6 +1,54 @@
 import React, {Component} from 'react';
 
 export default class Header extends Component {
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+          branches: [],
+          branchSelected: '',
+          branchId: ''
+        }
+      }
+
+    componentDidMount = () => {
+      // ajax call
+      this.fetchBranches()
+    }
+
+
+    fetchBranches = () => {
+        let userData = JSON.parse(localStorage["appState"])
+        fetch('http://localhost:8000/api/user_branchs/'+userData.user.id)
+        .then(response => response.json())
+        .then((json) => {
+          this.setState({
+            branches: json,
+            branchSelected: userData.user.branchId
+          })
+        })
+    }
+
+    createBranchPicker = (branches) => {
+        let opt = []
+    
+        branches.map((data) => {
+          opt.push(<option style={{background: '#367fa9', color: 'white'}} value={data.id}>{data.name}</option>)
+        })
+    
+        return (
+            opt
+        )
+      }
+
+      onChangeBranch = (e) =>  {
+        let tempStorage = JSON.parse(localStorage["appState"])
+        tempStorage.user.branchId = e.target.value
+        localStorage["appState"] = JSON.stringify(tempStorage)
+
+        window.location.reload()
+      }
+
     logout = () => {
         let appState = {
             isLoggedIn: false,
@@ -11,13 +59,18 @@ export default class Header extends Component {
         this.setState(appState);
     }
     render(){
-        const branch = JSON.parse(localStorage["appState"]).user.branchName
+        const { branches, branchSelected } = this.state
         const role = JSON.parse(localStorage["appState"]).user.roleId
+
         return (
             <header className="main-header">
                 <a href="#" className="logo">
-                    <span className="logo-mini"><b>A</b>LT</span>
-                    <span className="logo-lg"><b>Admin</b>{role != 1 && (' - '+ branch)}</span>
+                    <span className="logo-lg" style={{width: role != 1 ?'106%' : '100%'}}><b>Admin</b>{role != 1 && ' - '}
+                    {role != 1 && (
+                        <select id="branch-picker" value={branchSelected} onChange={ (e) => this.onChangeBranch(e)} style={{background: 'none', color: 'white'}}>
+                                {this.createBranchPicker(branches)}
+                        </select>)}
+                    </span>
                 </a>
                 <nav className="navbar navbar-static-top">
                     <a href="#" className="sidebar-toggle" data-toggle="push-menu" role="button">
