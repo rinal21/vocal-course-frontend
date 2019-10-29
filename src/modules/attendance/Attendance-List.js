@@ -376,13 +376,20 @@ async onChangeEndAt(e, id) {
     this.tableAttendancesGroup()
   }
 
-  componentDidUpdate = () => {
-    const separator = document.querySelectorAll('td:empty')
-    for (let i = 0; i < separator.length; i++) {
-      separator[i].setAttribute('colspan', 8)
-      separator[i].setAttribute('style', 'height: 15px; background-color: #d0d0d0;')
-      // separator[i].innerHTML = '<h1>separator</h1>'
-    }
+  componentDidUpdate = (prevState) => {
+    // !this.state.loading && console.log('coba masookkkk')
+      // console.log('coba masookkkk')
+      // const separator = document.querySelectorAll('td:empty')
+      // for (let i = 0; i < separator.length; i++) {
+      //   console.log('coba separator', separator.length)
+      //   separator[i].setAttribute('colspan', 8)
+        // separator[i].setAttribute('style', 'height: 15px; background-color: #d0d0d0;')
+        // separator[i].innerHTML = '<h1>separator</h1>'
+      // }
+  }
+
+  componentWillReceiveProps = () => {
+    console.log('coba masuk')
   }
 
   createStudentPicker = (students) => {

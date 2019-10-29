@@ -192,7 +192,12 @@ export default class employeeList extends Component {
               <div className="content">
                 <b><h4>Employee</h4></b>
                 <div className="box-header">
-                  <NavLink to="/employee/add" className="btn btn-success"><i className="fa fa-plus"></i> Add Employee</NavLink>
+                  <NavLink to={{
+                    pathname: 'user/add',
+                    state: {
+                      group: 2,
+                    }
+                  }} className="btn btn-success"><i className="fa fa-plus"></i> Add User</NavLink>
                 </div>
                 <MDBDataTable
                   striped
